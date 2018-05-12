@@ -38,6 +38,7 @@
 
       <h1>CodeU Chat App</h1>
       <h2>Welcome!</h2>
+      <h3>This is CodeUnstoppables' chat app!</h3>
 
       <ul>
         <li><a href="/login">Login</a> to get started.</li>
