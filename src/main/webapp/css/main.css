@@ -24,7 +24,9 @@ body {
 }
 
 nav {
-  background-color: #283593;
+background-color: #359328;
+  /*background-color: #283593;
+  */
 }
 
 nav a {
@@ -36,7 +38,8 @@ nav a {
 }
 
 #navTitle {
-  font-size: 36px;
+   font-size: 36px;
+
 }
 
 #container {
