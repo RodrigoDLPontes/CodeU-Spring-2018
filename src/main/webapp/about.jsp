@@ -68,7 +68,7 @@
     <footer>
      <p>
         Created By: Israel Ali, Quinlan Kimble-Brown,
-        Alex Meijia and Rodrgio Pontes 2018.
+        Alex Meijia, and Rodrgio Pontes 2018.
     </p>
   </footer>
     </div>
