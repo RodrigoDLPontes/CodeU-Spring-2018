@@ -64,6 +64,13 @@
         This page should also be used to describe the features and improvements
         you've added.
       </p>
+
+    <footer>
+     <p>
+        Created By: Israel Ali, Quinlan Kimble-Brown,
+        Alex Meijia and Rodrgio Pontes 2018.
+    </p>
+  </footer>
     </div>
   </div>
 </body>
