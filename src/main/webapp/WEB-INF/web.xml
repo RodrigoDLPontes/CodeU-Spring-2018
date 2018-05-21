@@ -57,7 +57,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>UserProfileServlet</servlet-name>
-    <url-pattern>/userprofile</url-pattern>
+    <url-pattern>/userprofile/*</url-pattern>
   </servlet-mapping>
 
 </web-app>

@@ -47,7 +47,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 <body onload="scrollChat()">
 
   <nav>
-    <a id="navTitle" href="/">CodeU Chat App What</a>
+    <a id="navTitle" href="/">CodeU Chat App </a>
     <a href="/conversations">Conversations</a>
       <% if (request.getSession().getAttribute("user") != null) { %>
     <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
@@ -68,10 +68,12 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       <ul>
     <%
       for (Message message : messages) {
-        String author = UserStore.getInstance()
+        String authorname = UserStore.getInstance()
           .getUser(message.getAuthorId()).getName();
+          
+          String url = "/userprofile/"+ authorname;
     %>
-      <li><strong> <a href="/userprofile/"><%= author %>:</strong></a> <%= message.getContent() %></li>
+      <li><strong> <a href=<%= url %>> <%= authorname %>:</strong></a> <%= message.getContent() %></li>
     <%
       }
     %>

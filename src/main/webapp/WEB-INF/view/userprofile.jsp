@@ -37,7 +37,7 @@
 
 
        <% if(request.getSession().getAttribute("user") != null) { %>
-          <h1 id="profileNameCenter"> <%= request.getSession().getAttribute("user") %>'s Profile </h1>
+          <h1 id="profileNameCenter"> <%= request.getAttribute("user") %>'s Profile </h1>
       <% } else { %>
             <a href="/login">Login  to view your profile</a>
       <% } %>
