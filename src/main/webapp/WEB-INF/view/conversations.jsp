@@ -71,8 +71,10 @@
     <%
       for(Conversation conversation : conversations){
     %>
+
       <li><a href="/chat/<%= conversation.getTitle() %>">
-        <%= conversation.getTitle() %></a></li>
+        <%= conversation.getTitle() %></a></li> 
+
     <%
       }
     %>
