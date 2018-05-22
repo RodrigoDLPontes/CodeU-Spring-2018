@@ -20,23 +20,28 @@
   <div id="container">
     <h1>Admin Page</h1>
 
-    <% 
-    	List<String> admins = Arrays.asList("amejia", "shershey", "Rodrigo", "quinykb", "Israel");
+  <% 
+      ArrayList<String> admins = new ArrayList<String>();
+      admins.add("amejia");
+      admins.add("shershey");
+      admins.add("Rodrigo");
+      admins.add("quinykb");
+      admins.add("Israel");
     	String username = request.getSession().getAttribute("user");
 
     	if(username != null){ 
-    %>
+  %>
         <p>You must <a href="/login">login</a> and be an admin to view this page.</p>
 
-    <% 
+  <% 
 		} else if (!admins.contains(username)) { 
 	%>
     	<p>Sorry! Only admins can view this page.</p>
 
-    <%  
+  <%  
 		} else {
 	%>
-		<p>Hi <% username %>! Welcome to the admin page!</p>
+		<p>Hi <%= username %>! Welcome to the admin page!</p>
 
 	<%
 		}
