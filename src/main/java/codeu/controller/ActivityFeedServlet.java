@@ -1,12 +1,14 @@
 package codeu.controller;
 
 import codeu.model.data.Conversation;
+
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
+import java.util.LinkedList;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -55,8 +57,13 @@ public class ActivityFeedServlet extends HttpServlet {
 	  @Override
 	  public void doGet(HttpServletRequest request, HttpServletResponse response)
 	      throws IOException, ServletException {
-//	    List<Conversation> conversations = conversationStore.getAllConversations();
-	    request.setAttribute("icecream", "Sea-Salt is a weird Flavor");
+	    List<Conversation> conversations = conversationStore.getAllConversations();
+	    List<String> activities = new LinkedList<>();
+	    for(Conversation conversation : conversations){
+	    	String activity = conversation.getCreationTime().toString() + ": " + userStore.getUser(conversation.getOwnerId()).getName() + " created a new conversation: " + conversation.getTitle();
+	    	activities.add(activity);
+	    }
+	    request.setAttribute("activities", activities);
 	    request.getRequestDispatcher("/WEB-INF/view/activity_feed.jsp").forward(request, response);
 	  }
 

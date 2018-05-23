@@ -1,3 +1,4 @@
+<%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,12 +19,34 @@
     <a href="/about.jsp">About</a>
   </nav>
   <div id="container">
-    <h2>Activity</h2>
 
+    <h2>Activity</h2>
+    <%
+    List<String> activities =
+      (List<String>) request.getAttribute("activities");
+    if(activities == null || activities.isEmpty()){
+    %>
+      <p>Create a conversation to get started.</p>
+    <%
+    }
+    else{
+    %>
+      <ul class="mdl-list">
+    <%
+      for(String activity : activities){
+    %>
+      
+      <li><%= activity %> </li>
+    <%
+      }
+    %>
+      </ul>
+    <%
+    }
+    %>
   </div>
 
-<!-- <% String icecream = (String) request.getAttribute("icecream"); %>
-<%= icecream %> -->
+
   
   
 </body>
