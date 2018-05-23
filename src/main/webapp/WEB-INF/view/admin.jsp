@@ -1,4 +1,3 @@
-<%@ page import="java.util.ArrayList" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,32 +20,14 @@
   <div id="container">
     <h1>Admin Page</h1>
 
-  <% 
-      ArrayList<String> admins = new ArrayList<String>();
-      admins.add("amejia");
-      admins.add("shershey");
-      admins.add("Rodrigo");
-      admins.add("quinykb");
-      admins.add("Israel");
-    	String username = request.getSession().getAttribute("user");
-
-    	if(username != null){ 
-  %>
-        <p>You must <a href="/login">login</a> and be an admin to view this page.</p>
-
-  <% 
-		} else if (!admins.contains(username)) { 
-	%>
-    	<p>Sorry! Only admins can view this page.</p>
-
-  <%  
-		} else {
-	%>
-		<p>Hi <%= username %>! Welcome to the admin page!</p>
-
-	<%
-		}
-	%>
+   <% if (request.getAttribute("unregistered_user") != null) { %>
+        <h2><%= request.getAttribute("unregistered_user") %></h2>
+    <% } else if (request.getAttribute("non_admin") != null) { %>
+        <h2><%= request.getAttribute("non_admin") %></h2>
+    <% } else { %>
+        <h2><%= request.getAttribute("admin") %></h2>
+	  <% } %>
   </div>
+
 </body>
 </html>
