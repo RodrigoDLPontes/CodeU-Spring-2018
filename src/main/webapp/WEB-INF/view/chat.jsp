@@ -71,9 +71,8 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       for (Message message : messages) {
         String author = UserStore.getInstance()
           .getUser(message.getAuthorId()).getName();
-        String content = BBCodeParser.parse(message.getContent());
     %>
-      <li><strong><%= author %>:</strong> <%= content %></li>
+      <li><strong><%= author %>:</strong> <%= BBCodeParser.parse(message.getContent()) %></li>
     <%
       }
     %>

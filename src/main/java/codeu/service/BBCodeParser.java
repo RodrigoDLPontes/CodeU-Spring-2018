@@ -8,22 +8,10 @@ public class BBCodeParser {
    * @return The parsed text
    */
   public static String parse(String input) {
-    StringBuilder builder = new StringBuilder(input);
-
     // replace [b] with <b>
-    int i = builder.indexOf("[b]");
-    while (i != -1) {
-      builder.replace(i, i + "[b]".length(), "<b>");
-      i = builder.indexOf("[b]", i);
-    }
-
+    input = input.replaceAll("\\[b\\]", "<b>"); // \\[b\\] is regex for [b]
     // replace [/b] with </b>
-    i = builder.indexOf("[/b]");
-    while (i != -1) {
-      builder.replace(i, i + "[/b]".length(), "</b>");
-      i = builder.indexOf("[/b]", i);
-    }
-
-    return builder.toString();
+    input = input.replaceAll("\\[/b\\]", "</b>"); // \\[/b]\\ is regex for [/b]
+    return input;
   }
 }
