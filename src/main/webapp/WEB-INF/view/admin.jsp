@@ -6,7 +6,7 @@
 </head>
 <body>
 
-	<nav>
+  <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
     <% if(request.getSession().getAttribute("user") != null){ %>
@@ -26,7 +26,7 @@
         <h2><%= request.getAttribute("non_admin") %></h2>
     <% } else { %>
         <h2><%= request.getAttribute("admin") %></h2>
-	  <% } %>
+    <% } %>
   </div>
 
 </body>

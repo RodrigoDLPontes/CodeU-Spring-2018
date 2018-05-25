@@ -62,7 +62,7 @@ public class AdminServlet extends HttpServlet {
     return;
   }
 
-  public boolean isAdmin(String username) {
+  private boolean isAdmin(String username) {
     ArrayList<String> admins = new ArrayList<String>();
     admins.add("amejia");
     admins.add("shershey");

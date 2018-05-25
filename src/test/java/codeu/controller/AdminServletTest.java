@@ -33,39 +33,35 @@ public class AdminServletTest {
         .thenReturn(mockRequestDispatcher);
   }
 
-  // Tests accessing the admin page with an unregistered user
   @Test
   public void testDoGet_UnregisteredUserReturnsDeniedAccess() throws IOException, ServletException {
-  	Mockito.when(mockSession.getAttribute("user")).thenReturn(null);
-  		
-  	adminServlet.doGet(mockRequest, mockResponse);
+    Mockito.when(mockSession.getAttribute("user")).thenReturn(null);
+      
+    adminServlet.doGet(mockRequest, mockResponse);
 
     Mockito.verify(mockRequest).setAttribute("unregistered_user", 
-    	"You must login and be an admin to view this page.");
+      "You must login and be an admin to view this page.");
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
   }
 
-  // Tests accesing the admin page with a user who is not an admin. They should not be allowed access
   @Test
   public void testDoGet_NonAdminReturnsDeniedAccess() throws IOException, ServletException {
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
-  	
-  	adminServlet.doGet(mockRequest, mockResponse);
+    
+    adminServlet.doGet(mockRequest, mockResponse);
 
-    Mockito.verify(mockRequest).setAttribute("non_admin", 
-    	"You are not authorized to view this page");
+    Mockito.verify(mockRequest).setAttribute(
+        "non_admin", "You are not authorized to view this page");
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
   }
 
-  // Tests accessing the admin page with a user who is an admin 
   @Test
   public void testDoGet_AdminUserReturnsCanAccess() throws IOException, ServletException {
     Mockito.when(mockSession.getAttribute("user")).thenReturn("amejia");
-  	
-  	adminServlet.doGet(mockRequest, mockResponse);
+    
+    adminServlet.doGet(mockRequest, mockResponse);
 
     Mockito.verify(mockRequest).setAttribute("admin", "Hi amejia! Welcome to the admin page!");
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
   }
-
 }
