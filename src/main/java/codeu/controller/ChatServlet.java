@@ -45,6 +45,9 @@ public class ChatServlet extends HttpServlet {
   /** Store class that gives access to Users. */
   private UserStore userStore;
 
+  /** TextProcessor for parsing BBCode */
+  private TextProcessor textProcessor;
+
   /** Set up state for handling chat requests. */
   @Override
   public void init() throws ServletException {
@@ -52,6 +55,7 @@ public class ChatServlet extends HttpServlet {
     setConversationStore(ConversationStore.getInstance());
     setMessageStore(MessageStore.getInstance());
     setUserStore(UserStore.getInstance());
+    setTextProcessor(BBProcessorFactory.getInstance().create());
   }
 
   /**
@@ -76,6 +80,14 @@ public class ChatServlet extends HttpServlet {
    */
   void setUserStore(UserStore userStore) {
     this.userStore = userStore;
+  }
+
+  /**
+   * Sets the TextProcessor used by this servlet. This function provides a common setup method for
+   * use by the test framework or the servlet's init() function.
+   */
+  void setTextProcessor(TextProcessor textProcessor) {
+    this.textProcessor = textProcessor;
   }
 
   /**
@@ -146,7 +158,6 @@ public class ChatServlet extends HttpServlet {
     messageContent = Jsoup.clean(messageContent, Whitelist.none());
 
     // this parses BBCode tags to equivalent HTML tags
-    TextProcessor textProcessor = BBProcessorFactory.getInstance().create();
     messageContent = textProcessor.process(messageContent);
 
     Message message =
