@@ -63,7 +63,7 @@ public class ActivityFeedServletTest {
 	    
 	    List<String> activities = new LinkedList<>();
 	    for(Conversation conversation : fakeConversationList){
-	    	String activity = conversation.getCreationTime().toString() + ": " + userStore.getUser(conversation.getOwnerId()).getName() + " created a new conversation: " + conversation.getTitle();
+	    	String activity = conversation.getCreationTime().toString() + ": " + mockUserStore.getUser(conversation.getOwnerId()).getName() + " created a new conversation: " + conversation.getTitle();
 	    	activities.add(activity);
 	    }
 	    
