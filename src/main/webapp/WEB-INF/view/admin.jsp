@@ -1,3 +1,7 @@
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.LinkedHashMap" %>
+<%@ page import="codeu.controller.AdminServlet" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,13 +24,31 @@
   <div id="container">
     <h1>Admin Page</h1>
 
-   <% if (request.getAttribute("unregistered_user") != null) { %>
-        <h2><%= request.getAttribute("unregistered_user") %></h2>
-    <% } else if (request.getAttribute("non_admin") != null) { %>
-        <h2><%= request.getAttribute("non_admin") %></h2>
-    <% } else { %>
-        <h2><%= request.getAttribute("admin") %></h2>
-    <% } %>
+    <% AdminServlet.LoginState loginState = (AdminServlet.LoginState) request.getAttribute("login_state");
+
+       switch (loginState) {
+        case UNREGISTERED:
+          response.sendRedirect("/login");
+          break;
+        case REGISTERED:
+    %>    
+
+          <h2>You are not authorized to view this page</h2>
+
+    <%    break; 
+        case ADMIN:
+          Map<String, String> stats = (Map<String, String>) request.getAttribute("stats"); 
+    %>
+          <ul>
+
+            <% for (String key : stats.keySet()) { %>
+              <li><%= key %>: <%= stats.get(key) %></li>
+            <% } %>
+
+          </ul>
+    <%    break;
+      }
+    %>
   </div>
 
 </body>

@@ -17,12 +17,21 @@ import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.LinkedHashMap;
 
 /** Servlet class responsible for the admin page. */
 public class AdminServlet extends HttpServlet {
 
   /** Store class that gives access to Users. */
   private UserStore userStore;
+  private ConversationStore conversationStore;
+  private MessageStore messageStore;
+  LinkedHashMap<String, String> stats;
+
+  public enum LoginState {
+    REGISTERED, UNREGISTERED, ADMIN
+  }
 
   /**
    * Set up state for handling admin-related requests. This method is only called when
@@ -32,6 +41,8 @@ public class AdminServlet extends HttpServlet {
   public void init() throws ServletException {
     super.init();
     setUserStore(UserStore.getInstance());
+    setConversationStore(ConversationStore.getInstance());
+    setMessageStore(MessageStore.getInstance());
   }
 
   /**
@@ -43,7 +54,24 @@ public class AdminServlet extends HttpServlet {
   }
 
   /**
-   * This function fires when a user navigates to the admin page.
+   * Sets the ConversationStore used by this servlet. This function provides a common setup method for use
+   * by the test framework or the servlet's init() function.
+   */
+  void setConversationStore(ConversationStore conversationStore) {
+    this.conversationStore = conversationStore;
+  }
+
+  /**
+   * Sets the MessageStore used by this servlet. This function provides a common setup method for use
+   * by the test framework or the servlet's init() function.
+   */
+  void setMessageStore(MessageStore messageStore) {
+    this.messageStore = messageStore;
+  }
+
+  /**
+   * Serves the admin page for the logged in user. Can access the page directly from /admin url
+   * or can click through from the homepage (link shown only to admins).
    */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -51,11 +79,19 @@ public class AdminServlet extends HttpServlet {
     String username = (String) request.getSession().getAttribute("user");
 
     if (username == null) {
-      request.setAttribute("unregistered_user", "You must login and be an admin to view this page.");
+      request.setAttribute("login_state", LoginState.UNREGISTERED);
     } else if (!isAdmin(username)) {
-      request.setAttribute("non_admin", "You are not authorized to view this page");
+      request.setAttribute("login_state", LoginState.REGISTERED);
     } else {
-      request.setAttribute("admin", "Hi " + username + "! Welcome to the admin page!");
+      request.setAttribute("login_state", LoginState.ADMIN);
+
+      stats = new LinkedHashMap<>();
+
+      stats.put("Number of users", "" + userStore.size());
+      stats.put("Number of conversations", "" + conversationStore.size());
+      stats.put("Number of messages", "" + messageStore.size());
+
+      request.setAttribute("stats", stats);
     }
 
     request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
@@ -71,5 +107,9 @@ public class AdminServlet extends HttpServlet {
     admins.add("Israel");
     
     return admins.contains(username);
+  }
+
+  public LinkedHashMap<String, String> getStats() {
+    return stats;
   }
 }
