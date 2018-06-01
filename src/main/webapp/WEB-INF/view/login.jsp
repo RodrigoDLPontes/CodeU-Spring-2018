@@ -26,11 +26,14 @@
     <a href="/conversations">Conversations</a>
     <% if(request.getSession().getAttribute("user") != null){ %>
       <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
+      <a  href="/userprofile/<%= request.getSession().getAttribute("user")%>">About <%= request.getSession().getAttribute("user")%></a>
     <% } else{ %>
       <a href="/login">Login</a>
+      <a href="/userprofile/">AboutMe</a>
     <% } %>
     <a href="/about.jsp">About</a>
   </nav>
+
 
   <div id="container">
     <h1>Login</h1>
