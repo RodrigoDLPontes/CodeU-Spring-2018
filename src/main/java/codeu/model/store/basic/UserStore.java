@@ -127,7 +127,7 @@ public class UserStore {
     this.users = users;
   }
 
-  public int getUsersSize() {
+  public int getNumUsers() {
     return users.size();
   }
 }

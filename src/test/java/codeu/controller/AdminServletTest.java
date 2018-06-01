@@ -74,9 +74,9 @@ public class AdminServletTest {
   public void testDoGet_AdminUserReturnsCanAccess() throws IOException, ServletException {
     Mockito.when(mockSession.getAttribute("user")).thenReturn("amejia");
 
-    Mockito.when(mockUserStore.getUsersSize()).thenReturn(0);
-    Mockito.when(mockConversationStore.getConversationsSize()).thenReturn(0);
-    Mockito.when(mockMessageStore.getMessagesSize()).thenReturn(0);
+    Mockito.when(mockUserStore.getNumUsers()).thenReturn(0);
+    Mockito.when(mockConversationStore.getNumConversations()).thenReturn(0);
+    Mockito.when(mockMessageStore.getNumMessages()).thenReturn(0);
     
     adminServlet.doGet(mockRequest, mockResponse);
 
@@ -89,9 +89,9 @@ public class AdminServletTest {
   public void testDoGet_ZeroUsersConvosMessagesReturnsZero() throws IOException, ServletException {
     Mockito.when(mockSession.getAttribute("user")).thenReturn("amejia");
 
-    Mockito.when(mockUserStore.getUsersSize()).thenReturn(0);
-    Mockito.when(mockConversationStore.getConversationsSize()).thenReturn(0);
-    Mockito.when(mockMessageStore.getMessagesSize()).thenReturn(0);
+    Mockito.when(mockUserStore.getNumUsers()).thenReturn(0);
+    Mockito.when(mockConversationStore.getNumConversations()).thenReturn(0);
+    Mockito.when(mockMessageStore.getNumMessages()).thenReturn(0);
     
     adminServlet.doGet(mockRequest, mockResponse);
 

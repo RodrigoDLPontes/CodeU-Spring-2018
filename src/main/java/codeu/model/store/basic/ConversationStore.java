@@ -101,7 +101,7 @@ public class ConversationStore {
     this.conversations = conversations;
   }
 
-  public int getConversationsSize() {
+  public int getNumConversations() {
     return conversations.size();
   }
 }

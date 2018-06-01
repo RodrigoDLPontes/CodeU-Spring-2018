@@ -17,7 +17,6 @@ public class AdminServlet extends HttpServlet {
   private UserStore userStore;
   private ConversationStore conversationStore;
   private MessageStore messageStore;
-  boolean isRegistered, isAdmin;
 
   /**
    * Set up state for handling admin-related requests. This method is only called when
@@ -63,22 +62,13 @@ public class AdminServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
     String username = (String) request.getSession().getAttribute("user");
+    boolean isRegistered = (username != null);
+    boolean isAdmin = isAdmin(username);
 
-    if (username == null) {
-      isRegistered = false;
-      isAdmin = false;
-    } else {
-      isRegistered = true;
-
-      if (!isAdmin(username)) {
-        isAdmin = false;
-      } else {
-        isAdmin = true;
-
-        request.setAttribute("num_users", userStore.getUsersSize());
-        request.setAttribute("num_convos", conversationStore.getConversationsSize());
-        request.setAttribute("num_messages", messageStore.getMessagesSize());
-      }
+    if (isAdmin) {
+      request.setAttribute("num_users", userStore.getNumUsers());
+      request.setAttribute("num_convos", conversationStore.getNumConversations());
+      request.setAttribute("num_messages", messageStore.getNumMessages());
     }
 
     request.setAttribute("is_registered", isRegistered);
@@ -96,6 +86,6 @@ public class AdminServlet extends HttpServlet {
     admins.add("quinykb");
     admins.add("Israel");
     
-    return admins.contains(username);
+    return username != null && admins.contains(username);
   }
 }
