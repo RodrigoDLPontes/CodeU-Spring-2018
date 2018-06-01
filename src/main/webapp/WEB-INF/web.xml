@@ -50,6 +50,7 @@ limitations under the License.
     <servlet-name>RegisterServlet</servlet-name>
     <url-pattern>/register</url-pattern>
   </servlet-mapping>
+<<<<<<< HEAD
   <!--- -->
   <servlet>
       <servlet-name>UserProfileServlet</servlet-name>
@@ -61,3 +62,6 @@ limitations under the License.
     </servlet-mapping>
  <!-- -->
 </web-app>
+=======
+</web-app>
+>>>>>>> master

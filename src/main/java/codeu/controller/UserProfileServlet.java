@@ -6,10 +6,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+<<<<<<< HEAD
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import codeu.model.data.User;
 import codeu.model.store.basic.UserStore;
+=======
+>>>>>>> master
 
 /**
  * Servlet implementation class UserProfileServlet
@@ -17,6 +20,7 @@ import codeu.model.store.basic.UserStore;
 @WebServlet("/UserProfileServlet")
 public class UserProfileServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+<<<<<<< HEAD
 
 	public UserProfileServlet() {
 		super();
@@ -71,6 +75,31 @@ public class UserProfileServlet extends HttpServlet {
 
 		}
 
+=======
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public UserProfileServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+>>>>>>> master
 	}
 
 }
