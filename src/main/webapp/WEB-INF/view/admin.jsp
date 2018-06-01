@@ -1,7 +1,3 @@
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.LinkedHashMap" %>
-<%@ page import="codeu.controller.AdminServlet" %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,29 +20,22 @@
   <div id="container">
     <h1>Admin Page</h1>
 
-    <% AdminServlet.LoginState loginState = (AdminServlet.LoginState) request.getAttribute("login_state");
+    <% Boolean isRegistered = (Boolean) request.getAttribute("is_registered");
+      Boolean isAdmin = (Boolean) request.getAttribute("is_admin");
 
-       switch (loginState) {
-        case UNREGISTERED:
-          response.sendRedirect("/login");
-          break;
-        case REGISTERED:
-    %>    
-
-          <h2>You are not authorized to view this page</h2>
-
-    <%    break; 
-        case ADMIN:
-          Map<String, String> stats = (Map<String, String>) request.getAttribute("stats"); 
+      if (isAdmin) {
     %>
-          <ul>
+      <ul>
 
-            <% for (String key : stats.keySet()) { %>
-              <li><%= key %>: <%= stats.get(key) %></li>
-            <% } %>
+        <li>Users: <%= request.getAttribute("num_users") %></li>
+        <li>Conversations: <%= request.getAttribute("num_convos") %></li>
+        <li>Messages: <%= request.getAttribute("num_messages") %></li>
 
-          </ul>
-    <%    break;
+      </ul>
+    <% } else if (isRegistered) { %>
+      <h2>You are not authorized to view this page</h2>
+    <% } else { 
+        response.sendRedirect("/login");
       }
     %>
   </div>

@@ -1,24 +1,14 @@
 package codeu.controller;
 
-import codeu.model.data.Conversation;
-import codeu.model.data.Message;
-import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
-import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.LinkedHashMap;
 
 /** Servlet class responsible for the admin page. */
 public class AdminServlet extends HttpServlet {
@@ -27,11 +17,7 @@ public class AdminServlet extends HttpServlet {
   private UserStore userStore;
   private ConversationStore conversationStore;
   private MessageStore messageStore;
-  LinkedHashMap<String, String> stats;
-
-  public enum LoginState {
-    REGISTERED, UNREGISTERED, ADMIN
-  }
+  boolean isRegistered, isAdmin;
 
   /**
    * Set up state for handling admin-related requests. This method is only called when
@@ -79,20 +65,24 @@ public class AdminServlet extends HttpServlet {
     String username = (String) request.getSession().getAttribute("user");
 
     if (username == null) {
-      request.setAttribute("login_state", LoginState.UNREGISTERED);
-    } else if (!isAdmin(username)) {
-      request.setAttribute("login_state", LoginState.REGISTERED);
+      isRegistered = false;
+      isAdmin = false;
     } else {
-      request.setAttribute("login_state", LoginState.ADMIN);
+      isRegistered = true;
 
-      stats = new LinkedHashMap<>();
+      if (!isAdmin(username)) {
+        isAdmin = false;
+      } else {
+        isAdmin = true;
 
-      stats.put("Number of users", "" + userStore.size());
-      stats.put("Number of conversations", "" + conversationStore.size());
-      stats.put("Number of messages", "" + messageStore.size());
-
-      request.setAttribute("stats", stats);
+        request.setAttribute("num_users", userStore.getUsersSize());
+        request.setAttribute("num_convos", conversationStore.getConversationsSize());
+        request.setAttribute("num_messages", messageStore.getMessagesSize());
+      }
     }
+
+    request.setAttribute("is_registered", isRegistered);
+    request.setAttribute("is_admin", isAdmin);
 
     request.getRequestDispatcher("/WEB-INF/view/admin.jsp").forward(request, response);
     return;
@@ -107,9 +97,5 @@ public class AdminServlet extends HttpServlet {
     admins.add("Israel");
     
     return admins.contains(username);
-  }
-
-  public LinkedHashMap<String, String> getStats() {
-    return stats;
   }
 }

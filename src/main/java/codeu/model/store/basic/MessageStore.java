@@ -90,7 +90,7 @@ public class MessageStore {
     this.messages = messages;
   }
 
-  public int size() {
+  public int getMessagesSize() {
     return messages.size();
   }
 }
