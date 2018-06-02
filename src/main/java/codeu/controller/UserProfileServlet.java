@@ -13,8 +13,6 @@ import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 
-
-
 /**
  * Servlet implementation class UserProfileServlet
  */
@@ -22,18 +20,18 @@ import codeu.model.store.basic.UserStore;
 public class UserProfileServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	  /** Store class that gives access to Users. */
-	  private UserStore userStore;
-	  @Override
-	  public void init() throws ServletException {
-	    super.init();
-	    setUserStore(UserStore.getInstance());
-	  }
-	  
-	  void setUserStore(UserStore userStore) {
-		    this.userStore = userStore;
-		  }
+	/** Store class that gives access to Users. */
+	private UserStore userStore;
 
+	@Override
+	public void init() throws ServletException {
+		super.init();
+		setUserStore(UserStore.getInstance());
+	}
+
+	void setUserStore(UserStore userStore) {
+		this.userStore = userStore;
+	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
@@ -43,24 +41,22 @@ public class UserProfileServlet extends HttpServlet {
 		request.getRequestDispatcher("/WEB-INF/view/userprofile.jsp").forward(request, response);
 	}
 
-	
-		public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-			String requestUrl = request.getRequestURI();
-			String Profile = requestUrl.substring("/userprofile/".length());
-			request.setAttribute("user", Profile);
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		String requestUrl = request.getRequestURI();
+		String Profile = requestUrl.substring("/userprofile/".length());
+		request.setAttribute("user", Profile);
 
-			String User = (String) request.getSession().getAttribute("user");
-			if (User != null) {
-				String AboutMe = request.getParameter("aboutme");
-				// this removes any HTML from the message content
-				String cleanedAboutMe = Jsoup.clean(AboutMe, Whitelist.none());
-				 response.getOutputStream().println("<h1>" + cleanedAboutMe + "</h1>");
-				System.out.println(cleanedAboutMe);
-				//response.sendRedirect("/userprofile/" + Profile);
-				// request.getRequestDispatcher("/userprofile/"+ Profile).forward(request,
-				// response);
-				return;
-
+		String User = (String) request.getSession().getAttribute("user");
+		if (User != null) {
+			String AboutMe = request.getParameter("aboutme");
+			// this removes any HTML from the message content
+			String cleanedAboutMe = Jsoup.clean(AboutMe, Whitelist.none());
+			response.getOutputStream().println("<h1>" + cleanedAboutMe + "</h1>");
+			System.out.println(cleanedAboutMe);
+			// response.sendRedirect("/userprofile/" + Profile);
+			// request.getRequestDispatcher("/userprofile/"+ Profile).forward(request,
+			// response);
+			return;
 
 		}
 	}
