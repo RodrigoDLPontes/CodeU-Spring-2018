@@ -15,19 +15,4 @@ public class AboutMeMessageStore {
 	   * Returns the singleton instance of AboutMeMessageStore that should be shared between all servlet
 	   * classes. Do not call this function from a test; use getTestInstance() instead.
 	   */
-	  public static AboutMeMessageStore getInstance() {
-	    if (instance == null) {
-	      instance = new AboutMeMessageStore(PersistentStorageAgent.getInstance());
-	    }
-	    return instance;
-	  }
-	  /**
-	   * Instance getter function used for testing. Supply a mock for PersistentStorageAgent.
-	   *
-	   * @param persistentStorageAgent a mock used for testing
-	   */
-	  public static AboutMeMessageStore  getTestInstance(PersistentStorageAgent persistentStorageAgent) {
-	    return new AboutMeMessageStore (persistentStorageAgent);
-	  }
-
 }
