@@ -15,6 +15,7 @@
 package codeu.model.data;
 
 import java.time.Instant;
+
 import java.util.UUID;
 
 public class AboutMeMessage {
@@ -43,22 +44,24 @@ public class AboutMeMessage {
 		this.creation = creation;
 
 	}
+
 	/** Returns the ID of this AboutMeMessage. */
-	  public UUID getId() {
-	    return id;
-	  }
-	  /** Returns the ID of the User who sent this AboutMeMessage. */
-	  public UUID getAuthorId() {
-	    return author;
-	  }
+	public UUID getId() {
+		return id;
+	}
 
-	  /** Returns the text content of this AboutMeMessage. */
-	  public String getContent() {
-	    return content;
-	  }
+	/** Returns the ID of the User who sent this AboutMeMessage. */
+	public UUID getAuthorId() {
+		return author;
+	}
 
-	  /** Returns the creation time of this AboutMeMessage. */
-	  public Instant getCreationTime() {
-	    return creation;
-	  }
+	/** Returns the text content of this AboutMeMessage. */
+	public String getContent() {
+		return content;
+	}
+
+	/** Returns the creation time of this AboutMeMessage. */
+	public Instant getCreationTime() {
+		return creation;
+	}
 }

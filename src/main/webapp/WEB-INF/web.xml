@@ -65,6 +65,7 @@ limitations under the License.
     <servlet-name>RegisterServlet</servlet-name>
     <url-pattern>/register</url-pattern>
   </servlet-mapping>
+
   <servlet>
     <servlet-name>UserProfileServlet</servlet-name>
     <servlet-class>codeu.controller.UserProfileServlet</servlet-class>
@@ -76,5 +77,15 @@ limitations under the License.
   </servlet-mapping>
 
 
+
+  <servlet>
+    <servlet-name>AdminServlet</servlet-name>
+    <servlet-class>codeu.controller.AdminServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>AdminServlet</servlet-name>
+    <url-pattern>/admin</url-pattern>
+  </servlet-mapping>
 
 </web-app>

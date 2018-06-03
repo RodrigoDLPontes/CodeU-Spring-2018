@@ -14,6 +14,7 @@
 
 package codeu.model.store.persistence;
 
+import codeu.model.data.AboutMeMessage;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
@@ -148,6 +149,45 @@ public class PersistentDataStore {
 
     return messages;
   }
+  
+
+  /**
+   * Loads all AboutMeMessage objects from the Datastore service and returns them in a List, sorted in
+   * ascending order by creation time.
+   *
+   * @throws PersistentDataStoreException if an error was detected during the load from the
+   *     Datastore service
+   */
+  public List<AboutMeMessage> loadAboutMeMessages() throws PersistentDataStoreException {
+
+    List<AboutMeMessage> aboutmemessages = new ArrayList<>();
+
+    // Retrieve all messages from the datastore.
+    Query query = new Query("chat-aboutme").addSort("creation_time", SortDirection.ASCENDING);
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        UUID authorUuid = UUID.fromString((String) entity.getProperty("author_uuid"));
+        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
+        String content = (String) entity.getProperty("content");
+        AboutMeMessage aboutmemessage = new  AboutMeMessage(uuid, authorUuid, content, creationTime);
+        aboutmemessages.add(aboutmemessage);
+      } catch (Exception e) {
+        // In a production environment, errors should be very rare. Errors which may
+        // occur include network errors, Datastore service errors, authorization errors,
+        // database entity definition mismatches, or service mismatches.
+        throw new PersistentDataStoreException(e);
+      }
+    }
+
+    return  aboutmemessages;
+  }
+  
+  
+  
+  
 
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
@@ -179,5 +219,16 @@ public class PersistentDataStore {
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
     datastore.put(conversationEntity);
   }
+  /** Write a AboutMeMessage object to the Datastore service. */
+  public void writeThrough(AboutMeMessage aboutmemessage) {
+    Entity aboutmemessageEntity = new Entity("chat-aboutme", aboutmemessage.getId().toString());
+    aboutmemessageEntity.setProperty("uuid",aboutmemessage.getId().toString());
+    aboutmemessageEntity.setProperty("author_uuid", aboutmemessage.getAuthorId().toString());
+    aboutmemessageEntity.setProperty("content", aboutmemessage.getContent());
+    aboutmemessageEntity.setProperty("creation_time", aboutmemessage.getCreationTime().toString());
+    datastore.put(aboutmemessageEntity);
+  }
+
+
 }
 

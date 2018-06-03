@@ -84,7 +84,10 @@ public class LoginServlet extends HttpServlet {
     }
 
     request.getSession().setAttribute("user", username);
+
    response.sendRedirect("/conversations");
-   // response.sendRedirect("/WEB-INF/view/userprofile.jsp") ;
+
+    
+
   }
 }

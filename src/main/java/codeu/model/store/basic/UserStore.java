@@ -15,6 +15,7 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.User;
+
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
@@ -125,6 +126,10 @@ public class UserStore {
    */
   public void setUsers(List<User> users) {
     this.users = users;
+  }
+
+  public int getNumUsers() {
+    return users.size();
   }
 }
 
