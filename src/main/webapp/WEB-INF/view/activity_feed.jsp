@@ -34,10 +34,10 @@
     %>
       <ul class="mdl-list">
     <%
-      for(Activity activity : activities){
+      for (int i = activities.size()-1; i >= 0; i--) {
     %>
       
-      <li><%= activity.toString() %> </li>
+      <li><%= activities.get(i).toString() %> </li>
     <%
       }
     %>
