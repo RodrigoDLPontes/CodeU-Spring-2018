@@ -16,11 +16,14 @@ package codeu.controller;
 
 import codeu.model.data.Conversation;
 import codeu.model.data.User;
+import codeu.model.data.Activity;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.UserStore;
+import codeu.model.store.basic.ActivityStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -35,6 +38,9 @@ public class ConversationServlet extends HttpServlet {
 
   /** Store class that gives access to Conversations. */
   private ConversationStore conversationStore;
+  
+  /** Store class that gives access to Activities. */
+  private ActivityStore activityStore;
 
   /**
    * Set up state for handling conversation-related requests. This method is only called when
@@ -45,8 +51,12 @@ public class ConversationServlet extends HttpServlet {
     super.init();
     setUserStore(UserStore.getInstance());
     setConversationStore(ConversationStore.getInstance());
+    setActivityStore(ActivityStore.getInstance());
   }
-
+  
+  void setActivityStore(ActivityStore activityStore) {
+	  this.activityStore = activityStore;
+  }
   /**
    * Sets the UserStore used by this servlet. This function provides a common setup method for use
    * by the test framework or the servlet's init() function.
@@ -115,8 +125,15 @@ public class ConversationServlet extends HttpServlet {
 
     Conversation conversation =
         new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
-
+    
+    List<String> attributes = new ArrayList<>();
+    attributes.add(username);
+    attributes.add(conversation.getTitle());
+    Activity activity = 
+    	new Activity(UUID.randomUUID(), conversation.getCreationTime(), "conversation", attributes);
+    
     conversationStore.addConversation(conversation);
+    activityStore.addActivity(activity);
     response.sendRedirect("/chat/" + conversationTitle);
   }
 }
