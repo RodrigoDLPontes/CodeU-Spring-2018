@@ -23,8 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet class responsible for the login page. */
 public class LogoutServlet extends HttpServlet {
   /**
-   * This function fires when a user requests the /login URL. It simply forwards the request to
-   * login.jsp.
+   * This function fires when a user requests the /logout URL.  It makes sure no user is
+   * registered and redirects to "/".
    */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
