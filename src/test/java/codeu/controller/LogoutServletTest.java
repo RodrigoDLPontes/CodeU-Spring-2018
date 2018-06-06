@@ -50,7 +50,6 @@ public class LogoutServletTest {
 	  mockSession.setAttribute("user", "fluffy");
 	  Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
 	  logoutServlet.doGet(mockRequest, mockResponse);
-      Mockito.verify(mockResponse).sendRedirect("/");
       Mockito.verify(mockSession).setAttribute("user", null);
   }
 }
