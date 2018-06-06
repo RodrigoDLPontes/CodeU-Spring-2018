@@ -56,8 +56,6 @@ public class AboutMeMessageStore {
 		aboutmemessages = new ArrayList<>();
 	}
 
-
-
 	/**
 	 * Add a new message to the current set of messages known to the application.
 	 */
@@ -65,32 +63,28 @@ public class AboutMeMessageStore {
 		aboutmemessages.add(aboutmemessage);
 		persistentStorageAgent.writeThrough(aboutmemessage);
 	}
-	
+
 	/** Access the current set of AboutMeMessages known to the application. */
-	  public List<AboutMeMessage> getAllAboutMeMessages() {
-		  
-	    return aboutmemessages;
-	  }
-	  
-	
-	 
+	public List<AboutMeMessage> getAllAboutMeMessages() {
+
+		return aboutmemessages;
+	}
+
 	/** Access the current set of AboutMeMessages given a unique user . */
-	  
-	  public List<AboutMeMessage> getAboutMeMessagesByUser(UUID authorId) {
 
-	    List<AboutMeMessage> aboutMeMessagesByUser = new ArrayList<>();
+	public List<AboutMeMessage> getAboutMeMessagesByUser(UUID authorId) {
 
-	    for (AboutMeMessage aboutmemessage : aboutmemessages) {
-	      if (aboutmemessage.getAuthorId().equals(authorId)) {
-	    	  aboutMeMessagesByUser.add(aboutmemessage);
-	      }
-	    }
+		List<AboutMeMessage> aboutMeMessagesByUser = new ArrayList<>();
 
-	    return aboutMeMessagesByUser;
-	  }
-	  
+		for (AboutMeMessage aboutmemessage : aboutmemessages) {
+			if (aboutmemessage.getAuthorId().equals(authorId)) {
+				aboutMeMessagesByUser.add(aboutmemessage);
+			}
+		}
 
-	  
+		return aboutMeMessagesByUser;
+	}
+
 	/** Sets the List of AboutMeMessage stored by this ConversationStore. */
 	public void setAboutMeMessages(List<AboutMeMessage> aboutmemessages) {
 		this.aboutmemessages = aboutmemessages;

@@ -14,8 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 --%>
 <%@ page import="java.util.List"%>
-<%@ page import="codeu.model.data.Conversation"%>
-<%@ page import="codeu.controller.UserProfileServlet"%>
+<%@ page import="codeu.model.data.AboutMeMessage"%>
+<%@ page import="codeu.model.data.User"%>
+<%@ page import="codeu.model.store.basic.UserStore"%>
+<%
+	// Creats a list of all   to all aboutmemessages
+	List<AboutMeMessage> aboutmemessages = (List<AboutMeMessage>) request.getAttribute("aboutmemessage");
+%>
 
 <!DOCTYPE html>
 <html>
@@ -24,44 +29,92 @@ limitations under the License.
 <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-	<% String userUrl = "/userprofile/"+  request.getSession().getAttribute("user"); %>
+	<%
+	   /*** The unique Url that is generated for each Users about me page  */
+		String userUrl = "/userprofile/" + request.getSession().getAttribute("user"); 
+		// This is the currrent user that is logged.in
+		String currenLoginedInUser = request.getSession().getAttribute("user").toString();
+		// This is the  user  who's profile is getting looked at by another user
+		String viewAnotherUserProfile = request.getAttribute("user").toString();
+	%>
 	<nav>
 		<a id="navTitle" href="/">CodeU Chat App</a> <a href="/conversations">Conversations</a>
-		<% if(request.getSession().getAttribute("user") != null){ %>
-		<a>Hello <%= request.getSession().getAttribute("user") %>!
-		</a> <a href="<%= userUrl %>"> About <%= request.getSession().getAttribute("user")%></a>
-		<% } else{ %>
+		<%
+			if (request.getSession().getAttribute("user") != null) {
+		%>
+		<a>Hello <%=request.getSession().getAttribute("user")%>!
+		</a> <a href="<%=userUrl%>"> About <%=request.getSession().getAttribute("user")%></a>
+		<%
+			} else {
+		%>
 		<a href="/login">Login</a> <a href="/userprofile/">AboutMe</a>
-		<% } %>
+		<%
+			}
+		%>
 		<a href="/about.jsp">About</a>
 	</nav>
-
-
-
-
-	<!--  Checks if the user is logged  in but Viewing thier own page and alllows them to edit it   -->
-	<%  if ((request.getSession().getAttribute("user") != null) && (request.getSession().getAttribute("user").equals(request.getAttribute("user")))) {%>
-	<h1 id="profileNameCenter">
-		<%= request.getAttribute("user") %>
-		you can edit your profile
-	</h1>
-	<form action="" <%= userUrl %>" method="POST">
-		<input type="text" name="aboutme"> <br />
-		  <br/><br/>
-  <input type="submit" value="Submit">
-      </form>
-
-		
-		<!--  Checks if the user is logged  and View come else page   -->
-		<% } else if(request.getSession().getAttribute("user") != null)  { %>
-		<h1 id="profileNameCenter">
-			<%= request.getAttribute("user") %>'s profile
-		</h1>
-		
-		<!--  Direcet user to login so they can view profiles   -->
-		<% } else { %>
-		<a href="/login">Login to view your profile</a>
-		<% } %>
 	
+	<!--  Checks if the user is logged  in but Viewing thier own page and alllows them to edit it   -->
+	<%
+		if ((request.getSession().getAttribute("user") != null)
+				&& (request.getSession().getAttribute("user").equals(request.getAttribute("user")))) {
+	%>
+	<h1 id="profileNameCenter">
+		<%=request.getAttribute("user")%>
+		tell us all about yourself
+	</h1>
+
+	<ul class="mdl-list">
+		<%
+			for (AboutMeMessage aboutmemessage : aboutmemessages) {
+					String author = UserStore.getInstance().getUser(aboutmemessage.getAuthorId()).getName();
+					if (author.equals(currenLoginedInUser)) {
+		%>
+		<li><strong> <%=author%>:
+		</strong> </a> <%=aboutmemessage.getContent()%></li>
+		<%
+			}
+		%>
+		<%
+			}
+		%>
+	</ul>
+	<form action="" <%=userUrl%>" method="POST">
+		<input type="text" name="aboutme"> <br /> <br /> <br /> <input
+			type="submit" value="Submit">
+	</form>
+
+
+	<!--  Checks if the user is logged  and View come else page   -->
+	<%
+		} else if (request.getSession().getAttribute("user") != null) {
+	%>
+	<h1 id="profileNameCenter">
+		<%=request.getAttribute("user")%>'s profile Read all about them
+	</h1>
+
+	<ul class="mdl-list">
+		<%
+			for (AboutMeMessage aboutmemessage : aboutmemessages) {
+					String author = UserStore.getInstance().getUser(aboutmemessage.getAuthorId()).getName();
+					if (author.equals(viewAnotherUserProfile)) {
+		%>
+		<li><strong> <%=author%>:
+		</strong> </a> <%=aboutmemessage.getContent()%></li>
+		<%
+			}
+		%>
+		<%
+			}
+		%>
+	</ul>
+	<!--  Direcet user to login so they can view profiles   -->
+	<%
+		} else {
+	%>
+	<a href="/login">Login to view your profile</a>
+	<%
+		}
+	%>
 </body>
 </html>
