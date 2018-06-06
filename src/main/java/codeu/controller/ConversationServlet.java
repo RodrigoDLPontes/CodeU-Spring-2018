@@ -133,7 +133,7 @@ public class ConversationServlet extends HttpServlet {
     	new Activity(UUID.randomUUID(), conversation.getCreationTime(), "conversation", attributes);
     
     conversationStore.addConversation(conversation);
-    activityStore.addActivity(activity);
+    //activityStore.addActivity(activity);
     response.sendRedirect("/chat/" + conversationTitle);
   }
 }
