@@ -54,7 +54,7 @@
 
       <hr/>
     <% } %>
-    <h1> Israel is Goat </h1>
+   
     <h1>Conversations</h1>
 
     <%
