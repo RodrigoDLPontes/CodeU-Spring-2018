@@ -187,7 +187,7 @@ public class ChatServlet extends HttpServlet {
     	new Activity(UUID.randomUUID(), message.getCreationTime(), "message", attributes);
     
     messageStore.addMessage(message);
-    activityStore.addActivity(activity);
+    activityStore.addActivity(activity); 
     // redirect to a GET request
     response.sendRedirect("/chat/" + conversationTitle);
   }

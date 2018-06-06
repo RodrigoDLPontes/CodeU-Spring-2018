@@ -18,7 +18,7 @@
 Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
 		  /*** The unique Url that is generated for each Users about me page  */
-			String userUrl = "/userprofile/" + request.getSession().getAttribute("user"); 
+		
 %>
 
 <!DOCTYPE html>
@@ -45,22 +45,16 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 </head>
 <body onload="scrollChat()">
 
-  <nav>
-		<a id="navTitle" href="/">CodeU Chat App</a> <a href="/conversations">Conversations</a>
-		<%
-			if (request.getSession().getAttribute("user") != null) {
-		%>
-		<a>Hello <%=request.getSession().getAttribute("user")%>!
-		</a> <a href="<%=userUrl%>"> About <%=request.getSession().getAttribute("user")%></a>
-		<%
-			} else {
-		%>
-		<a href="/login">Login</a> <a href="/userprofile/">AboutMe</a>
-		<%
-			}
-		%>
-		<a href="/about.jsp">About</a>
-	</nav>
+	<nav>
+	    <a id="navTitle" href="/">CodeU Chat App</a>
+	    <a href="/conversations">Conversations</a>
+	    <% if(request.getSession().getAttribute("user") != null){ %>
+	      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
+	    <% } else{ %>
+	      <a href="/login">Login</a>
+	    <% } %>
+	    <a href="/about.jsp">About</a>
+	  </nav>
 
   <div id="container">
 
