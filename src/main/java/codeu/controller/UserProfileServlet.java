@@ -1,6 +1,8 @@
 package codeu.controller;
 
+
 import codeu.model.data.AboutMeMessage;
+
 
 import codeu.model.data.User;
 import codeu.model.store.basic.AboutMeMessageStore;
@@ -9,6 +11,8 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,12 +23,15 @@ import org.jsoup.safety.Whitelist;
 import org.kefirsf.bb.BBProcessorFactory;
 import org.kefirsf.bb.TextProcessor;
 
+
+
 /**
  * Servlet implementation class UserProfileServlet
  */
 @WebServlet("/UserProfileServlet")
 public class UserProfileServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+
 
 	/** Store class that gives access to Users. */
 	private UserStore userStore;
@@ -140,4 +147,5 @@ public class UserProfileServlet extends HttpServlet {
 
 		}
 	}
+
 }

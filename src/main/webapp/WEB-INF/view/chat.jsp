@@ -45,6 +45,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 </head>
 <body onload="scrollChat()">
 
+
 	<nav>
 	    <a id="navTitle" href="/">CodeU Chat App</a>
 	    <a href="/conversations">Conversations</a>
@@ -55,6 +56,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 	    <% } %>
 	    <a href="/about.jsp">About</a>
 	  </nav>
+
 
   <div id="container">
 
@@ -69,10 +71,14 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       for (Message message : messages) {
         String author = UserStore.getInstance()
           .getUser(message.getAuthorId()).getName();
+
         String url = "/userprofile/"+ author;
     %>
 
       <li><strong> <a href= <%= url %>> <%= author %>:</strong> </a>  <%= message.getContent() %></li>
+  
+   
+    
     <%
       }
     %>
