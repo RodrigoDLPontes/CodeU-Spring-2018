@@ -130,7 +130,7 @@ public class ConversationServlet extends HttpServlet {
     attributes.add(username);
     attributes.add(conversation.getTitle());
     Activity activity = 
-    	new Activity(conversation.getId(), conversation.getCreationTime(), "conversation", attributes);
+    	new Activity(UUID.randomUUID(), conversation.getCreationTime(), "conversation", attributes);
     
     conversationStore.addConversation(conversation);
     activityStore.addActivity(activity);

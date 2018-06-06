@@ -44,9 +44,16 @@ public class Activity {
 	
 	public String toString(){
 		if (this.type.equals("conversation")) {
+			// conversation attribute indices: 0) username, 1) name of conversation
 			DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG).withLocale(Locale.US).withZone( ZoneId.systemDefault() );
-			return formatter.format(this.creation) + " " + this.attributes.get(0) + " created a new conversation: " + this.attributes.get(1);
+			return formatter.format(this.creation) + " " + this.attributes.get(0) + " created a new conversation: " + this.attributes.get(1);	
 		}
+		else if (this.type.equals("message")){
+			// message attributes indices: 0) username, 1) name of conversation, 2) message detail
+			DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG).withLocale(Locale.US).withZone( ZoneId.systemDefault() );
+			return formatter.format(this.creation) + " " + this.attributes.get(0) + " sent a message in " + this.attributes.get(1) + ": " + this.attributes.get(2);	
+		}
+		
 		return null;
 		
 	}
