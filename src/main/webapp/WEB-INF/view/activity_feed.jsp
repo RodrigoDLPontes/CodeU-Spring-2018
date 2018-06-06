@@ -1,4 +1,5 @@
 <%@ page import="java.util.List" %>
+<%@ page import="codeu.model.data.Activity" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,23 +21,23 @@
   </nav>
   <div id="container">
 
-    <h2>Activity</h2>
+    <h2>Activities</h2>
     <%
-    List<String> activities =
-      (List<String>) request.getAttribute("activities");
+    List<Activity> activities =
+      (List<Activity>) request.getAttribute("activities");
     if(activities == null || activities.isEmpty()){
     %>
-      <p>Create a conversation to get started.</p>
+      <p>Here is what is happening on your feed.</p>
     <%
     }
     else{
     %>
       <ul class="mdl-list">
     <%
-      for(String activity : activities){
+      for(Activity activity : activities){
     %>
       
-      <li><%= activity %> </li>
+      <li><%= activity.toString() %> </li>
     <%
       }
     %>
