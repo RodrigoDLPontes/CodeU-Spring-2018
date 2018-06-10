@@ -70,12 +70,16 @@ public class UserStore {
    * @return null if username does not match any existing User.
    */
   public User getUser(String username) {
+    long comparisons = 0;
     // This approach will be pretty slow if we have many users.
     for (User user : users) {
+      comparisons++;
       if (user.getName().equals(username)) {
+        System.out.println("STATS: UserStore getUser: " + comparisons + " comparisons");
         return user;
       }
     }
+    System.out.println("STATS: UserStore getUser(username): " + comparisons + " comparisons");
     return null;
   }
 
@@ -85,11 +89,15 @@ public class UserStore {
    * @return null if the UUID does not match any existing User.
    */
   public User getUser(UUID id) {
+    long comparisons = 0;
     for (User user : users) {
+      comparisons++;
       if (user.getId().equals(id)) {
+        System.out.println("STATS: UserStore getUser(id): " + comparisons + " comparisons");
         return user;
       }
     }
+    System.out.println("STATS: UserStore getUser(id): " + comparisons + " comparisons");
     return null;
   }
 
@@ -111,11 +119,15 @@ public class UserStore {
 
   /** Return true if the given username is known to the application. */
   public boolean isUserRegistered(String username) {
+    long comparisons = 0;
     for (User user : users) {
+      comparisons++;
       if (user.getName().equals(username)) {
+        System.out.println("STATS: UserStore isUserRegistered: " + comparisons + " comparisons");
         return true;
       }
     }
+    System.out.println("STATS: UserStore isUserRegistered: " + comparisons + " comparisons");
     return false;
   }
 

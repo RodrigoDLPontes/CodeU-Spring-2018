@@ -70,9 +70,15 @@ public class ConversationServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
+    long startTime = System.currentTimeMillis();
+
     List<Conversation> conversations = conversationStore.getAllConversations();
     request.setAttribute("conversations", conversations);
     request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
+
+    // print the elapsed time for the method call
+    System.out.println("STATS: ConversationServlet doGet: " + (System.currentTimeMillis() -
+        startTime) + "ms");
   }
 
   /**
@@ -83,6 +89,7 @@ public class ConversationServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
+    long startTime = System.currentTimeMillis();
 
     String username = (String) request.getSession().getAttribute("user");
     if (username == null) {
@@ -118,5 +125,9 @@ public class ConversationServlet extends HttpServlet {
 
     conversationStore.addConversation(conversation);
     response.sendRedirect("/chat/" + conversationTitle);
+
+    // print the elapsed time for the method call
+    System.out.println("STATS: ConversationServlet doPost: " + (System.currentTimeMillis() -
+        startTime) + "ms");
   }
 }

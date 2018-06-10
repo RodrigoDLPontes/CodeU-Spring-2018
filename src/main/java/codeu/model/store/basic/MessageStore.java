@@ -73,14 +73,19 @@ public class MessageStore {
 
   /** Access the current set of Messages within the given Conversation. */
   public List<Message> getMessagesInConversation(UUID conversationId) {
+    long comparisons = 0;
 
     List<Message> messagesInConversation = new ArrayList<>();
 
     for (Message message : messages) {
+      comparisons++;
       if (message.getConversationId().equals(conversationId)) {
         messagesInConversation.add(message);
       }
     }
+
+    System.out.println("STATS: MessageStore getMessagesInConversation: " + comparisons +
+        " comparisons");
 
     return messagesInConversation;
   }

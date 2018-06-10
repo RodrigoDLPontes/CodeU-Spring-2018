@@ -54,6 +54,7 @@ public class PersistentDataStore {
    *     Datastore service
    */
   public List<User> loadUsers() throws PersistentDataStoreException {
+    long startTime = System.currentTimeMillis();
 
     List<User> users = new ArrayList<>();
 
@@ -77,6 +78,10 @@ public class PersistentDataStore {
       }
     }
 
+    // print the elapsed time for the method call
+    System.out.println("STATS: PersistentDataStore loadUsers: " + (System.currentTimeMillis() -
+        startTime) + "ms");
+
     return users;
   }
 
@@ -88,6 +93,7 @@ public class PersistentDataStore {
    *     Datastore service
    */
   public List<Conversation> loadConversations() throws PersistentDataStoreException {
+    long startTime = System.currentTimeMillis();
 
     List<Conversation> conversations = new ArrayList<>();
 
@@ -111,6 +117,10 @@ public class PersistentDataStore {
       }
     }
 
+    // print the elapsed time for the method call
+    System.out.println("STATS: PersistentDataStore loadConversations: " + (System.currentTimeMillis
+        () - startTime) + "ms");
+
     return conversations;
   }
 
@@ -122,6 +132,7 @@ public class PersistentDataStore {
    *     Datastore service
    */
   public List<Message> loadMessages() throws PersistentDataStoreException {
+    long startTime = System.currentTimeMillis();
 
     List<Message> messages = new ArrayList<>();
 
@@ -146,21 +157,33 @@ public class PersistentDataStore {
       }
     }
 
+    // print the elapsed time for the method call
+    System.out.println("STATS: PersistentDataStore loadMessages: " + (System.currentTimeMillis() -
+        startTime) + "ms");
+
     return messages;
   }
 
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
+    long startTime = System.currentTimeMillis();
+
     Entity userEntity = new Entity("chat-users", user.getId().toString());
     userEntity.setProperty("uuid", user.getId().toString());
     userEntity.setProperty("username", user.getName());
     userEntity.setProperty("password_hash", user.getPasswordHash());
     userEntity.setProperty("creation_time", user.getCreationTime().toString());
     datastore.put(userEntity);
+
+    // print the elapsed time for the method call
+    System.out.println("STATS PersistentDataStore writeThrough(User): " +
+        (System.currentTimeMillis() - startTime) + "ms");
   }
 
   /** Write a Message object to the Datastore service. */
   public void writeThrough(Message message) {
+    long startTime = System.currentTimeMillis();
+
     Entity messageEntity = new Entity("chat-messages", message.getId().toString());
     messageEntity.setProperty("uuid", message.getId().toString());
     messageEntity.setProperty("conv_uuid", message.getConversationId().toString());
@@ -168,16 +191,26 @@ public class PersistentDataStore {
     messageEntity.setProperty("content", message.getContent());
     messageEntity.setProperty("creation_time", message.getCreationTime().toString());
     datastore.put(messageEntity);
+
+    // print the elapsed time for the method call
+    System.out.println("STATS: PersistentDataStore writeThrough(Message): " +
+        (System.currentTimeMillis() - startTime) + "ms");
   }
 
   /** Write a Conversation object to the Datastore service. */
   public void writeThrough(Conversation conversation) {
+    long startTime = System.currentTimeMillis();
+
     Entity conversationEntity = new Entity("chat-conversations", conversation.getId().toString());
     conversationEntity.setProperty("uuid", conversation.getId().toString());
     conversationEntity.setProperty("owner_uuid", conversation.getOwnerId().toString());
     conversationEntity.setProperty("title", conversation.getTitle());
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
     datastore.put(conversationEntity);
+
+    // print the elapsed time for the method call
+    System.out.println("STATS: PersistentDataStore writeThrough(Conversation): " +
+        (System.currentTimeMillis() - startTime) + "ms");
   }
 }
 

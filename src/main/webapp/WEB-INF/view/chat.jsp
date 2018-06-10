@@ -13,6 +13,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
+<% long startTime = System.currentTimeMillis(); %>
+
 <%@ page import="java.util.List" %>
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
@@ -96,3 +98,5 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 
 </body>
 </html>
+
+<% System.out.println("STATS: chat.jsp: " + (System.currentTimeMillis() - startTime) + "ms"); %>

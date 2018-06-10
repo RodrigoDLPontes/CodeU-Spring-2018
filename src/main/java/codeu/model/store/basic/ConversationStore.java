@@ -77,22 +77,33 @@ public class ConversationStore {
 
   /** Check whether a Conversation title is already known to the application. */
   public boolean isTitleTaken(String title) {
+    long comparisons = 0;
     // This approach will be pretty slow if we have many Conversations.
     for (Conversation conversation : conversations) {
+      comparisons++;
       if (conversation.getTitle().equals(title)) {
+        System.out.println("STATS: ConversationStore isTitleTaken: " + comparisons +
+            " comparisons");
         return true;
       }
     }
+    System.out.println("STATS: ConversationStore isTitleTaken: " + comparisons + " comparisons");
     return false;
   }
 
   /** Find and return the Conversation with the given title. */
   public Conversation getConversationWithTitle(String title) {
+    long comparisons = 0;
     for (Conversation conversation : conversations) {
+      comparisons++;
       if (conversation.getTitle().equals(title)) {
+        System.out.println("STATS: ConversationStore getConversationWithTitle: " + comparisons +
+            " comparisons");
         return conversation;
       }
     }
+    System.out.println("STATS: ConversationStore getConversationWithTitle: " + comparisons +
+        " comparisons");
     return null;
   }
 

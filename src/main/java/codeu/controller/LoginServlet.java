@@ -55,7 +55,13 @@ public class LoginServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
+    long startTime = System.currentTimeMillis();
+
     request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
+
+    // print the elapsed time for the method call
+    System.out.println("STATS: LoginServlet doGet: " + (System.currentTimeMillis() - startTime) +
+        "ms");
   }
 
   /**
@@ -66,6 +72,8 @@ public class LoginServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
+    long startTime = System.currentTimeMillis();
+
     String username = request.getParameter("username");
     String password = request.getParameter("password");
 
@@ -85,5 +93,9 @@ public class LoginServlet extends HttpServlet {
 
     request.getSession().setAttribute("user", username);
     response.sendRedirect("/conversations");
+
+    // print the elapsed time for the method call
+    System.out.println("STATS: LoginServlet doPost: " + (System.currentTimeMillis() - startTime) +
+        "ms");
   }
 }
