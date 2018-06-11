@@ -14,17 +14,14 @@
 
 package codeu.controller;
 
-import codeu.model.data.Activity;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
-import codeu.model.store.basic.ActivityStore;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.servlet.ServletException;
@@ -50,9 +47,6 @@ public class ChatServlet extends HttpServlet {
 
   /** TextProcessor for parsing BBCode */
   private TextProcessor textProcessor;
-  
-  /** Store class that gives access to Activities. */
-  private ActivityStore activityStore;
 
   /** Set up state for handling chat requests. */
   @Override
@@ -62,7 +56,6 @@ public class ChatServlet extends HttpServlet {
     setMessageStore(MessageStore.getInstance());
     setUserStore(UserStore.getInstance());
     setTextProcessor(BBProcessorFactory.getInstance().create());
-    setActivityStore(ActivityStore.getInstance());
   }
 
   /**
@@ -79,10 +72,6 @@ public class ChatServlet extends HttpServlet {
    */
   void setMessageStore(MessageStore messageStore) {
     this.messageStore = messageStore;
-  }
-  
-  void setActivityStore(ActivityStore activityStore) {
-	  this.activityStore = activityStore;
   }
 
   /**
@@ -178,16 +167,9 @@ public class ChatServlet extends HttpServlet {
             user.getId(),
             messageContent,
             Instant.now());
-    
-    List<String> attributes = new ArrayList<>();
-    attributes.add(username);
-    attributes.add(conversation.getTitle());
-    attributes.add(message.getContent());
-    Activity activity = 
-    	new Activity(UUID.randomUUID(), message.getCreationTime(), "message", attributes);
-    
+
     messageStore.addMessage(message);
-    activityStore.addActivity(activity); 
+
     // redirect to a GET request
     response.sendRedirect("/chat/" + conversationTitle);
   }
