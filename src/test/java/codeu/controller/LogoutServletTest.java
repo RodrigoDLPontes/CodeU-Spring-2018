@@ -38,18 +38,18 @@ public class LogoutServletTest {
 
   @Test
   public void testDoGetRedirectsToFrontPage() throws IOException, ServletException {
-	  HttpSession mockSession = Mockito.mock(HttpSession.class);
-	  Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
-	  logoutServlet.doGet(mockRequest, mockResponse);
-      Mockito.verify(mockResponse).sendRedirect("/");
+    HttpSession mockSession = Mockito.mock(HttpSession.class);
+    Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
+    logoutServlet.doGet(mockRequest, mockResponse);
+    Mockito.verify(mockResponse).sendRedirect("/");
   }
 
   @Test
   public void testDoGetUnsetsUserAttribute() throws IOException, ServletException {
-	  HttpSession mockSession = Mockito.mock(HttpSession.class);
-	  mockSession.setAttribute("user", "fluffy");
-	  Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
-	  logoutServlet.doGet(mockRequest, mockResponse);
-      Mockito.verify(mockSession).setAttribute("user", null);
+    HttpSession mockSession = Mockito.mock(HttpSession.class);
+    mockSession.setAttribute("user", "this_should_be_null_when_the_user_logs_out");
+    Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
+    logoutServlet.doGet(mockRequest, mockResponse);
+    Mockito.verify(mockSession).setAttribute("user", null);
   }
 }

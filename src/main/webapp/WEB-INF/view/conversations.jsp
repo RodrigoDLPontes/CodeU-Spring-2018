@@ -34,7 +34,7 @@
     <% } %>
     <a href="/about.jsp">About</a>
     <% if(request.getSession().getAttribute("user") != null){ %>
-    	<a href="/logout">Logout</a>
+      <a href="/logout">Logout</a>
     <% } %>    
   </nav>
 
