@@ -13,7 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * This class turns off caching for all pages in the website.  This is
  * necessary so that when users logout, they won't appear to be logged
- * in when hitting the browser's back button. 
+ * in when hitting the browser's back button.
+ * TODO(shershey): Maybe don't disable the cache for *all* pages. 
  */
 @WebFilter("*")
 public class NoCacheFilter implements Filter {
