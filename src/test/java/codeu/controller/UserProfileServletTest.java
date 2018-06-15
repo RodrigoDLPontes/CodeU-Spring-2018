@@ -1,12 +1,9 @@
 package codeu.controller;
 
-
 import codeu.model.data.AboutMeMessage;
-
 
 import codeu.model.data.User;
 import codeu.model.store.basic.AboutMeMessageStore;
-
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
@@ -24,12 +21,6 @@ import org.junit.Test;
 import org.kefirsf.bb.TextProcessor;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-
-
-
-
-
-
 
 public class UserProfileServletTest {
 	

@@ -14,10 +14,7 @@
 
 package codeu.model.store.persistence;
 
-
 import codeu.model.data.AboutMeMessage;
-
-import codeu.model.data.Activity;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
@@ -103,21 +100,7 @@ public class PersistentStorageAgent {
   
   public List<AboutMeMessage> loadAboutMeMessages() throws PersistentDataStoreException {
 	  return persistentDataStore.loadAboutMeMessages();
-	 
-
-
   }
-
-  /**
-   * Retrieve all Activity objects from the Datastore service. The returned list may be empty.
-   *
-   * @throws PersistentDataStoreException if an error was detected during the load from the
-   *     Datastore service
-   */
-  public List<Activity> loadActivity() throws PersistentDataStoreException {
-    return persistentDataStore.loadActivities();
-  }
-  
 
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
@@ -138,10 +121,4 @@ public class PersistentStorageAgent {
   public void writeThrough(AboutMeMessage aboutmemessage) {
     persistentDataStore.writeThrough(aboutmemessage);
   }
- 
-  /** Write an Activity object to the Datastore service. */
-  public void writeThrough(Activity activity) {
-    persistentDataStore.writeThrough(activity);
-  }
-
 }
