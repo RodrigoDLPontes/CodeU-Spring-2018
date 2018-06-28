@@ -37,21 +37,21 @@ limitations under the License.
 		// This is the  user  who's profile is getting looked at by another user
 		String viewAnotherUserProfile = request.getAttribute("user").toString();
 	%>
-	<nav>
-		<a id="navTitle" href="/">CodeU Chat App</a> <a href="/conversations">Conversations</a>
-		<%
-			if (request.getSession().getAttribute("user") != null) {
-		%>
-		<a  href="/userprofile/<%= request.getSession().getAttribute("user")%>">Hello <%= request.getSession().getAttribute("user")%></a>
-		<%
-			} else {
-		%>
-		<a href="/login">Login</a> 
-		<%
-			}
-		%>
-		<a href="/about.jsp">About</a>
-	</nav>
+	  <nav>
+    <a id="navTitle" href="/">CodeU Chat App</a>
+    <a href="/conversations">Conversations</a>
+    <% if(request.getSession().getAttribute("user") != null){ %>
+      <a  href="/userprofile/<%= request.getSession().getAttribute("user")%>">Hello <%= request.getSession().getAttribute("user")%></a>
+    <% } else{ %>
+      <a href="/login">Login</a>
+      <a href="/userprofile/">AboutMe</a>
+    <% } %>
+    <a href="/about.jsp">About</a>
+    <% if(request.getSession().getAttribute("user") != null){ %>
+      <a href="/logout">Logout</a>
+    <% } %>    
+  </nav>
+
 	
 	<!--  Checks if the user is logged  in but Viewing thier own page and alllows them to edit it   -->
 	<%

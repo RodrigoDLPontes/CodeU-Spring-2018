@@ -15,43 +15,65 @@
   limitations under the License.
 -->
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
-	<listener>
-		<listener-class>codeu.controller.ServerStartupListener</listener-class>
-	</listener>
-	<servlet>
-		<servlet-name>LoginServlet</servlet-name>
-		<servlet-class>codeu.controller.LoginServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>LoginServlet</servlet-name>
-		<url-pattern>/login</url-pattern>
-	</servlet-mapping>
-	<servlet>
-		<servlet-name>ConversationServlet</servlet-name>
-		<servlet-class>codeu.controller.ConversationServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>ConversationServlet</servlet-name>
-		<url-pattern>/conversations</url-pattern>
-	</servlet-mapping>
-	<servlet>
-		<servlet-name>ChatServlet</servlet-name>
-		<servlet-class>codeu.controller.ChatServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>ChatServlet</servlet-name>
-		<url-pattern>/chat/*</url-pattern>
-	</servlet-mapping>
-	<servlet>
-		<servlet-name>RegisterServlet</servlet-name>
-		<servlet-class>codeu.controller.RegisterServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>RegisterServlet</servlet-name>
-		<url-pattern>/register</url-pattern>
-	</servlet-mapping>
+  <listener>
+    <listener-class>codeu.controller.ServerStartupListener</listener-class>
+  </listener>
+  <servlet>
+    <servlet-name>LoginServlet</servlet-name>
+    <servlet-class>codeu.controller.LoginServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>LoginServlet</servlet-name>
+    <url-pattern>/login</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ConversationServlet</servlet-name>
+    <servlet-class>codeu.controller.ConversationServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ConversationServlet</servlet-name>
+    <url-pattern>/conversations</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ChatServlet</servlet-name>
+    <servlet-class>codeu.controller.ChatServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ChatServlet</servlet-name>
+    <url-pattern>/chat/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>RegisterServlet</servlet-name>
+    <servlet-class>codeu.controller.RegisterServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RegisterServlet</servlet-name>
+    <url-pattern>/register</url-pattern>
+  </servlet-mapping>
 
-	<servlet>
+
+  <servlet>
+    <servlet-name>AdminServlet</servlet-name>
+    <servlet-class>codeu.controller.AdminServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>AdminServlet</servlet-name>
+    <url-pattern>/admin</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>LogoutServlet</servlet-name>
+    <servlet-class>codeu.controller.LogoutServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>LogoutServlet</servlet-name>
+    <url-pattern>/logout</url-pattern>
+  </servlet-mapping>
+
+
+<servlet>
 		<servlet-name>UserProfileServlet</servlet-name>
 		<servlet-class>codeu.controller.UserProfileServlet</servlet-class>
 	</servlet>
@@ -60,15 +82,5 @@
 		<servlet-name>UserProfileServlet</servlet-name>
 		<url-pattern>/userprofile/*</url-pattern>
 	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>AdminServlet</servlet-name>
-		<servlet-class>codeu.controller.AdminServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>AdminServlet</servlet-name>
-		<url-pattern>/admin</url-pattern>
-	</servlet-mapping>
-
 </web-app>
 
