@@ -15,9 +15,6 @@
 package codeu.model.store.persistence;
 
 import codeu.model.data.AboutMeMessage;
-
-
-
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
@@ -154,7 +151,6 @@ public class PersistentDataStore {
     return messages;
   }
   
-
   /**
    * Loads all AboutMeMessage objects from the Datastore service and returns them in a List, sorted in
    * ascending order by creation time.
@@ -165,7 +161,6 @@ public class PersistentDataStore {
   public List<AboutMeMessage> loadAboutMeMessages() throws PersistentDataStoreException {
 
     List<AboutMeMessage> aboutmemessages = new ArrayList<>();
-
     // Retrieve all messages from the datastore.
     Query query = new Query("chat-aboutme").addSort("creation_time", SortDirection.ASCENDING);
     PreparedQuery results = datastore.prepare(query);
@@ -189,11 +184,6 @@ public class PersistentDataStore {
     return  aboutmemessages;
   }
   
-  
-  
-  
-
-
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
     Entity userEntity = new Entity("chat-users", user.getId().toString());
@@ -234,11 +224,5 @@ public class PersistentDataStore {
     aboutmemessageEntity.setProperty("creation_time", aboutmemessage.getCreationTime().toString());
     datastore.put(aboutmemessageEntity);
   }
-
-
-
-  
-
-
 }
 

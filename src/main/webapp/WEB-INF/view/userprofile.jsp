@@ -42,12 +42,11 @@ limitations under the License.
 		<%
 			if (request.getSession().getAttribute("user") != null) {
 		%>
-		<a>Hello <%=request.getSession().getAttribute("user")%>!
-		</a> <a href="<%=userUrl%>"> About <%=request.getSession().getAttribute("user")%></a>
+		<a  href="/userprofile/<%= request.getSession().getAttribute("user")%>">Hello <%= request.getSession().getAttribute("user")%></a>
 		<%
 			} else {
 		%>
-		<a href="/login">Login</a> <a href="/userprofile/">AboutMe</a>
+		<a href="/login">Login</a> 
 		<%
 			}
 		%>

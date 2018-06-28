@@ -12,88 +12,88 @@ import java.util.UUID;
  * singleton so all servlet classes can access the same instance.
  */
 public class AboutMeMessageStore {
-	/** Singleton instance of AboutMeMessageStore. */
-	private static AboutMeMessageStore instance;
+    
+    /** Singleton instance of AboutMeMessageStore. */
+    private static AboutMeMessageStore instance;
 
-	/**
-	 * Returns the singleton instance of MessageStore that should be shared between
-	 * all servlet classes. Do not call this function from a test; use
-	 * getTestInstance() instead.
-	 */
-	public static AboutMeMessageStore getInstance() {
-		if (instance == null) {
-			instance = new AboutMeMessageStore(PersistentStorageAgent.getInstance());
-		}
-		return instance;
-	}
+    /**
+     * Returns the singleton instance of MessageStore that should be shared between
+     * all servlet classes. Do not call this function from a test; use
+     * getTestInstance() instead.
+     */
+    public static AboutMeMessageStore getInstance() {
+        if (instance == null) {
+            instance = new AboutMeMessageStore(PersistentStorageAgent.getInstance());
+        }
+        return instance;
+    }
 
-	/**
-	 * Instance getter function used for testing. Supply a mock for
-	 * PersistentStorageAgent.
-	 *
-	 * @param persistentStorageAgent
-	 *            a mock used for testing
-	 */
-	public static AboutMeMessageStore getTestInstance(PersistentStorageAgent persistentStorageAgent) {
-		return new AboutMeMessageStore(persistentStorageAgent);
-	}
+    /**
+     * Instance getter function used for testing. Supply a mock for
+     * PersistentStorageAgent. @param persistentStorageAgent a mock used for testing
+     */
+    public static AboutMeMessageStore getTestInstance(PersistentStorageAgent persistentStorageAgent) {
+        return new AboutMeMessageStore(persistentStorageAgent);
+    }
 
-	/**
-	 * The PersistentStorageAgent responsible for loading Messages from and saving
-	 * Messages to Datastore.
-	 */
-	private PersistentStorageAgent persistentStorageAgent;
+    /**
+     * The PersistentStorageAgent responsible for loading Messages from and saving
+     * Messages to Datastore.
+     */
+    private PersistentStorageAgent persistentStorageAgent;
 
-	/** The in-memory list of Messages. */
-	private List<AboutMeMessage> aboutmemessages;
+    /** The in-memory list of Messages. */
+    private List<AboutMeMessage> aboutmemessages;
 
-	/**
-	 * This class is a singleton, so its constructor is private. Call getInstance()
-	 * instead.
-	 */
-	private AboutMeMessageStore(PersistentStorageAgent persistentStorageAgent) {
-		this.persistentStorageAgent = persistentStorageAgent;
-		aboutmemessages = new ArrayList<>();
-	}
+    /**
+     * This class is a singleton, so its constructor is private. Call getInstance()
+     * instead.
+     */
+    private AboutMeMessageStore(PersistentStorageAgent persistentStorageAgent) {
+        this.persistentStorageAgent = persistentStorageAgent;
+        aboutmemessages = new ArrayList<>();
+    }
 
-	/**
-	 * Add a new message to the current set of messages known to the application.
-	 */
-	public void addAboutMeMessage(AboutMeMessage aboutmemessage) {
-		aboutmemessages.add(aboutmemessage);
-		persistentStorageAgent.writeThrough(aboutmemessage);
-	}
+    /**
+     * Add a new message to the current set of messages known to the application.
+     */
+    public void addAboutMeMessage(AboutMeMessage aboutmemessage) {
+        aboutmemessages.add(aboutmemessage);
+        persistentStorageAgent.writeThrough(aboutmemessage);
+    }
 
-	/** Access the current set of AboutMeMessages known to the application. */
-	public List<AboutMeMessage> getAllAboutMeMessages() {
+    /** Access the current set of AboutMeMessages known to the application. */
+    public List<AboutMeMessage> getAllAboutMeMessages() {
 
-		return aboutmemessages;
-	}
+        return aboutmemessages;
+    }
 
-	/** Access the current set of AboutMeMessages given a unique user . */
+    /** Access the current set of AboutMeMessages given a unique user . */
 
-	public List<AboutMeMessage> getAboutMeMessagesByUser(UUID authorId) {
+    public List<AboutMeMessage> getAboutMeMessagesByUser(UUID authorId) {
 
-		List<AboutMeMessage> aboutMeMessagesByUser = new ArrayList<>();
+        List<AboutMeMessage> aboutMeMessagesByUser = new ArrayList<>();
 
-		for (AboutMeMessage aboutmemessage : aboutmemessages) {
-			if (aboutmemessage.getAuthorId().equals(authorId)) {
-				aboutMeMessagesByUser.add(aboutmemessage);
-			}
-		}
+        
+        for (AboutMeMessage aboutmemessage : aboutmemessages) {
+            if (aboutmemessage.getAuthorId().equals(authorId)) {
+                aboutMeMessagesByUser.add(aboutmemessage);
+            }
+        }
 
-		return aboutMeMessagesByUser;
-	}
+        return aboutMeMessagesByUser;
+        
+    }
+    
 
-	/** Sets the List of AboutMeMessage stored by this ConversationStore. */
-	public void setAboutMeMessages(List<AboutMeMessage> aboutmemessages) {
-		this.aboutmemessages = aboutmemessages;
-	}
+    /** Sets the List of AboutMeMessage stored by this ConversationStore. */
+    public void setAboutMeMessages(List<AboutMeMessage> aboutmemessages) {
+        this.aboutmemessages = aboutmemessages;
+    }
 
-	/** Get the number of AboutMe Messages users have written */
+    /** Get the number of AboutMe Messages users have written */
 
-	public int getNumAboutMeMessages() {
-		return aboutmemessages.size();
-	}
-
+    public int getNumAboutMeMessages() {
+        return aboutmemessages.size();
+    }
 }
