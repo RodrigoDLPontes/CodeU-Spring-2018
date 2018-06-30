@@ -29,7 +29,7 @@ public class Conversation {
   public final String title;
   private TreeSet<User> members;
 
-  /** 
+  /**
    * Constructs a new Conversation.
    *
    * @param id the ID of this Conversation
