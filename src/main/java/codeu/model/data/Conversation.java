@@ -69,4 +69,9 @@ public class Conversation {
   public TreeSet<User> getMembers() {
     return members;
   }
+  
+  /** Adds given user as a member to this Conversation */
+  public void addMember(User user) {
+    members.add(user);
+  }
 }

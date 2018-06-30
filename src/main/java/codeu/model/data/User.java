@@ -15,6 +15,7 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.util.TreeSet;
 import java.util.UUID;
 
 /** Class representing a registered user. */
@@ -23,6 +24,7 @@ public class User {
   private final String name;
   private final String passwordHash;
   private final Instant creation;
+  private TreeSet<Conversation> conversations;
 
   /**
    * Constructs a new User.
@@ -37,6 +39,7 @@ public class User {
     this.name = name;
     this.passwordHash = passwordHash;
     this.creation = creation;
+    conversations = new TreeSet<Conversation>();
   }
 
   /** Returns the ID of this User. */
@@ -58,4 +61,15 @@ public class User {
   public Instant getCreationTime() {
     return creation;
   }
+  
+  /** Returns a set of the conversations this User belongs to */
+  public TreeSet<Conversation> getConversations() {
+    return conversations;
+  }
+  
+  /** Adds a conversation that this User is a member of to the Conversations set */
+  public void addConversation(Conversation convo) {
+    conversations.add(convo);
+  }
+  
 }
