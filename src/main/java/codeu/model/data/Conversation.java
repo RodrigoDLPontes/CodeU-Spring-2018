@@ -15,6 +15,7 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.util.TreeSet;
 import java.util.UUID;
 
 /**
@@ -26,6 +27,7 @@ public class Conversation {
   public final UUID owner;
   public final Instant creation;
   public final String title;
+  private TreeSet<User> members;
 
   /**
    * Constructs a new Conversation.
@@ -40,6 +42,7 @@ public class Conversation {
     this.owner = owner;
     this.creation = creation;
     this.title = title;
+    members = new TreeSet<User>();
   }
 
   /** Returns the ID of this Conversation. */
@@ -60,5 +63,10 @@ public class Conversation {
   /** Returns the creation time of this Conversation. */
   public Instant getCreationTime() {
     return creation;
+  }
+  
+  /** Returns a set of the members of this Conversation */
+  public TreeSet<User> getMembers() {
+    return members;
   }
 }
