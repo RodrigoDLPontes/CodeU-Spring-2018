@@ -30,6 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
+import org.kefirsf.bb.BBProcessorFactory;
+import org.kefirsf.bb.TextProcessor;
 
 /** Servlet class responsible for the chat page. */
 public class ChatServlet extends HttpServlet {
@@ -43,6 +45,9 @@ public class ChatServlet extends HttpServlet {
   /** Store class that gives access to Users. */
   private UserStore userStore;
 
+  /** TextProcessor for parsing BBCode */
+  private TextProcessor textProcessor;
+
   /** Set up state for handling chat requests. */
   @Override
   public void init() throws ServletException {
@@ -50,6 +55,7 @@ public class ChatServlet extends HttpServlet {
     setConversationStore(ConversationStore.getInstance());
     setMessageStore(MessageStore.getInstance());
     setUserStore(UserStore.getInstance());
+    setTextProcessor(BBProcessorFactory.getInstance().create());
   }
 
   /**
@@ -74,6 +80,14 @@ public class ChatServlet extends HttpServlet {
    */
   void setUserStore(UserStore userStore) {
     this.userStore = userStore;
+  }
+
+  /**
+   * Sets the TextProcessor used by this servlet. This function provides a common setup method for
+   * use by the test framework or the servlet's init() function.
+   */
+  void setTextProcessor(TextProcessor textProcessor) {
+    this.textProcessor = textProcessor;
   }
 
   /**
@@ -141,14 +155,17 @@ public class ChatServlet extends HttpServlet {
     String messageContent = request.getParameter("message");
 
     // this removes any HTML from the message content
-    String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.none());
+    messageContent = Jsoup.clean(messageContent, Whitelist.none());
+
+    // this parses BBCode tags to equivalent HTML tags
+    messageContent = textProcessor.process(messageContent);
 
     Message message =
         new Message(
             UUID.randomUUID(),
             conversation.getId(),
             user.getId(),
-            cleanedMessageContent,
+            messageContent,
             Instant.now());
 
     messageStore.addMessage(message);

@@ -20,16 +20,20 @@
   <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-
+ 
+  <!-- TODO(shershey): Share this menu across JSP pages -->
   <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
     <% if(request.getSession().getAttribute("user") != null){ %>
-      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
+      <a  href="/userprofile/<%= request.getSession().getAttribute("user")%>">Hello <%= request.getSession().getAttribute("user")%></a>
     <% } else{ %>
       <a href="/login">Login</a>
     <% } %>
     <a href="/about.jsp">About</a>
+    <% if(request.getSession().getAttribute("user") != null){ %>
+    	<a href="/logout">Logout</a>
+    <% } %>
   </nav>
 
   <div id="container">
@@ -46,6 +50,7 @@
             create or join a conversation.</li>
         <li>View the <a href="/about.jsp">about</a> page to learn more about the
             project.</li>
+        <li>View the <a href="/admin">admin</a> page for app-related statistics!</li>
       </ul>
     </div>
   </div>

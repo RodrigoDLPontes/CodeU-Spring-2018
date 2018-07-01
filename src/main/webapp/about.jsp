@@ -25,12 +25,16 @@
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
     <% if(request.getSession().getAttribute("user") != null){ %>
-      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
+      <a  href="/userprofile/<%= request.getSession().getAttribute("user")%>">Hello <%= request.getSession().getAttribute("user")%></a>
     <% } else{ %>
       <a href="/login">Login</a>
     <% } %>
     <a href="/about.jsp">About</a>
+    <% if(request.getSession().getAttribute("user") != null){ %>
+    	<a href="/logout">Logout</a>
+    <% } %>    
   </nav>
+
 
   <div id="container">
     <div
@@ -68,7 +72,7 @@
     <footer>
      <p>
         Created By: Israel Ali, Quinlan Kimble-Brown,
-        Alex Meijia, and Rodrgio Pontes 2018.
+        Alexis Mejia, and Rodrigo Pontes 2018.
     </p>
   </footer>
     </div>

@@ -1,12 +1,9 @@
 <%--
   Copyright 2017 Google Inc.
-
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-
      http://www.apache.org/licenses/LICENSE-2.0
-
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +17,8 @@
 <%
 Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
+		  /*** The unique Url that is generated for each Users about me page  */
+		
 %>
 
 <!DOCTYPE html>
@@ -46,6 +45,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 </head>
 <body onload="scrollChat()">
 
+
   <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
@@ -55,7 +55,11 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       <a href="/login">Login</a>
     <% } %>
     <a href="/about.jsp">About</a>
+    <% if(request.getSession().getAttribute("user") != null){ %>
+      <a href="/logout">Logout</a>
+    <% } %>    
   </nav>
+
 
   <div id="container">
 
@@ -70,8 +74,14 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       for (Message message : messages) {
         String author = UserStore.getInstance()
           .getUser(message.getAuthorId()).getName();
+
+        String url = "/userprofile/"+ author;
     %>
-      <li><strong><%= author %>:</strong> <%= message.getContent() %></li>
+
+      <li><strong> <a href= <%= url %>> <%= author %>:</strong> </a>  <%= message.getContent() %></li>
+  
+   
+    
     <%
       }
     %>

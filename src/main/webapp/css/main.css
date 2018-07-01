@@ -59,6 +59,21 @@ input {
 button {
   font-size: 18px;
 }
+
+
+#profileName{
+   margin: 0 auto;
+   font-size: 36px;
+   text-align: center;
+  }
+  
+#profileNameCenter{
+  font-size: 36px;
+  margin: 0 auto;
+  text-align: center;
+  width:100%;
+}
+
 .btn {
   background-color: DodgerBlue;
   border: none;
