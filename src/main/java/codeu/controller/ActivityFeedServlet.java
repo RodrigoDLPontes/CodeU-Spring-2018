@@ -18,6 +18,9 @@ package codeu.controller;
 import codeu.model.data.Conversation;
 import codeu.model.data.User;
 import codeu.model.data.Activity;
+import codeu.model.data.UserActivity; 
+import codeu.model.data.MessageActivity; 
+import codeu.model.data.ConversationActivity; 
 import codeu.model.data.Message;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
@@ -81,13 +84,9 @@ public class ActivityFeedServlet extends HttpServlet {
 				// use the UserStore to convert the owner's UUID into a String (username)
 				User author = this.userStore.getUser(id);
 						
-				List<String> attributes = new ArrayList<>();
-			    attributes.add(author.getName());		    
-			    attributes.add(conversation.getTitle());
-			    attributes.add(message.getContent());
-			    Activity activity = 
-			    	new Activity(UUID.randomUUID(), message.getCreationTime(), "message", attributes);
-			    activities.add(activity);
+		    MessageActivity activity = 
+		    	new MessageActivity(UUID.randomUUID(), message.getCreationTime(), author.getName(), conversation.getTitle(), message.getContent());
+		    activities.add(activity);
 			}
 			
 			// get conversation owner's UUID from conversation
@@ -95,21 +94,16 @@ public class ActivityFeedServlet extends HttpServlet {
 			// use the UserStore to convert the owner's UUID into a String (username)
 			User owner = this.userStore.getUser(id);
 					
-			List<String> attributes = new ArrayList<>();
-		    attributes.add(owner.getName());
-		    attributes.add(conversation.getTitle());
-		    Activity activity = 
-		    	new Activity(UUID.randomUUID(), conversation.getCreationTime(), "conversation", attributes);
-		    activities.add(activity);
+	    ConversationActivity activity = 
+	    	new ConversationActivity(UUID.randomUUID(), conversation.getCreationTime(), owner.getName(), conversation.getTitle());
+	    activities.add(activity);
 		}
 		
 		List<User> users = this.userStore.getUsers();
 		for (User user : users) {
-			List<String> attributes = new ArrayList<>();
-		    attributes.add(user.getName());
 		    
-		    Activity activity = 
-		    	new Activity(UUID.randomUUID(), user.getCreationTime(), "user", attributes);
+		    UserActivity activity = 
+		    	new UserActivity(UUID.randomUUID(), user.getCreationTime(), user.getName());
 		    activities.add(activity);
 		}
 		
