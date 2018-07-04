@@ -21,7 +21,7 @@ import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
-import java.util.TreeSet;
+import java.util.HashSet;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -74,7 +74,7 @@ public class ConversationServlet extends HttpServlet {
     String username = (String) request.getSession().getAttribute("user");
     boolean isRegistered = (username != null);
     request.setAttribute("is_registered", isRegistered);
-    TreeSet<Conversation> conversations = null;
+    HashSet<Conversation> conversations = null;
     
     if (isRegistered) {
       User user = userStore.getUser(username);
