@@ -15,6 +15,7 @@
 --%>
 <%@ page import="java.util.List" %>
 <%@ page import="codeu.model.data.Conversation" %>
+<%@ page import="java.util.TreeSet" %>
 
 <!DOCTYPE html>
 <html>
@@ -61,14 +62,13 @@
     <h1>Conversations</h1>
 
     <%
-    List<Conversation> conversations =
-      (List<Conversation>) request.getAttribute("conversations");
+    TreeSet<Conversation> conversations =
+      (TreeSet<Conversation>) request.getAttribute("conversations");
     if(conversations == null || conversations.isEmpty()){
     %>
-      <p>Create a conversation to get started.</p>
+      <p>You have no conversations to view.</p>
     <%
-    }
-    else{
+    } else {
     %>
       <ul class="mdl-list">
     <%

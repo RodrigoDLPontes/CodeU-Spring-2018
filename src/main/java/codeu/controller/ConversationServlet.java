@@ -21,6 +21,7 @@ import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -70,7 +71,17 @@ public class ConversationServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    List<Conversation> conversations = conversationStore.getAllConversations();
+    String username = (String) request.getSession().getAttribute("user");
+    boolean isRegistered = (username != null);
+    request.setAttribute("is_registered", isRegistered);
+    TreeSet<Conversation> conversations = null;
+    
+    if (isRegistered) {
+      User user = userStore.getUser(username);
+      conversations = user.getConversations();
+    }
+    
+    request.setAttribute("is_registered", isRegistered);
     request.setAttribute("conversations", conversations);
     request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
   }
@@ -115,6 +126,8 @@ public class ConversationServlet extends HttpServlet {
 
     Conversation conversation =
         new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
+    conversation.addMember(user);
+    user.addConversation(conversation);
 
     conversationStore.addConversation(conversation);
     response.sendRedirect("/chat/" + conversationTitle);
