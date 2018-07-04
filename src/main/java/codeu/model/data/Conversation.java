@@ -88,12 +88,12 @@ public class Conversation {
     }
     
     // class check
-    if (!(o instanceof User)) {
+    if (!(o instanceof Conversation)) {
       return false;
     }
     
-    User user = (User) o;
-    return id.equals(user.getId());
+    Conversation conversation = (Conversation) o;
+    return id.equals(conversation.getId());
   }
   
   @Override
