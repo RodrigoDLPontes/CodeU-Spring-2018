@@ -67,6 +67,11 @@ public class User {
     return conversations;
   }
   
+  /** Sets the set of conversations this User belongs to */
+  public void setConversations(HashSet<Conversation> conversations) {
+    this.conversations = conversations;
+  }
+  
   /** Adds a conversation that this User is a member of to the Conversations set */
   public void addConversation(Conversation convo) {
     conversations.add(convo);

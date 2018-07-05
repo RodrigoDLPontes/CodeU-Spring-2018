@@ -73,12 +73,10 @@ public class ConversationServlet extends HttpServlet {
       throws IOException, ServletException {
     String username = (String) request.getSession().getAttribute("user");
     boolean isRegistered = (username != null);
-    request.setAttribute("is_registered", isRegistered);
     HashSet<Conversation> conversations = null;
     
     if (isRegistered) {
-      User user = userStore.getUser(username);
-      conversations = user.getConversations();
+      conversations = userStore.getUser(username).getConversations();
     }
     
     request.setAttribute("is_registered", isRegistered);
@@ -120,6 +118,8 @@ public class ConversationServlet extends HttpServlet {
     if (conversationStore.isTitleTaken(conversationTitle)) {
       // conversation title is already taken, just go into that conversation instead of creating a
       // new one
+      Conversation convo = conversationStore.getConversationWithTitle(conversationTitle);
+      user.addConversation(convo);
       response.sendRedirect("/chat/" + conversationTitle);
       return;
     }

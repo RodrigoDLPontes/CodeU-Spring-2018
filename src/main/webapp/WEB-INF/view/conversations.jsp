@@ -15,7 +15,7 @@
 --%>
 <%@ page import="java.util.List" %>
 <%@ page import="codeu.model.data.Conversation" %>
-<%@ page import="java.util.TreeSet" %>
+<%@ page import="java.util.HashSet" %>
 
 <!DOCTYPE html>
 <html>
@@ -28,13 +28,14 @@
   <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
-    <% if(request.getSession().getAttribute("user") != null){ %>
+    <% Boolean isRegistered = (Boolean) request.getAttribute("is_registered");
+       if(isRegistered) { %>
       <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
     <% } else{ %>
       <a href="/login">Login</a>
     <% } %>
     <a href="/about.jsp">About</a>
-    <% if(request.getSession().getAttribute("user") != null){ %>
+    <% if(isRegistered){ %>
       <a href="/logout">Logout</a>
     <% } %>    
   </nav>
@@ -45,7 +46,7 @@
         <h2 style="color:red"><%= request.getAttribute("error") %></h2>
     <% } %>
 
-    <% if(request.getSession().getAttribute("user") != null){ %>
+    <% if(isRegistered){ %>
       <h1>New Conversation</h1>
       <form action="/conversations" method="POST">
           <div class="form-group">
@@ -57,32 +58,37 @@
       </form>
 
       <hr/>
-    <% } %>
    
-    <h1>Conversations</h1>
+      <h1>Conversations</h1>
 
-    <%
-    TreeSet<Conversation> conversations =
-      (TreeSet<Conversation>) request.getAttribute("conversations");
-    if(conversations == null || conversations.isEmpty()){
-    %>
-      <p>You have no conversations to view.</p>
-    <%
-    } else {
-    %>
-      <ul class="mdl-list">
-    <%
-      for(Conversation conversation : conversations){
-    %>
-      <li><a href="/chat/<%= conversation.getTitle() %>">
-        <%= conversation.getTitle() %></a></li>
-    <%
+      <%
+      HashSet<Conversation> conversations =
+        (HashSet<Conversation>) request.getAttribute("conversations");
+      if(conversations == null || conversations.isEmpty()){
+      %>
+        <p>You have no conversations to view.</p>
+      <%
+      } else {
+      %>
+        <ul class="mdl-list">
+      <%
+        for(Conversation conversation : conversations){
+      %>
+        <li><a href="/chat/<%= conversation.getTitle() %>">
+          <%= conversation.getTitle() %></a></li>
+      <%
+        }
+      %>
+        </ul>
+      <%
       }
-    %>
-      </ul>
+    } else { 
+      %>
+      <p>You must <a href="/login">login</a> to view conversations.</p>
     <%
     }
     %>
+
     <hr/>
   </div>
 </body>
