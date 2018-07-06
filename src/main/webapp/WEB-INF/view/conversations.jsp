@@ -30,15 +30,17 @@
     <a href="/conversations">Conversations</a>
     <% Boolean isRegistered = (Boolean) request.getAttribute("is_registered");
        if(isRegistered) { %>
-      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
+      <a  href="/userprofile/<%= request.getSession().getAttribute("user")%>">Hello <%= request.getSession().getAttribute("user")%></a>
     <% } else{ %>
       <a href="/login">Login</a>
+    
     <% } %>
     <a href="/about.jsp">About</a>
     <% if(isRegistered){ %>
       <a href="/logout">Logout</a>
     <% } %>    
   </nav>
+
 
   <div id="container">
 
@@ -58,7 +60,6 @@
       </form>
 
       <hr/>
-   
       <h1>Conversations</h1>
 
       <%
