@@ -18,6 +18,7 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentDataStoreException;
+import codeu.service.GeneralTimingFilter;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -54,7 +55,7 @@ public class PersistentDataStore {
    *     Datastore service
    */
   public List<User> loadUsers() throws PersistentDataStoreException {
-    long startTime = System.currentTimeMillis();
+    GeneralTimingFilter filter = new GeneralTimingFilter("PersistentDataStore loadUsers");
 
     List<User> users = new ArrayList<>();
 
@@ -78,10 +79,7 @@ public class PersistentDataStore {
       }
     }
 
-    // print the elapsed time for the method call
-    System.out.println("STATS: PersistentDataStore loadUsers: " + (System.currentTimeMillis() -
-        startTime) + "ms");
-
+    filter.finish();
     return users;
   }
 
@@ -93,7 +91,7 @@ public class PersistentDataStore {
    *     Datastore service
    */
   public List<Conversation> loadConversations() throws PersistentDataStoreException {
-    long startTime = System.currentTimeMillis();
+    GeneralTimingFilter filter = new GeneralTimingFilter("PersistentDataStore loadConversations");
 
     List<Conversation> conversations = new ArrayList<>();
 
@@ -117,10 +115,7 @@ public class PersistentDataStore {
       }
     }
 
-    // print the elapsed time for the method call
-    System.out.println("STATS: PersistentDataStore loadConversations: " + (System.currentTimeMillis
-        () - startTime) + "ms");
-
+    filter.finish();
     return conversations;
   }
 
@@ -132,7 +127,7 @@ public class PersistentDataStore {
    *     Datastore service
    */
   public List<Message> loadMessages() throws PersistentDataStoreException {
-    long startTime = System.currentTimeMillis();
+    GeneralTimingFilter filter = new GeneralTimingFilter("PersistentDataStore loadMessages");
 
     List<Message> messages = new ArrayList<>();
 
@@ -157,16 +152,13 @@ public class PersistentDataStore {
       }
     }
 
-    // print the elapsed time for the method call
-    System.out.println("STATS: PersistentDataStore loadMessages: " + (System.currentTimeMillis() -
-        startTime) + "ms");
-
+    filter.finish();
     return messages;
   }
 
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
-    long startTime = System.currentTimeMillis();
+    GeneralTimingFilter filter = new GeneralTimingFilter("PersistentDataStore writeThrough(user)");
 
     Entity userEntity = new Entity("chat-users", user.getId().toString());
     userEntity.setProperty("uuid", user.getId().toString());
@@ -175,14 +167,13 @@ public class PersistentDataStore {
     userEntity.setProperty("creation_time", user.getCreationTime().toString());
     datastore.put(userEntity);
 
-    // print the elapsed time for the method call
-    System.out.println("STATS PersistentDataStore writeThrough(User): " +
-        (System.currentTimeMillis() - startTime) + "ms");
+    filter.finish();
   }
 
   /** Write a Message object to the Datastore service. */
   public void writeThrough(Message message) {
-    long startTime = System.currentTimeMillis();
+    GeneralTimingFilter filter = new GeneralTimingFilter("PersistentDataStore writeThrough"
+        + "(message)");
 
     Entity messageEntity = new Entity("chat-messages", message.getId().toString());
     messageEntity.setProperty("uuid", message.getId().toString());
@@ -192,14 +183,13 @@ public class PersistentDataStore {
     messageEntity.setProperty("creation_time", message.getCreationTime().toString());
     datastore.put(messageEntity);
 
-    // print the elapsed time for the method call
-    System.out.println("STATS: PersistentDataStore writeThrough(Message): " +
-        (System.currentTimeMillis() - startTime) + "ms");
+    filter.finish();
   }
 
   /** Write a Conversation object to the Datastore service. */
   public void writeThrough(Conversation conversation) {
-    long startTime = System.currentTimeMillis();
+    GeneralTimingFilter filter = new GeneralTimingFilter("PersistentDataStore writeThrough"
+        + "(conversation)");
 
     Entity conversationEntity = new Entity("chat-conversations", conversation.getId().toString());
     conversationEntity.setProperty("uuid", conversation.getId().toString());
@@ -208,9 +198,7 @@ public class PersistentDataStore {
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
     datastore.put(conversationEntity);
 
-    // print the elapsed time for the method call
-    System.out.println("STATS: PersistentDataStore writeThrough(Conversation): " +
-        (System.currentTimeMillis() - startTime) + "ms");
+    filter.finish();
   }
 }
 

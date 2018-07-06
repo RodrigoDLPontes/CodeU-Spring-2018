@@ -16,6 +16,8 @@ package codeu.model.store.basic;
 
 import codeu.model.data.Conversation;
 import codeu.model.store.persistence.PersistentStorageAgent;
+import codeu.service.GeneralComparisonsFilter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +66,7 @@ public class ConversationStore {
     conversations = new ArrayList<>();
   }
 
-/** Access the current set of conversations known to the application. */
+  /** Access the current set of conversations known to the application. */
   public List<Conversation> getAllConversations() {
     return conversations;
   }
@@ -77,33 +79,30 @@ public class ConversationStore {
 
   /** Check whether a Conversation title is already known to the application. */
   public boolean isTitleTaken(String title) {
-    long comparisons = 0;
+    GeneralComparisonsFilter filter = new GeneralComparisonsFilter("ConversationStore isTitleTaken");
     // This approach will be pretty slow if we have many Conversations.
     for (Conversation conversation : conversations) {
-      comparisons++;
+      filter.increment();
       if (conversation.getTitle().equals(title)) {
-        System.out.println("STATS: ConversationStore isTitleTaken: " + comparisons +
-            " comparisons");
+        filter.finish();
         return true;
       }
     }
-    System.out.println("STATS: ConversationStore isTitleTaken: " + comparisons + " comparisons");
+    filter.finish();
     return false;
   }
 
   /** Find and return the Conversation with the given title. */
   public Conversation getConversationWithTitle(String title) {
-    long comparisons = 0;
+    GeneralComparisonsFilter filter = new GeneralComparisonsFilter("ConversationStore getConversationWithTitle");
     for (Conversation conversation : conversations) {
-      comparisons++;
+      filter.increment();
       if (conversation.getTitle().equals(title)) {
-        System.out.println("STATS: ConversationStore getConversationWithTitle: " + comparisons +
-            " comparisons");
+        filter.finish();
         return conversation;
       }
     }
-    System.out.println("STATS: ConversationStore getConversationWithTitle: " + comparisons +
-        " comparisons");
+    filter.finish();
     return null;
   }
 

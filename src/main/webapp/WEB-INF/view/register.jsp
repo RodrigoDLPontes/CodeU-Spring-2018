@@ -13,7 +13,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
-<% long startTime = System.currentTimeMillis(); %>
+<%@ page import="codeu.service.GeneralTimingFilter" %>
+<% GeneralTimingFilter filter = new GeneralTimingFilter("conversations.jsp"); %>
 
 <!DOCTYPE html>
 <html>
@@ -56,4 +57,4 @@
 </body>
 </html>
 
-<% System.out.println("STATS: register.jsp: " + (System.currentTimeMillis() - startTime) + "ms"); %>
+<% filter.finish(); %>

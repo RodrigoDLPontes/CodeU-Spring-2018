@@ -40,20 +40,12 @@ public class RegisterServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    long startTime = System.currentTimeMillis();
-
     request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
-
-    // print the elapsed time for the method call
-    System.out.println("STATS: RegisterServlet doGet: " + (System.currentTimeMillis() -
-        startTime) + "ms");
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    long startTime = System.currentTimeMillis();
-
     String username = request.getParameter("username");
 
     if (!username.matches("[\\w*\\s*]*")) {
@@ -75,9 +67,5 @@ public class RegisterServlet extends HttpServlet {
     userStore.addUser(user);
 
     response.sendRedirect("/login");
-
-    // print the elapsed time for the method call
-    System.out.println("STATS: RegisterServlet doPost: " + (System.currentTimeMillis() -
-        startTime) + "ms");
   }
 }

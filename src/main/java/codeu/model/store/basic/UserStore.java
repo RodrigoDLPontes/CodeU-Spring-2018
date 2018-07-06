@@ -16,6 +16,8 @@ package codeu.model.store.basic;
 
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
+import codeu.service.GeneralComparisonsFilter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -70,16 +72,16 @@ public class UserStore {
    * @return null if username does not match any existing User.
    */
   public User getUser(String username) {
-    long comparisons = 0;
+    GeneralComparisonsFilter filter = new GeneralComparisonsFilter("UserStore getUser(username)");
     // This approach will be pretty slow if we have many users.
     for (User user : users) {
-      comparisons++;
+      filter.increment();
       if (user.getName().equals(username)) {
-        System.out.println("STATS: UserStore getUser: " + comparisons + " comparisons");
+        filter.finish();
         return user;
       }
     }
-    System.out.println("STATS: UserStore getUser(username): " + comparisons + " comparisons");
+    filter.finish();
     return null;
   }
 
@@ -89,15 +91,15 @@ public class UserStore {
    * @return null if the UUID does not match any existing User.
    */
   public User getUser(UUID id) {
-    long comparisons = 0;
+    GeneralComparisonsFilter filter = new GeneralComparisonsFilter("UserStore getUser(id)");
     for (User user : users) {
-      comparisons++;
+      filter.increment();
       if (user.getId().equals(id)) {
-        System.out.println("STATS: UserStore getUser(id): " + comparisons + " comparisons");
+        filter.finish();
         return user;
       }
     }
-    System.out.println("STATS: UserStore getUser(id): " + comparisons + " comparisons");
+    filter.finish();
     return null;
   }
 
@@ -119,15 +121,15 @@ public class UserStore {
 
   /** Return true if the given username is known to the application. */
   public boolean isUserRegistered(String username) {
-    long comparisons = 0;
+    GeneralComparisonsFilter filter = new GeneralComparisonsFilter("UserStore isUserRegistered");
     for (User user : users) {
-      comparisons++;
+      filter.increment();
       if (user.getName().equals(username)) {
-        System.out.println("STATS: UserStore isUserRegistered: " + comparisons + " comparisons");
+        filter.finish();
         return true;
       }
     }
-    System.out.println("STATS: UserStore isUserRegistered: " + comparisons + " comparisons");
+    filter.finish();
     return false;
   }
 

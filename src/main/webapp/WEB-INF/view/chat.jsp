@@ -13,7 +13,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
-<% long startTime = System.currentTimeMillis(); %>
+<%@ page import="codeu.service.GeneralTimingFilter" %>
+<% GeneralTimingFilter filter = new GeneralTimingFilter("chat.jsp"); %>
 
 <%@ page import="java.util.List" %>
 <%@ page import="codeu.model.data.Conversation" %>
@@ -99,4 +100,4 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 </body>
 </html>
 
-<% System.out.println("STATS: chat.jsp: " + (System.currentTimeMillis() - startTime) + "ms"); %>
+<% filter.finish(); %>
