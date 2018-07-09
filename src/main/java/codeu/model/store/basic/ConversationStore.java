@@ -15,8 +15,10 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Conversation;
+import codeu.model.data.Statistic.Type;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import codeu.service.GeneralComparisonsFilter;
+import codeu.service.GeneralTimingFilter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,13 +75,17 @@ public class ConversationStore {
 
   /** Add a new conversation to the current set of conversations known to the application. */
   public void addConversation(Conversation conversation) {
+    GeneralTimingFilter filter = new GeneralTimingFilter(
+        Type.CONVERSATION_STORE_ADD_CONVERSATION_TIME, persistentStorageAgent);
     conversations.add(conversation);
     persistentStorageAgent.writeThrough(conversation);
+    filter.finish();
   }
 
   /** Check whether a Conversation title is already known to the application. */
   public boolean isTitleTaken(String title) {
-    GeneralComparisonsFilter filter = new GeneralComparisonsFilter("ConversationStore isTitleTaken");
+    GeneralComparisonsFilter filter = new GeneralComparisonsFilter(
+        Type.CONVERSATION_STORE_IS_TITLE_TAKEN_COMPS, persistentStorageAgent);
     // This approach will be pretty slow if we have many Conversations.
     for (Conversation conversation : conversations) {
       filter.increment();
@@ -94,7 +100,8 @@ public class ConversationStore {
 
   /** Find and return the Conversation with the given title. */
   public Conversation getConversationWithTitle(String title) {
-    GeneralComparisonsFilter filter = new GeneralComparisonsFilter("ConversationStore getConversationWithTitle");
+    GeneralComparisonsFilter filter = new GeneralComparisonsFilter(
+        Type.CONVERSATION_STORE_GET_CONVERSATION_WITH_TITLE_COMPS, persistentStorageAgent);
     for (Conversation conversation : conversations) {
       filter.increment();
       if (conversation.getTitle().equals(title)) {

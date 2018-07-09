@@ -2,12 +2,15 @@ package codeu.model.store.persistence;
 
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
+import codeu.model.data.Statistic;
 import codeu.model.data.User;
 import java.time.Instant;
 import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import static org.mockito.ArgumentMatchers.any;
 
 /**
  * Contains tests of the PersistentStorageAgent class. Currently that class is just a pass-through
@@ -30,18 +33,21 @@ public class PersistentStorageAgentTest {
   public void testLoadUsers() throws PersistentDataStoreException {
     persistentStorageAgent.loadUsers();
     Mockito.verify(mockPersistentDataStore).loadUsers();
+    Mockito.verify(mockPersistentDataStore).writeThrough(any(Statistic.class));
   }
 
   @Test
   public void testLoadConversations() throws PersistentDataStoreException {
     persistentStorageAgent.loadConversations();
     Mockito.verify(mockPersistentDataStore).loadConversations();
+    Mockito.verify(mockPersistentDataStore).writeThrough(any(Statistic.class));
   }
 
   @Test
   public void testLoadMessages() throws PersistentDataStoreException {
     persistentStorageAgent.loadMessages();
     Mockito.verify(mockPersistentDataStore).loadMessages();
+    Mockito.verify(mockPersistentDataStore).writeThrough(any(Statistic.class));
   }
 
   @Test
@@ -54,6 +60,7 @@ public class PersistentStorageAgentTest {
             Instant.now());
     persistentStorageAgent.writeThrough(user);
     Mockito.verify(mockPersistentDataStore).writeThrough(user);
+    Mockito.verify(mockPersistentDataStore).writeThrough(any(Statistic.class));
   }
 
   @Test
@@ -62,6 +69,7 @@ public class PersistentStorageAgentTest {
         new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now());
     persistentStorageAgent.writeThrough(conversation);
     Mockito.verify(mockPersistentDataStore).writeThrough(conversation);
+    Mockito.verify(mockPersistentDataStore).writeThrough(any(Statistic.class));
   }
 
   @Test
@@ -71,5 +79,6 @@ public class PersistentStorageAgentTest {
             UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), "test content", Instant.now());
     persistentStorageAgent.writeThrough(message);
     Mockito.verify(mockPersistentDataStore).writeThrough(message);
+    Mockito.verify(mockPersistentDataStore).writeThrough(any(Statistic.class));
   }
 }

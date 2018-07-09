@@ -15,8 +15,10 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Message;
+import codeu.model.data.Statistic.Type;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import codeu.service.GeneralComparisonsFilter;
+import codeu.service.GeneralTimingFilter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,13 +71,17 @@ public class MessageStore {
 
   /** Add a new message to the current set of messages known to the application. */
   public void addMessage(Message message) {
+    GeneralTimingFilter filter = new GeneralTimingFilter(
+        Type.MESSAGE_STORE_ADD_MESSAGE_TIME, persistentStorageAgent);
     messages.add(message);
     persistentStorageAgent.writeThrough(message);
+    filter.finish();
   }
 
   /** Access the current set of Messages within the given Conversation. */
   public List<Message> getMessagesInConversation(UUID conversationId) {
-    GeneralComparisonsFilter filter = new GeneralComparisonsFilter("MessageStore getMessagesInConversation");
+    GeneralComparisonsFilter filter = new GeneralComparisonsFilter(
+        Type.MESSAGE_STORE_GET_MESSAGES_IN_CONVERSATION_COMPS, persistentStorageAgent);
 
     List<Message> messagesInConversation = new ArrayList<>();
 

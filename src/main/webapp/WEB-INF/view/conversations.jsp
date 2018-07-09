@@ -13,8 +13,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
+<%@ page import="codeu.model.data.Statistic.Type" %>
 <%@ page import="codeu.service.GeneralTimingFilter" %>
-<% GeneralTimingFilter filter = new GeneralTimingFilter("conversations.jsp"); %>
+<% GeneralTimingFilter filter = new GeneralTimingFilter(Type.CONVERSATIONS_JSP); %>
 
 <%@ page import="java.util.List" %>
 <%@ page import="codeu.model.data.Conversation" %>

@@ -1,5 +1,9 @@
 package codeu.controller;
 
+import codeu.model.data.Statistic;
+import codeu.model.data.Statistic.Type;
+import codeu.model.store.persistence.PersistentStorageAgent;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -20,13 +24,18 @@ public class ServletTimingFilter implements Filter {
   @Override
   public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
                        FilterChain filterChain) throws IOException, ServletException {
-    String uri = ((HttpServletRequest)servletRequest).getRequestURI(); // gets URI (e.g. /chat)
-    String method = ((HttpServletRequest)servletRequest).getMethod(); // gets HTTP method (e.g. GET)
     long startTime = System.currentTimeMillis();
+    // runs servlet method (what would be done without the filter)
     filterChain.doFilter(servletRequest, servletResponse);
-    // prints info (e.g. "STATS: GET - /about.jsp: 153ms")
-    System.out.println("STATS: " + method + " - " + uri + ": " +
-        (System.currentTimeMillis() - startTime) + "ms");
+    // creates statistic and saves it
+    long elapsedTime = System.currentTimeMillis() - startTime;
+    String method = ((HttpServletRequest)servletRequest).getMethod(); // gets HTTP method (e.g. GET)
+    String uri = ((HttpServletRequest)servletRequest).getRequestURI(); // gets URI (e.g. /chat)
+    Type type = Type.getFromMethodAndURI(method, uri);
+    if(type != null) {
+      Statistic statistic = new Statistic(type, elapsedTime);
+      PersistentStorageAgent.getInstance().writeThrough(statistic);
+    }
   }
 
   @Override
