@@ -83,7 +83,7 @@
   </servlet-mapping>
 
 
-<servlet>
+  <servlet>
 		<servlet-name>UserProfileServlet</servlet-name>
 		<servlet-class>codeu.controller.UserProfileServlet</servlet-class>
 	</servlet>
@@ -92,5 +92,15 @@
 		<servlet-name>UserProfileServlet</servlet-name>
 		<url-pattern>/userprofile/*</url-pattern>
 	</servlet-mapping>
+
+  <servlet>
+    <servlet-name>RequestServlet</servlet-name>
+    <servlet-class>codeu.controller.RequestServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>RequestServlet</servlet-name>
+    <url-pattern>/requests</url-pattern>
+  </servlet-mapping>
 </web-app>
 
