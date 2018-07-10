@@ -1,5 +1,6 @@
 package codeu.model.store.persistence;
 
+import codeu.model.data.AboutMeMessage;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
@@ -145,5 +146,44 @@ public class PersistentDataStoreTest {
     Assert.assertEquals(authorTwo, resultMessageTwo.getAuthorId());
     Assert.assertEquals(contentTwo, resultMessageTwo.getContent());
     Assert.assertEquals(creationTwo, resultMessageTwo.getCreationTime());
+  }
+  
+
+  @Test
+  public void testSaveAndLoadAbouMeMessages() throws PersistentDataStoreException {
+    UUID idOne = UUID.fromString("10000000-2222-3333-4444-555555555555");
+    UUID authorOne = UUID.fromString("10000002-2222-3333-4444-555555555555");
+    String contentOne = "test content one";
+    Instant creationOne = Instant.ofEpochMilli(1000);
+    AboutMeMessage inputAboutMeMessageOne =
+        new AboutMeMessage(idOne, authorOne, contentOne, creationOne);
+
+    UUID idTwo = UUID.fromString("10000003-2222-3333-4444-555555555555");
+    UUID authorTwo = UUID.fromString("10000005-2222-3333-4444-555555555555");
+    String contentTwo = "test content one";
+    Instant creationTwo = Instant.ofEpochMilli(2000);
+    AboutMeMessage inputAboutMeMessageTwo =
+        new AboutMeMessage(idTwo, authorTwo, contentTwo, creationTwo);
+    // save
+    persistentDataStore.writeThrough(inputAboutMeMessageOne);
+    persistentDataStore.writeThrough(inputAboutMeMessageTwo);
+    
+
+    // load
+    List<AboutMeMessage> resultAboutMeMessages = persistentDataStore.loadAboutMeMessages();
+
+ // confirm that what we saved matches what we loaded
+    AboutMeMessage resultsAboutMeMessageOne = resultAboutMeMessages.get(0);
+    Assert.assertEquals(idOne, resultsAboutMeMessageOne.getId());
+    Assert.assertEquals(authorOne, resultsAboutMeMessageOne.getAuthorId());
+    Assert.assertEquals(contentOne, resultsAboutMeMessageOne.getContent());
+    Assert.assertEquals(creationOne, resultsAboutMeMessageOne.getCreationTime());
+
+    AboutMeMessage resultsAboutMeMessageTwo = resultAboutMeMessages.get(1);
+    Assert.assertEquals(idTwo, resultsAboutMeMessageTwo.getId());
+    Assert.assertEquals(authorTwo, resultsAboutMeMessageTwo.getAuthorId());
+    Assert.assertEquals(contentTwo, resultsAboutMeMessageTwo.getContent());
+    Assert.assertEquals(creationTwo, resultsAboutMeMessageTwo.getCreationTime());
+    
   }
 }

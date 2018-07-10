@@ -15,6 +15,8 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Message;
+
+
 import codeu.model.store.persistence.PersistentStorageAgent;
 import codeu.service.GeneralComparisonsFilter;
 
@@ -94,5 +96,9 @@ public class MessageStore {
   /** Sets the List of Messages stored by this MessageStore. */
   public void setMessages(List<Message> messages) {
     this.messages = messages;
+  }
+
+  public int getNumMessages() {
+    return messages.size();
   }
 }
