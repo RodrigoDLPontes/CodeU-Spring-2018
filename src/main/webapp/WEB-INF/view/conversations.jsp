@@ -28,10 +28,10 @@
   <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
-    <% String username = request.getSession().getAttribute("user"); %>
-    <% if(username != null){ %>
+    <% String username = (String) request.getSession().getAttribute("user"); %>
+    <% if(username != null) { %>
       <a  href="/userprofile/<%= request.getSession().getAttribute("user")%>">Hello <%= username %></a>
-    <% } else{ %>
+    <% } else { %>
       <a href="/login">Login</a>
     
     <% } %>
