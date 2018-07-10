@@ -16,6 +16,8 @@ package codeu.model.store.basic;
 
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
+import codeu.service.GeneralComparisonsFilter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -75,12 +77,16 @@ public class UserStore {
    * @return null if username does not match any existing User.
    */
   public User getUser(String username) {
+    GeneralComparisonsFilter filter = new GeneralComparisonsFilter("UserStore getUser(username)");
     // This approach will be pretty slow if we have many users.
     for (User user : users) {
+      filter.increment();
       if (user.getName().equals(username)) {
+        filter.finish();
         return user;
       }
     }
+    filter.finish();
     return null;
   }
 
@@ -90,11 +96,15 @@ public class UserStore {
    * @return null if the UUID does not match any existing User.
    */
   public User getUser(UUID id) {
+    GeneralComparisonsFilter filter = new GeneralComparisonsFilter("UserStore getUser(id)");
     for (User user : users) {
+      filter.increment();
       if (user.getId().equals(id)) {
+        filter.finish();
         return user;
       }
     }
+    filter.finish();
     return null;
   }
 
@@ -116,11 +126,15 @@ public class UserStore {
 
   /** Return true if the given username is known to the application. */
   public boolean isUserRegistered(String username) {
+    GeneralComparisonsFilter filter = new GeneralComparisonsFilter("UserStore isUserRegistered");
     for (User user : users) {
+      filter.increment();
       if (user.getName().equals(username)) {
+        filter.finish();
         return true;
       }
     }
+    filter.finish();
     return false;
   }
 

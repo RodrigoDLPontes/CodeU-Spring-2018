@@ -61,7 +61,6 @@
     <url-pattern>/activityfeed</url-pattern>
   </servlet-mapping>
 
-
   <servlet>
     <servlet-name>AdminServlet</servlet-name>
     <servlet-class>codeu.controller.AdminServlet</servlet-class>
@@ -82,8 +81,7 @@
     <url-pattern>/logout</url-pattern>
   </servlet-mapping>
 
-
-<servlet>
+  <servlet>
 		<servlet-name>UserProfileServlet</servlet-name>
 		<servlet-class>codeu.controller.UserProfileServlet</servlet-class>
 	</servlet>
@@ -92,5 +90,15 @@
 		<servlet-name>UserProfileServlet</servlet-name>
 		<url-pattern>/userprofile/*</url-pattern>
 	</servlet-mapping>
+
+  <filter>
+    <filter-name>ServletTimingFilter</filter-name>
+    <filter-class>codeu.controller.ServletTimingFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>ServletTimingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 </web-app>
 

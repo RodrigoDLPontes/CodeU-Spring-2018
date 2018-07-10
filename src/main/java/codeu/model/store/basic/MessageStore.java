@@ -18,6 +18,8 @@ import codeu.model.data.Message;
 
 
 import codeu.model.store.persistence.PersistentStorageAgent;
+import codeu.service.GeneralComparisonsFilter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -75,14 +77,18 @@ public class MessageStore {
 
   /** Access the current set of Messages within the given Conversation. */
   public List<Message> getMessagesInConversation(UUID conversationId) {
+    GeneralComparisonsFilter filter = new GeneralComparisonsFilter("MessageStore getMessagesInConversation");
 
     List<Message> messagesInConversation = new ArrayList<>();
 
     for (Message message : messages) {
+      filter.increment();
       if (message.getConversationId().equals(conversationId)) {
         messagesInConversation.add(message);
       }
     }
+
+    filter.finish();
 
     return messagesInConversation;
   }
