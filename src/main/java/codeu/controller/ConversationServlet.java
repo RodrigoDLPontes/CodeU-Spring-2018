@@ -117,8 +117,13 @@ public class ConversationServlet extends HttpServlet {
       // conversation title is already taken, just go into that conversation instead of creating a
       // new one
       Conversation convo = conversationStore.getConversationWithTitle(conversationTitle);
-      user.addConversation(convo);
-      response.sendRedirect("/chat/" + conversationTitle);
+      if (user.getConversations().contains(convo)) {
+        response.sendRedirect("/chat/" + conversationTitle);
+      } else {
+        request.setAttribute("error", "You are not authorized to view this conversation.");
+        request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
+      }
+      
       return;
     }
 

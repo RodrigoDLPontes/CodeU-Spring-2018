@@ -15,6 +15,7 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.UUID;
 
@@ -25,6 +26,7 @@ public class User {
   private final String passwordHash;
   private final Instant creation;
   private LinkedHashSet<Conversation> conversations;
+  private HashSet<Conversation> adminConvos;
 
   /**
    * Constructs a new User.
@@ -40,6 +42,7 @@ public class User {
     this.passwordHash = passwordHash;
     this.creation = creation;
     conversations = new LinkedHashSet<Conversation>();
+    adminConvos = new HashSet<Conversation>();
   }
 
   /** Returns the ID of this User. */
@@ -67,14 +70,29 @@ public class User {
     return conversations;
   }
   
+  /** Returns a set of the conversations this User is an admin for */
+  public HashSet<Conversation> getAdminConvos() {
+    return adminConvos;
+  }
+  
   /** Sets the set of conversations this User belongs to */
   public void setConversations(LinkedHashSet<Conversation> conversations) {
     this.conversations = conversations;
   }
   
+  /** Sets the set of conversations this User is an admin for */
+  public void setAdminConvos(HashSet<Conversation> adminConvos) {
+    this.adminConvos = adminConvos;
+  }
+  
   /** Adds a conversation that this User is a member of to the Conversations set */
   public void addConversation(Conversation convo) {
     conversations.add(convo);
+  }
+  
+  /** Adds a conversation that this User is an admin for to the adminConvos set */
+  public void addAdminConvo(Conversation adminConvo) {
+    adminConvos.add(adminConvo);
   }
   
   @Override
