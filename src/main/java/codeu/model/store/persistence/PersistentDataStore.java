@@ -19,6 +19,7 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentDataStoreException;
+import codeu.service.GeneralTimingFilter;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -56,6 +57,7 @@ public class PersistentDataStore {
    *     Datastore service
    */
   public List<User> loadUsers() throws PersistentDataStoreException {
+    GeneralTimingFilter filter = new GeneralTimingFilter("PersistentDataStore loadUsers");
 
     List<User> users = new ArrayList<>();
 
@@ -79,6 +81,7 @@ public class PersistentDataStore {
       }
     }
 
+    filter.finish();
     return users;
   }
 
@@ -90,6 +93,7 @@ public class PersistentDataStore {
    *     Datastore service
    */
   public List<Conversation> loadConversations() throws PersistentDataStoreException {
+    GeneralTimingFilter filter = new GeneralTimingFilter("PersistentDataStore loadConversations");
 
     List<Conversation> conversations = new ArrayList<>();
 
@@ -113,6 +117,7 @@ public class PersistentDataStore {
       }
     }
 
+    filter.finish();
     return conversations;
   }
 
@@ -124,6 +129,7 @@ public class PersistentDataStore {
    *     Datastore service
    */
   public List<Message> loadMessages() throws PersistentDataStoreException {
+    GeneralTimingFilter filter = new GeneralTimingFilter("PersistentDataStore loadMessages");
 
     List<Message> messages = new ArrayList<>();
 
@@ -148,6 +154,7 @@ public class PersistentDataStore {
       }
     }
 
+    filter.finish();
     return messages;
   }
   
@@ -186,16 +193,23 @@ public class PersistentDataStore {
   
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
+    GeneralTimingFilter filter = new GeneralTimingFilter("PersistentDataStore writeThrough(user)");
+
     Entity userEntity = new Entity("chat-users", user.getId().toString());
     userEntity.setProperty("uuid", user.getId().toString());
     userEntity.setProperty("username", user.getName());
     userEntity.setProperty("password_hash", user.getPasswordHash());
     userEntity.setProperty("creation_time", user.getCreationTime().toString());
     datastore.put(userEntity);
+
+    filter.finish();
   }
 
   /** Write a Message object to the Datastore service. */
   public void writeThrough(Message message) {
+    GeneralTimingFilter filter = new GeneralTimingFilter("PersistentDataStore writeThrough"
+        + "(message)");
+
     Entity messageEntity = new Entity("chat-messages", message.getId().toString());
     messageEntity.setProperty("uuid", message.getId().toString());
     messageEntity.setProperty("conv_uuid", message.getConversationId().toString());
@@ -203,16 +217,23 @@ public class PersistentDataStore {
     messageEntity.setProperty("content", message.getContent());
     messageEntity.setProperty("creation_time", message.getCreationTime().toString());
     datastore.put(messageEntity);
+
+    filter.finish();
   }
 
   /** Write a Conversation object to the Datastore service. */
   public void writeThrough(Conversation conversation) {
+    GeneralTimingFilter filter = new GeneralTimingFilter("PersistentDataStore writeThrough"
+        + "(conversation)");
+
     Entity conversationEntity = new Entity("chat-conversations", conversation.getId().toString());
     conversationEntity.setProperty("uuid", conversation.getId().toString());
     conversationEntity.setProperty("owner_uuid", conversation.getOwnerId().toString());
     conversationEntity.setProperty("title", conversation.getTitle());
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
     datastore.put(conversationEntity);
+
+    filter.finish();
   }
 
   /** Write a AboutMeMessage object to the Datastore service. */

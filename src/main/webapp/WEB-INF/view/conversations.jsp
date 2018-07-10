@@ -13,6 +13,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
+<%@ page import="codeu.service.GeneralTimingFilter" %>
+<% GeneralTimingFilter filter = new GeneralTimingFilter("conversations.jsp"); %>
+
 <%@ page import="java.util.List" %>
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="java.util.LinkedHashSet" %>
@@ -94,3 +97,5 @@
   </div>
 </body>
 </html>
+
+<% filter.finish(); %>
