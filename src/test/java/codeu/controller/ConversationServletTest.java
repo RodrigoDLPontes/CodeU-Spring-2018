@@ -21,7 +21,7 @@ import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
 import javax.servlet.RequestDispatcher;
@@ -71,7 +71,6 @@ public class ConversationServletTest {
 
     conversationServlet.doGet(mockRequest, mockResponse);
 
-    Mockito.verify(mockRequest).setAttribute("is_registered", false);
     Mockito.verify(mockRequest).setAttribute("conversations", null);
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
   }
@@ -86,13 +85,12 @@ public class ConversationServletTest {
             "test_username",
             "$2a$10$eDhncK/4cNH2KE.Y51AWpeL8/5znNBQLuAFlyJpSYNODR/SJQ/Fg6",
             Instant.now());
-    HashSet<Conversation> fakeConvos = new HashSet<Conversation>();
+    LinkedHashSet<Conversation> fakeConvos = new LinkedHashSet<Conversation>();
     fakeUser.setConversations(fakeConvos);
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
     
     conversationServlet.doGet(mockRequest, mockResponse);
 
-    Mockito.verify(mockRequest).setAttribute("is_registered", true);
     Mockito.verify(mockRequest).setAttribute("conversations", fakeConvos);
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
   }
