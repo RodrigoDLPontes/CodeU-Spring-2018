@@ -21,7 +21,7 @@ import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -72,14 +72,12 @@ public class ConversationServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
     String username = (String) request.getSession().getAttribute("user");
-    boolean isRegistered = (username != null);
-    HashSet<Conversation> conversations = null;
+    LinkedHashSet<Conversation> conversations = null;
     
-    if (isRegistered) {
+    if (username != null) {
       conversations = userStore.getUser(username).getConversations();
     }
     
-    request.setAttribute("is_registered", isRegistered);
     request.setAttribute("conversations", conversations);
     request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
   }

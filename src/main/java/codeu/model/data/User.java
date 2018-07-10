@@ -15,7 +15,7 @@
 package codeu.model.data;
 
 import java.time.Instant;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.UUID;
 
 /** Class representing a registered user. */
@@ -24,7 +24,7 @@ public class User {
   private final String name;
   private final String passwordHash;
   private final Instant creation;
-  private HashSet<Conversation> conversations;
+  private LinkedHashSet<Conversation> conversations;
 
   /**
    * Constructs a new User.
@@ -39,7 +39,7 @@ public class User {
     this.name = name;
     this.passwordHash = passwordHash;
     this.creation = creation;
-    conversations = new HashSet<Conversation>();
+    conversations = new LinkedHashSet<Conversation>();
   }
 
   /** Returns the ID of this User. */
@@ -63,12 +63,12 @@ public class User {
   }
   
   /** Returns a set of the conversations this User belongs to */
-  public HashSet<Conversation> getConversations() {
+  public LinkedHashSet<Conversation> getConversations() {
     return conversations;
   }
   
   /** Sets the set of conversations this User belongs to */
-  public void setConversations(HashSet<Conversation> conversations) {
+  public void setConversations(LinkedHashSet<Conversation> conversations) {
     this.conversations = conversations;
   }
   
