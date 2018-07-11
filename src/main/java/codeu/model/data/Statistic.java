@@ -1,18 +1,24 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 public class Statistic {
 
   private UUID id;
-  private Instant instant;
+  private Instant creationTime;
   private Type type;
   private long value;
 
   public Statistic(Type type, long value) {
-    id = UUID.randomUUID();
-    instant = Instant.now();
+    this(UUID.randomUUID(), Instant.now(), type, value);
+  }
+
+  public Statistic(UUID id, Instant creationTime, Type type, long value) {
+    this.id = id;
+    this.creationTime = creationTime;
     this.type = type;
     this.value = value;
   }
@@ -21,9 +27,16 @@ public class Statistic {
     return id;
   }
 
-  public Instant getInstant() {
-    return instant;
+  public Instant getCreationTime() {
+    return creationTime;
   }
+
+  public String getCreationTimeString() {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd hh:mm:ss")
+        .withZone(ZoneOffset.UTC);
+    return formatter.format(creationTime);
+  }
+
 
   public Type getType() {
     return type;
@@ -37,8 +50,8 @@ public class Statistic {
     this.id = id;
   }
 
-  public void setInstant(Instant instant) {
-    this.instant = instant;
+  public void setCreationTime(Instant creationTime) {
+    this.creationTime = creationTime;
   }
 
   public void setType(Type type) {
@@ -51,7 +64,7 @@ public class Statistic {
 
   public enum Type {
     // chat servlet types
-    CHAT_SERVLET_GET_TIME("chat-servlet-get"),
+    CHAT_SERVLET_GET_TIME("chat-servlet-get-time"),
     CHAT_SERVLET_POST_TIME("chat-servlet-post-time"),
     // conversation servlet types
     CONVERSATION_SERVLET_GET_TIME("conversation-servlet-get-time"),
@@ -69,13 +82,13 @@ public class Statistic {
         "conversation-store-get-conversation-with-title-comps"),
     // message store types
     MESSAGE_STORE_ADD_MESSAGE_TIME("message-store-add-message-time"),
-    MESSAGE_STORE_GET_MESSAGES_IN_CONVERSATION_COMPS
-        ("MESSAGE-STORE-GET-MESSAGES-IN-CONVERSATION-COMPS"),
+    MESSAGE_STORE_GET_MESSAGES_IN_CONVERSATION_COMPS(
+        "message-store-get-messages-in-conversation-comps"),
     // user store types
     USER_STORE_ADD_USER_TIME("user-store-add-user-time"),
     USER_STORE_UPDATE_USER_TIME("user-store-update-user-time"),
     USER_STORE_GET_USER_USERNAME_COMPS("user-store-get-user-username-comps"),
-    USER_STORE_GET_USER_ID_COMPS("user-store-get-user-username-id-comps"),
+    USER_STORE_GET_USER_ID_COMPS("user-store-get-user-id-comps"),
     USER_STORE_IS_USER_REGISTERED_COMPS("user-store-is-user-registered-comps"),
     // persistent data store types
     PERSISTENT_DATA_STORE_LOAD_USERS_TIME("persistent-data-store-load-users-time"),
@@ -87,9 +100,8 @@ public class Statistic {
     PERSISTENT_DATA_STORE_WRITE_THROUGH_CONVERSATION_TIME(
         "persistent-data-store-write-through-conversation-time"),
     // jsp types
-    INDEX_JSP("about-jsp"), ABOUT_JSP("about-jsp"), CHAT_JSP("chat-jsp"),
-    CONVERSATIONS_JSP("conversations-jsp"), LOGIN_JSP("login-jsp"), REGISTER_JSP("register-jsp"),
-    STATISTICS_JSP("statistics-jsp");
+    INDEX_JSP("index-jsp"), ABOUT_JSP("about-jsp"), CHAT_JSP("chat-jsp"),
+    CONVERSATIONS_JSP("conversations-jsp"), LOGIN_JSP("login-jsp"), REGISTER_JSP("register-jsp");
 
     private String name;
 

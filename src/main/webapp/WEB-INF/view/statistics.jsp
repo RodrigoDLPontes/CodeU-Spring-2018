@@ -13,13 +13,103 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
+<%@ page import="java.util.List" %>
+<%@ page import="codeu.model.data.Statistic" %>
+<%@ page import="codeu.model.data.Statistic.Type" %>
+<%@ page import="codeu.model.store.persistence.PersistentStorageAgent" %>
 
 <!DOCTYPE html>
 <html>
 <head>
   <title>Statistics</title>
   <link rel="stylesheet" href="/css/main.css">
+  <!-- Functionality below is adapted from Google Chart's Quickstart guide -->
+  <!--Load the AJAX API-->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+
+    // Load the Visualization API and the corechart package.
+    google.charts.load('current', {'packages':['corechart']});
+
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.charts.setOnLoadCallback(drawGetChart);
+
+    google.charts.setOnLoadCallback(drawPostChart);
+
+    // Callback that creates and populates a data table,
+    // instantiates the line chart, passes in the data and draws it
+    function drawGetChart() {
+
+      // Get statistics from Datastore with JSP Java and transform it to JavaScript array
+      <% PersistentStorageAgent instance = PersistentStorageAgent.getInstance(); %>
+      <% List<Statistic> statistics = instance.loadStatistics(Type.CONVERSATION_SERVLET_GET_TIME); %>
+      var table = new Array();
+      <% for (int i = 0; i < statistics.size(); i++) {
+           String date = statistics.get(i).getCreationTimeString();
+           long value = statistics.get(i).getValue();
+      %>
+           table[<%= i %>] = ['<%= date %>', <%= value %>];
+      <% } %>
+
+      // Create the data table.
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'Creation Time');
+      data.addColumn('number', 'Elapsed Time');
+      data.addRows(table);
+
+      // Set chart options
+      var options = {'title':'Conversation Servlet GET Elapsed Time',
+                     'width':800,
+                     'height':600,
+                     'backgroundColor':'#f6f6f6',
+                     'colors':['green'],
+                     'hAxis':{'title':'Creation time'},
+                     'vAxis':{'title':'Elapsed time'},
+                     'legend':{'position':'none'},
+                     'chartArea':{'left':'15%','top':'15%','width':'70%','height':'60%'},
+                     'animation':{'startup':true, 'duration':500, 'easing':'in'}
+      };
+
+      // Instantiate and draw our chart, passing in some options.
+      var chart = new google.visualization.LineChart(document.getElementById('get_chart_div'));
+      chart.draw(data, options);
+    }
+
+    function drawPostChart() {
+
+        <% statistics = instance.loadStatistics(Type.CONVERSATION_SERVLET_POST_TIME); %>
+        var table = new Array();
+        <% for (int i = 0; i < statistics.size(); i++) {
+             String date = statistics.get(i).getCreationTimeString();
+             long value = statistics.get(i).getValue();
+        %>
+             table[<%= i %>] = ['<%= date %>', <%= value %>];
+        <% } %>
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Creation Time');
+        data.addColumn('number', 'Elapsed Time');
+        data.addRows(table);
+
+        var options = {'title':'Conversation Servlet POST Elapsed Time',
+                       'width':800,
+                       'height':600,
+                       'backgroundColor':'#f6f6f6',
+                       'colors':['green'],
+                       'hAxis':{'title':'Creation time'},
+                       'vAxis':{'title':'Elapsed time'},
+                       'legend':{'position':'none'},
+                       'chartArea':{'left':'15%','top':'15%','width':'70%','height':'60%'},
+                       'animation':{'startup':true, 'duration':500, 'easing':'in'}
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('post_chart_div'));
+        chart.draw(data, options);
+    }
+
+  </script>
 </head>
+
 <body>
 
   <nav>
@@ -35,7 +125,12 @@
 
   <div id="container">
     <h1>Statistics</h1>
-    <h2>Statistics will go here.</h2>
+    <h2>Conversation Servlet</h2>
+    <!--Div that will hold the pie chart-->
+    <div id="get_chart_div"></div>
+    <br>
+    <div id="post_chart_div"></div>
+    <br>
   </div>
 
 </body>
