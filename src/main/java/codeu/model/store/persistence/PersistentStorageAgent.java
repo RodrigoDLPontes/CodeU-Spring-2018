@@ -14,6 +14,7 @@
 
 package codeu.model.store.persistence;
 
+import codeu.model.data.AboutMeMessage;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.Statistic;
@@ -21,7 +22,7 @@ import codeu.model.data.Statistic.Type;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentDataStore;
 import codeu.service.GeneralTimingFilter;
-
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -104,6 +105,17 @@ public class PersistentStorageAgent {
     filter.finish();
     return messages;
   }
+  
+  /**
+   * Retrieve all AboutMeMessage objects from the Datastore service. The returned list may be empty.
+   *
+   * @throws PersistentDataStoreException if an error was detected during the load from the
+   *     Datastore service
+   */
+  
+  public List<AboutMeMessage> loadAboutMeMessages() throws PersistentDataStoreException {
+	  return persistentDataStore.loadAboutMeMessages();
+  }
 
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
@@ -133,5 +145,10 @@ public class PersistentStorageAgent {
    * would enter an infinite loop). */
   public void writeThrough(Statistic statistic) {
     persistentDataStore.writeThrough(statistic);
+  }
+
+  /** Write a AboutMeMessagee object to the Datastore service. */
+  public void writeThrough(AboutMeMessage aboutmemessage) {
+    persistentDataStore.writeThrough(aboutmemessage);
   }
 }

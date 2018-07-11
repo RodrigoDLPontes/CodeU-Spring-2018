@@ -15,6 +15,7 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.UUID;
 
 /**
@@ -26,6 +27,7 @@ public class Conversation {
   public final UUID owner;
   public final Instant creation;
   public final String title;
+  private HashSet<User> members;
 
   /**
    * Constructs a new Conversation.
@@ -40,6 +42,7 @@ public class Conversation {
     this.owner = owner;
     this.creation = creation;
     this.title = title;
+    members = new HashSet<User>();
   }
 
   /** Returns the ID of this Conversation. */
@@ -60,5 +63,41 @@ public class Conversation {
   /** Returns the creation time of this Conversation. */
   public Instant getCreationTime() {
     return creation;
+  }
+  
+  /** Returns a set of the members of this Conversation */
+  public HashSet<User> getMembers() {
+    return members;
+  }
+  
+  /** Adds given user as a member to this Conversation */
+  public void addMember(User user) {
+    members.add(user);
+  }
+  
+  @Override
+  public boolean equals(Object o) {
+    // null check
+    if (o == null) {
+      return false;
+    }
+    
+    // self check
+    if (this == o) {
+      return true;
+    }
+    
+    // class check
+    if (!(o instanceof Conversation)) {
+      return false;
+    }
+    
+    Conversation conversation = (Conversation) o;
+    return id.equals(conversation.getId());
+  }
+  
+  @Override
+  public int hashCode() {
+    return id.hashCode();
   }
 }

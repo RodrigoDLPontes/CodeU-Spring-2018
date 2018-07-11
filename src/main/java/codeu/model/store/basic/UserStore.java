@@ -62,6 +62,11 @@ public class UserStore {
   /** The in-memory list of Users. */
   private List<User> users;
 
+  /** Return full list of users */
+  public List<User> getUsers() {
+	  return this.users;
+  }
+  
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private UserStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
@@ -150,6 +155,10 @@ public class UserStore {
    */
   public void setUsers(List<User> users) {
     this.users = users;
+  }
+
+  public int getNumUsers() {
+    return users.size();
   }
 }
 

@@ -21,6 +21,7 @@ import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -70,7 +71,13 @@ public class ConversationServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    List<Conversation> conversations = conversationStore.getAllConversations();
+    String username = (String) request.getSession().getAttribute("user");
+    LinkedHashSet<Conversation> conversations = null;
+    
+    if (username != null) {
+      conversations = userStore.getUser(username).getConversations();
+    }
+    
     request.setAttribute("conversations", conversations);
     request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
   }
@@ -108,12 +115,21 @@ public class ConversationServlet extends HttpServlet {
     if (conversationStore.isTitleTaken(conversationTitle)) {
       // conversation title is already taken, just go into that conversation instead of creating a
       // new one
-      response.sendRedirect("/chat/" + conversationTitle);
+      Conversation convo = conversationStore.getConversationWithTitle(conversationTitle);
+      if (user.getConversations().contains(convo)) {
+        response.sendRedirect("/chat/" + conversationTitle);
+      } else {
+        request.setAttribute("error", "You are not authorized to view this conversation.");
+        request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
+      }
+      
       return;
     }
 
     Conversation conversation =
         new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
+    conversation.addMember(user);
+    user.addConversation(conversation);
 
     conversationStore.addConversation(conversation);
     response.sendRedirect("/chat/" + conversationTitle);

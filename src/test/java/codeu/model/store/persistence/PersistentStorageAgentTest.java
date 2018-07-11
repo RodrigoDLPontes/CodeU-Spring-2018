@@ -1,5 +1,6 @@
 package codeu.model.store.persistence;
 
+import codeu.model.data.AboutMeMessage;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.Statistic;
@@ -49,6 +50,12 @@ public class PersistentStorageAgentTest {
     Mockito.verify(mockPersistentDataStore).loadMessages();
     Mockito.verify(mockPersistentDataStore).writeThrough(any(Statistic.class));
   }
+  
+  @Test
+  public void testLoadAboutMeMessages() throws PersistentDataStoreException {
+    persistentStorageAgent.loadAboutMeMessages();
+    Mockito.verify(mockPersistentDataStore).loadAboutMeMessages();
+  }
 
   @Test
   public void testWriteThroughUser() {
@@ -80,5 +87,14 @@ public class PersistentStorageAgentTest {
     persistentStorageAgent.writeThrough(message);
     Mockito.verify(mockPersistentDataStore).writeThrough(message);
     Mockito.verify(mockPersistentDataStore).writeThrough(any(Statistic.class));
+  }
+  
+  @Test
+  public void testWriteThroughAboutMeMessage() {
+    AboutMeMessage aboutmemessage =
+        new AboutMeMessage(
+            UUID.randomUUID(), UUID.randomUUID(), "test content", Instant.now());
+    persistentStorageAgent.writeThrough(aboutmemessage);
+    Mockito.verify(mockPersistentDataStore).writeThrough(aboutmemessage);
   }
 }
