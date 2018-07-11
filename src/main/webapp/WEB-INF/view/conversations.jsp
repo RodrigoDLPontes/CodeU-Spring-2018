@@ -18,6 +18,7 @@
 
 <%@ page import="java.util.List" %>
 <%@ page import="codeu.model.data.Conversation" %>
+<%@ page import="java.util.LinkedHashSet" %>
 
 <!DOCTYPE html>
 <html>
@@ -30,14 +31,15 @@
   <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
-    <% if(request.getSession().getAttribute("user") != null){ %>
-      <a  href="/userprofile/<%= request.getSession().getAttribute("user")%>">Hello <%= request.getSession().getAttribute("user")%></a>
-    <% } else{ %>
+    <% String username = (String) request.getSession().getAttribute("user"); %>
+    <% if(username != null) { %>
+      <a  href="/userprofile/<%= request.getSession().getAttribute("user")%>">Hello <%= username %></a>
+    <% } else { %>
       <a href="/login">Login</a>
     
     <% } %>
     <a href="/about.jsp">About</a>
-    <% if(request.getSession().getAttribute("user") != null){ %>
+    <% if(username != null) { %>
       <a href="/logout">Logout</a>
     <% } %>    
   </nav>
@@ -49,7 +51,7 @@
         <h2 style="color:red"><%= request.getAttribute("error") %></h2>
     <% } %>
 
-    <% if(request.getSession().getAttribute("user") != null){ %>
+    <% if(username != null) { %>
       <h1>New Conversation</h1>
       <form action="/conversations" method="POST">
           <div class="form-group">
@@ -61,35 +63,36 @@
       </form>
 
       <hr/>
-    <% } %>
+      <h1>Conversations</h1>
 
-    <h1>Conversations</h1>
-
-    <%
-    List<Conversation> conversations =
-      (List<Conversation>) request.getAttribute("conversations");
-    if(conversations == null || conversations.isEmpty()){
-    %>
-      <p>Create a conversation to get started.</p>
-    <%
-    }
-    else{
-    %>
-      <ul class="mdl-list">
-    <%
-      for(Conversation conversation : conversations){
-    %>
-
-      <li><a href="/chat/<%= conversation.getTitle() %>">
-        <%= conversation.getTitle() %></a></li> 
-
-    <%
+      <%
+      LinkedHashSet<Conversation> conversations =
+        (LinkedHashSet<Conversation>) request.getAttribute("conversations");
+      if(conversations == null || conversations.isEmpty()){
+      %>
+        <p>You have no conversations to view.</p>
+      <%
+      } else {
+      %>
+        <ul class="mdl-list">
+      <%
+        for(Conversation conversation : conversations){
+      %>
+        <li><a href="/chat/<%= conversation.getTitle() %>">
+          <%= conversation.getTitle() %></a></li>
+      <%
+        }
+      %>
+        </ul>
+      <%
       }
-    %>
-      </ul>
+    } else { 
+      %>
+      <p>You must <a href="/login">login</a> to view conversations.</p>
     <%
     }
     %>
+
     <hr/>
   </div>
 </body>

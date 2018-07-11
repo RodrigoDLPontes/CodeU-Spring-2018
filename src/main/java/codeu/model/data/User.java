@@ -15,6 +15,8 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.UUID;
 
 /** Class representing a registered user. */
@@ -23,6 +25,8 @@ public class User {
   private final String name;
   private final String passwordHash;
   private final Instant creation;
+  private LinkedHashSet<Conversation> conversations;
+  private HashSet<Conversation> adminConvos;
 
   /**
    * Constructs a new User.
@@ -37,6 +41,8 @@ public class User {
     this.name = name;
     this.passwordHash = passwordHash;
     this.creation = creation;
+    conversations = new LinkedHashSet<Conversation>();
+    adminConvos = new HashSet<Conversation>();
   }
 
   /** Returns the ID of this User. */
@@ -58,4 +64,61 @@ public class User {
   public Instant getCreationTime() {
     return creation;
   }
+  
+  /** Returns a set of the conversations this User belongs to */
+  public LinkedHashSet<Conversation> getConversations() {
+    return conversations;
+  }
+  
+  /** Returns a set of the conversations this User is an admin for */
+  public HashSet<Conversation> getAdminConvos() {
+    return adminConvos;
+  }
+  
+  /** Sets the set of conversations this User belongs to */
+  public void setConversations(LinkedHashSet<Conversation> conversations) {
+    this.conversations = conversations;
+  }
+  
+  /** Sets the set of conversations this User is an admin for */
+  public void setAdminConvos(HashSet<Conversation> adminConvos) {
+    this.adminConvos = adminConvos;
+  }
+  
+  /** Adds a conversation that this User is a member of to the Conversations set */
+  public void addConversation(Conversation convo) {
+    conversations.add(convo);
+  }
+  
+  /** Adds a conversation that this User is an admin for to the adminConvos set */
+  public void addAdminConvo(Conversation adminConvo) {
+    adminConvos.add(adminConvo);
+  }
+  
+  @Override
+  public boolean equals(Object o) {
+    // null check
+    if (o == null) {
+      return false;
+    }
+    
+    // self check
+    if (this == o) {
+      return true;
+    }
+    
+    // class check
+    if (!(o instanceof User)) {
+      return false;
+    }
+    
+    User user = (User) o;
+    return id.equals(user.getId());
+  }
+  
+  @Override
+  public int hashCode() {
+    return id.hashCode();
+  }
+ 
 }
