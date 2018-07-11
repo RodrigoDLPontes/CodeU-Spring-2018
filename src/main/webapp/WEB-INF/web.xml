@@ -86,10 +86,10 @@
     <servlet-class>codeu.controller.UserProfileServlet</servlet-class>
   </servlet>
 
-	<servlet-mapping>
-		<servlet-name>UserProfileServlet</servlet-name>
-		<url-pattern>/userprofile/*</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UserProfileServlet</servlet-name>
+    <url-pattern>/userprofile/*</url-pattern>
+  </servlet-mapping>
   
   <servlet>
     <servlet-name>RequestServlet</servlet-name>
