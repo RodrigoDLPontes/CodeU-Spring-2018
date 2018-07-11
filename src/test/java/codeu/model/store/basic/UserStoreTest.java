@@ -1,5 +1,6 @@
 package codeu.model.store.basic;
 
+import codeu.model.data.Statistic;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.time.Instant;
@@ -10,6 +11,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 
 public class UserStoreTest {
 
@@ -52,6 +56,7 @@ public class UserStoreTest {
     User resultUser = userStore.getUser(USER_ONE.getName());
 
     assertEquals(USER_ONE, resultUser);
+    Mockito.verify(mockPersistentStorageAgent).writeThrough(any(Statistic.class));
   }
 
   @Test
@@ -59,6 +64,7 @@ public class UserStoreTest {
     User resultUser = userStore.getUser(USER_ONE.getId());
 
     assertEquals(USER_ONE, resultUser);
+    Mockito.verify(mockPersistentStorageAgent).writeThrough(any(Statistic.class));
   }
 
   @Test
@@ -66,6 +72,7 @@ public class UserStoreTest {
     User resultUser = userStore.getUser("fake username");
 
     Assert.assertNull(resultUser);
+    Mockito.verify(mockPersistentStorageAgent).writeThrough(any(Statistic.class));
   }
 
   @Test
@@ -73,6 +80,7 @@ public class UserStoreTest {
     User resultUser = userStore.getUser(UUID.randomUUID());
 
     Assert.assertNull(resultUser);
+    Mockito.verify(mockPersistentStorageAgent).writeThrough(any(Statistic.class));
   }
 
   @Test
@@ -89,16 +97,20 @@ public class UserStoreTest {
 
     assertEquals(inputUser, resultUser);
     Mockito.verify(mockPersistentStorageAgent).writeThrough(inputUser);
+    // check if statistic was written twice (in addUser() and getUser())
+    Mockito.verify(mockPersistentStorageAgent, times(2)).writeThrough(any(Statistic.class));
   }
 
   @Test
   public void testIsUserRegistered_true() {
     Assert.assertTrue(userStore.isUserRegistered(USER_ONE.getName()));
+    Mockito.verify(mockPersistentStorageAgent).writeThrough(any(Statistic.class));
   }
 
   @Test
   public void testIsUserRegistered_false() {
     Assert.assertFalse(userStore.isUserRegistered("fake username"));
+    Mockito.verify(mockPersistentStorageAgent).writeThrough(any(Statistic.class));
   }
 
   private void assertEquals(User expectedUser, User actualUser) {

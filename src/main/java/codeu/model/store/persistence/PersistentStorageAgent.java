@@ -17,8 +17,11 @@ package codeu.model.store.persistence;
 import codeu.model.data.AboutMeMessage;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
+import codeu.model.data.Statistic;
+import codeu.model.data.Statistic.Type;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentDataStore;
+import codeu.service.GeneralTimingFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +71,11 @@ public class PersistentStorageAgent {
    *     Datastore service
    */
   public List<User> loadUsers() throws PersistentDataStoreException {
-    return persistentDataStore.loadUsers();
+    GeneralTimingFilter filter = new GeneralTimingFilter(
+        Type.PERSISTENT_DATA_STORE_LOAD_USERS_TIME, this);
+    List<User> users = persistentDataStore.loadUsers();
+    filter.finish();
+    return users;
   }
 
   /**
@@ -78,7 +85,11 @@ public class PersistentStorageAgent {
    *     Datastore service
    */
   public List<Conversation> loadConversations() throws PersistentDataStoreException {
-    return persistentDataStore.loadConversations();
+    GeneralTimingFilter filter = new GeneralTimingFilter(
+        Type.PERSISTENT_DATA_STORE_LOAD_CONVERSATIONS_TIME, this);
+    List<Conversation> conversations = persistentDataStore.loadConversations();
+    filter.finish();
+    return conversations;
   }
 
   /**
@@ -88,7 +99,11 @@ public class PersistentStorageAgent {
    *     Datastore service
    */
   public List<Message> loadMessages() throws PersistentDataStoreException {
-    return persistentDataStore.loadMessages();
+    GeneralTimingFilter filter = new GeneralTimingFilter(
+        Type.PERSISTENT_DATA_STORE_LOAD_MESSAGES_TIME, this);
+    List<Message> messages = persistentDataStore.loadMessages();
+    filter.finish();
+    return messages;
   }
   
   /**
@@ -104,17 +119,32 @@ public class PersistentStorageAgent {
 
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
+    GeneralTimingFilter filter = new GeneralTimingFilter(
+        Type.PERSISTENT_DATA_STORE_WRITE_THROUGH_USER_TIME, this);
     persistentDataStore.writeThrough(user);
+    filter.finish();
   }
 
   /** Write a Message object to the Datastore service. */
   public void writeThrough(Conversation conversation) {
+    GeneralTimingFilter filter = new GeneralTimingFilter(
+        Type.PERSISTENT_DATA_STORE_WRITE_THROUGH_MESSAGE_TIME, this);
     persistentDataStore.writeThrough(conversation);
+    filter.finish();
   }
 
   /** Write a Conversation object to the Datastore service. */
   public void writeThrough(Message message) {
+    GeneralTimingFilter filter = new GeneralTimingFilter(
+        Type.PERSISTENT_DATA_STORE_WRITE_THROUGH_CONVERSATION_TIME, this);
     persistentDataStore.writeThrough(message);
+    filter.finish();
+  }
+
+  /** Write a Statistic object to the Datastore service (we don't time this method otherwise we
+   * would enter an infinite loop). */
+  public void writeThrough(Statistic statistic) {
+    persistentDataStore.writeThrough(statistic);
   }
 
   /** Write a AboutMeMessagee object to the Datastore service. */
