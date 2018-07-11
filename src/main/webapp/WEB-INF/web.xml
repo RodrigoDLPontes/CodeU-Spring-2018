@@ -83,7 +83,7 @@
 
   <servlet>
 		<servlet-name>UserProfileServlet</servlet-name>
-		<servlet-class>codeu.controller.UserProfileServlet</servlet-class>
+    <servlet-class>codeu.controller.UserProfileServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
