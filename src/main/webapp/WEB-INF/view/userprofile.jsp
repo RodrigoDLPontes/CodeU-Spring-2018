@@ -17,6 +17,11 @@ limitations under the License.
 <%@ page import="codeu.model.data.AboutMeMessage"%>
 <%@ page import="codeu.model.data.User"%>
 <%@ page import="codeu.model.store.basic.UserStore"%>
+<%@ page import="codeu.model.store.basic.AboutMeMessageStore"%>
+<%@ page import="codeu.controller.UserProfileServlet"%>
+<% 
+ 
+%>
 <%
 	// Creats a list of all   to all aboutmemessages
 	List<AboutMeMessage> aboutmemessages = (List<AboutMeMessage>) request.getAttribute("aboutmemessage");
@@ -71,8 +76,9 @@ limitations under the License.
 					if (author.equals(currenLoginedInUser)) {
 		%>
 		<li><strong> <%=author%>:
-		</strong> </a> <%=aboutmemessage.getContent()%></li>
-		<button class="btn"><i class="fa fa-close"></i></button>
+		</strong> </a> <%=aboutmemessage.getContent()%> <button class="btn"><i class="fa fa-close" type="submit" name="delete" value="delete"  ></i></button></li>
+		
+		
 		<%
 			}
 		%>

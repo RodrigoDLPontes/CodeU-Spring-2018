@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+
 /**
  * Store class that uses in-memory data structures to hold values and
  * automatically loads from and saves to PersistentStorageAgent. It's a
@@ -95,5 +97,14 @@ public class AboutMeMessageStore {
 
     public int getNumAboutMeMessages() {
         return aboutmemessages.size();
+    }
+
+    
+    
+    /** Delete a about me message  AboutMe Messages a  users have written */
+    public void deleteAboutMeMessage(AboutMeMessage aboutmemessage) {
+      //final DatastoreService dss=DatastoreServiceFactory.getDatastoreService();
+      aboutmemessages.remove(aboutmemessage);
+     
     }
 }

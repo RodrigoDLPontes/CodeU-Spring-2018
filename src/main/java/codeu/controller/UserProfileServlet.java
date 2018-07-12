@@ -1,6 +1,7 @@
 package codeu.controller;
 
 import codeu.model.data.AboutMeMessage;
+
 import codeu.model.data.User;
 import codeu.model.store.basic.AboutMeMessageStore;
 import codeu.model.store.basic.UserStore;
@@ -133,6 +134,8 @@ public class UserProfileServlet extends HttpServlet {
 
       aboutmemessageStore.addAboutMeMessage(aboutmemessage);
       // redirect to a GET request
+      
+      aboutmemessageStore.deleteAboutMeMessage(aboutmemessage);
       response.sendRedirect("/userprofile/" + username);
     }
   }
