@@ -19,8 +19,6 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.Statistic;
 import codeu.model.data.User;
-import codeu.model.store.persistence.PersistentDataStoreException;
-import codeu.service.GeneralTimingFilter;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -29,7 +27,6 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -182,6 +179,28 @@ public class PersistentDataStore {
 
     return  aboutmemessages;
   }
+
+  public List<Statistic> loadStatistics(Statistic.Type type) throws PersistentDataStoreException {
+    List<Statistic> statistics = new ArrayList<>();
+
+    // Retrieve all statistics of that type from the datastore.
+    Query query = new Query(type.getName()).addSort("creation_time", SortDirection.ASCENDING);
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        UUID id = UUID.fromString((String) entity.getProperty("uuid"));
+        long value = (long) entity.getProperty("value");
+        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
+        Statistic statistic = new Statistic(id, creationTime, type, value);
+        statistics.add(statistic);
+      } catch (Exception e) {
+        throw new PersistentDataStoreException(e);
+      }
+    }
+
+    return statistics;
+  }
   
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
@@ -219,7 +238,7 @@ public class PersistentDataStore {
     Entity valueEntity = new Entity(statistic.getType().getName(), statistic.getId().toString());
     valueEntity.setProperty("uuid", statistic.getId().toString());
     valueEntity.setProperty("value", statistic.getValue());
-    valueEntity.setProperty("creation_time", statistic.getInstant().toString());
+    valueEntity.setProperty("creation_time", statistic.getCreationTime().toString());
     datastore.put(valueEntity);
   }
 

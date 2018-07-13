@@ -29,10 +29,10 @@ public class ServletTimingFilter implements Filter {
     filterChain.doFilter(servletRequest, servletResponse);
     // creates statistic and saves it
     long elapsedTime = System.currentTimeMillis() - startTime;
-    String method = ((HttpServletRequest)servletRequest).getMethod(); // gets HTTP method (e.g. GET)
-    String uri = ((HttpServletRequest)servletRequest).getRequestURI(); // gets URI (e.g. /chat)
+    String method = ((HttpServletRequest) servletRequest).getMethod(); // gets HTTP method (eg GET)
+    String uri = ((HttpServletRequest) servletRequest).getRequestURI(); // gets URI (eg /chat)
     Type type = Type.getFromMethodAndURI(method, uri);
-    if(type != null) {
+    if (type != null) {
       Statistic statistic = new Statistic(type, elapsedTime);
       PersistentStorageAgent.getInstance().writeThrough(statistic);
     }

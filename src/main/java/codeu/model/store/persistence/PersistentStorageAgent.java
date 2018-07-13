@@ -117,6 +117,16 @@ public class PersistentStorageAgent {
 	  return persistentDataStore.loadAboutMeMessages();
   }
 
+  /**
+   * Retrieve all Statistic objects from the Datastore service. The returned list may be empty.
+   *
+   * @throws PersistentDataStoreException if an error was detected during the load from the
+   *     Datastore service
+   */
+  public List<Statistic> loadStatistics(Type type) throws PersistentDataStoreException {
+    return persistentDataStore.loadStatistics(type);
+  }
+
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
     GeneralTimingFilter filter = new GeneralTimingFilter(
@@ -128,7 +138,7 @@ public class PersistentStorageAgent {
   /** Write a Message object to the Datastore service. */
   public void writeThrough(Conversation conversation) {
     GeneralTimingFilter filter = new GeneralTimingFilter(
-        Type.PERSISTENT_DATA_STORE_WRITE_THROUGH_MESSAGE_TIME, this);
+        Type.PERSISTENT_DATA_STORE_WRITE_THROUGH_CONVERSATION_TIME, this);
     persistentDataStore.writeThrough(conversation);
     filter.finish();
   }
@@ -136,7 +146,7 @@ public class PersistentStorageAgent {
   /** Write a Conversation object to the Datastore service. */
   public void writeThrough(Message message) {
     GeneralTimingFilter filter = new GeneralTimingFilter(
-        Type.PERSISTENT_DATA_STORE_WRITE_THROUGH_CONVERSATION_TIME, this);
+        Type.PERSISTENT_DATA_STORE_WRITE_THROUGH_MESSAGE_TIME, this);
     persistentDataStore.writeThrough(message);
     filter.finish();
   }

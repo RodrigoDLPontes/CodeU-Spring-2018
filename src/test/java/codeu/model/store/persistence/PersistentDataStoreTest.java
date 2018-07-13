@@ -3,6 +3,8 @@ package codeu.model.store.persistence;
 import codeu.model.data.AboutMeMessage;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
+import codeu.model.data.Statistic;
+import codeu.model.data.Statistic.Type;
 import codeu.model.data.User;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
@@ -172,7 +174,7 @@ public class PersistentDataStoreTest {
     // load
     List<AboutMeMessage> resultAboutMeMessages = persistentDataStore.loadAboutMeMessages();
 
- // confirm that what we saved matches what we loaded
+    // confirm that what we saved matches what we loaded
     AboutMeMessage resultsAboutMeMessageOne = resultAboutMeMessages.get(0);
     Assert.assertEquals(idOne, resultsAboutMeMessageOne.getId());
     Assert.assertEquals(authorOne, resultsAboutMeMessageOne.getAuthorId());
@@ -184,6 +186,38 @@ public class PersistentDataStoreTest {
     Assert.assertEquals(authorTwo, resultsAboutMeMessageTwo.getAuthorId());
     Assert.assertEquals(contentTwo, resultsAboutMeMessageTwo.getContent());
     Assert.assertEquals(creationTwo, resultsAboutMeMessageTwo.getCreationTime());
-    
+  }
+
+  @Test
+  public void testSaveAndLoadStatistics() throws PersistentDataStoreException {
+    UUID idOne = UUID.fromString("10000000-2222-3333-4444-555555555555");
+    Instant creationOne = Instant.ofEpochMilli(1000);
+    long valueOne = 1248;
+    Statistic inputStatisticOne = new Statistic(idOne, creationOne, Type.TEST, valueOne);
+
+    UUID idTwo = UUID.fromString("10000001-2222-3333-4444-555555555555");
+    Instant creationTwo = Instant.ofEpochMilli(2000);
+    long valueTwo = 1235;
+    Statistic inputStatisticTwo = new Statistic(idTwo, creationTwo, Type.TEST, valueTwo);
+
+    // save
+    persistentDataStore.writeThrough(inputStatisticOne);
+    persistentDataStore.writeThrough(inputStatisticTwo);
+
+    // load
+    List<Statistic> resultStatistics = persistentDataStore.loadStatistics(Type.TEST);
+
+    // confirm that what we saved matches what we loaded
+    Statistic resultStatisticOne = resultStatistics.get(0);
+    Assert.assertEquals(idOne, resultStatisticOne.getId());
+    Assert.assertEquals(creationOne, resultStatisticOne.getCreationTime());
+    Assert.assertEquals(Type.TEST, resultStatisticOne.getType());
+    Assert.assertEquals(valueOne, resultStatisticOne.getValue());
+
+    Statistic resultStatisticTwo = resultStatistics.get(1);
+    Assert.assertEquals(idTwo, resultStatisticTwo.getId());
+    Assert.assertEquals(creationTwo, resultStatisticTwo.getCreationTime());
+    Assert.assertEquals(Type.TEST, resultStatisticTwo.getType());
+    Assert.assertEquals(valueTwo, resultStatisticTwo.getValue());
   }
 }
