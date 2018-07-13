@@ -135,7 +135,7 @@ public class UserProfileServlet extends HttpServlet {
       aboutmemessageStore.addAboutMeMessage(aboutmemessage);
       // redirect to a GET request
       
-      aboutmemessageStore.deleteAboutMeMessage(aboutmemessage);
+     // aboutmemessageStore.deleteAboutMeMessage(aboutmemessage);
       response.sendRedirect("/userprofile/" + username);
     }
   }
