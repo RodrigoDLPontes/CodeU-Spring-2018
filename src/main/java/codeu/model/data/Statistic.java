@@ -46,23 +46,9 @@ public class Statistic {
     return value;
   }
 
-  public void setId(UUID id) {
-    this.id = id;
-  }
-
-  public void setCreationTime(Instant creationTime) {
-    this.creationTime = creationTime;
-  }
-
-  public void setType(Type type) {
-    this.type = type;
-  }
-
-  public void setValue(long value) {
-    this.value = value;
-  }
-
   public enum Type {
+    // test type
+    TEST("test"),
     // chat servlet types
     CHAT_SERVLET_GET_TIME("chat-servlet-get-time"),
     CHAT_SERVLET_POST_TIME("chat-servlet-post-time"),
@@ -115,8 +101,11 @@ public class Statistic {
 
     /** Gets appropriate Type from request's method and URI */
     public static Type getFromMethodAndURI(String method, String uri) {
+      if(!method.equals("GET") && !method.equals("POST")) {
+        return null;
+      }
       // is a chat request
-      if (uri.startsWith("/chat")) {
+      if (uri.startsWith("/chat/")) {
         if (method.equals("GET")) {
           return CHAT_SERVLET_GET_TIME;
         } else {
