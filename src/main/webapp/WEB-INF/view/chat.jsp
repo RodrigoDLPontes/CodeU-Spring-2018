@@ -35,7 +35,17 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     #chat {
       background-color: white;
       height: 500px;
-      overflow-y: scroll
+      overflow-y: scroll;
+      float: left;
+      width: 580px;
+    }
+
+    #members {
+      background-color: white;
+      height: 500px;
+      margin-left: 600px;
+      width: 200px;
+      overflow-y: scroll;
     }
   </style>
 
@@ -90,6 +100,10 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       }
     %>
       </ul>
+    </div>
+
+    <div id="members">
+      <p style="text-align: center"><strong>Members</strong></p>
     </div>
 
     <hr/>
