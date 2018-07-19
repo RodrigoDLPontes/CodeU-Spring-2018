@@ -7,6 +7,8 @@ import codeu.model.data.Statistic;
 import codeu.model.data.Statistic.Type;
 import codeu.model.data.User;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,8 +73,10 @@ public class PersistentStorageAgentTest {
         new User(
             UUID.randomUUID(),
             "test_username",
-            "$2a$10$5GNCbSPS1sqqM9.hdiE2hexn1w.vnNoR.CaHIztFEhdAD7h82tqX.",
-            Instant.now());
+            "$2a$10$bBiLUAVmUFK6Iwg5rmpBUOIBW6rIMhU1eKfi3KR60V9UXaYTwPfHy",
+            Instant.now(),
+            new LinkedHashSet<Conversation>(),
+            new HashSet<Conversation>());
     persistentStorageAgent.writeThrough(user);
     Mockito.verify(mockPersistentDataStore).writeThrough(user);
     Mockito.verify(mockPersistentDataStore).writeThrough(any(Statistic.class));
@@ -81,7 +85,8 @@ public class PersistentStorageAgentTest {
   @Test
   public void testWriteThroughConversation() {
     Conversation conversation =
-        new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now());
+        new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now(),
+            new LinkedHashSet<User>());
     persistentStorageAgent.writeThrough(conversation);
     Mockito.verify(mockPersistentDataStore).writeThrough(conversation);
     Mockito.verify(mockPersistentDataStore).writeThrough(any(Statistic.class));

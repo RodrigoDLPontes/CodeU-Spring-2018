@@ -9,6 +9,8 @@ import codeu.model.data.User;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
 import org.junit.After;
@@ -45,13 +47,15 @@ public class PersistentDataStoreTest {
     String nameOne = "test_username_one";
     String passwordHashOne = "$2a$10$BNte6sC.qoL4AVjO3Rk8ouY6uFaMnsW8B9NjtHWaDNe8GlQRPRT1S";
     Instant creationOne = Instant.ofEpochMilli(1000);
-    User inputUserOne = new User(idOne, nameOne, passwordHashOne, creationOne);
+    User inputUserOne = new User(idOne, nameOne, passwordHashOne, creationOne, 
+        new LinkedHashSet<Conversation>(), new HashSet<Conversation>());
 
     UUID idTwo = UUID.fromString("10000001-2222-3333-4444-555555555555");
     String nameTwo = "test_username_two";
     String passwordHashTwo = "$2a$10$ttaMOMMGLKxBBuTN06VPvu.jVKif.IczxZcXfLcqEcFi1lq.sLb6i";
     Instant creationTwo = Instant.ofEpochMilli(2000);
-    User inputUserTwo = new User(idTwo, nameTwo, passwordHashTwo, creationTwo);
+    User inputUserTwo = new User(idTwo, nameTwo, passwordHashTwo, creationTwo,
+        new LinkedHashSet<Conversation>(), new HashSet<Conversation>());
 
     // save
     persistentDataStore.writeThrough(inputUserOne);
@@ -80,13 +84,15 @@ public class PersistentDataStoreTest {
     UUID ownerOne = UUID.fromString("10000001-2222-3333-4444-555555555555");
     String titleOne = "Test_Title";
     Instant creationOne = Instant.ofEpochMilli(1000);
-    Conversation inputConversationOne = new Conversation(idOne, ownerOne, titleOne, creationOne);
+    Conversation inputConversationOne = new Conversation(idOne, ownerOne, titleOne, creationOne,
+        new LinkedHashSet<User>());
 
     UUID idTwo = UUID.fromString("10000002-2222-3333-4444-555555555555");
     UUID ownerTwo = UUID.fromString("10000003-2222-3333-4444-555555555555");
     String titleTwo = "Test_Title_Two";
     Instant creationTwo = Instant.ofEpochMilli(2000);
-    Conversation inputConversationTwo = new Conversation(idTwo, ownerTwo, titleTwo, creationTwo);
+    Conversation inputConversationTwo = new Conversation(idTwo, ownerTwo, titleTwo, creationTwo,
+        new LinkedHashSet<User>());
 
     // save
     persistentDataStore.writeThrough(inputConversationOne);

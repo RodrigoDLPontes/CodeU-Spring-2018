@@ -18,9 +18,13 @@ import codeu.model.data.Conversation;
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.UserStore;
+import codeu.model.store.persistence.PersistentDataStore;
+import codeu.model.store.persistence.PersistentStorageAgent;
+
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
@@ -78,15 +82,15 @@ public class ConversationServletTest {
   @Test
   public void testDoGet_UserLoggedIn() throws IOException, ServletException {
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
-    
+    LinkedHashSet<Conversation> fakeConvos = new LinkedHashSet<Conversation>();
     User fakeUser =
         new User(
             UUID.randomUUID(),
             "test_username",
             "$2a$10$eDhncK/4cNH2KE.Y51AWpeL8/5znNBQLuAFlyJpSYNODR/SJQ/Fg6",
-            Instant.now());
-    LinkedHashSet<Conversation> fakeConvos = new LinkedHashSet<Conversation>();
-    fakeUser.setConversations(fakeConvos);
+            Instant.now(),
+            fakeConvos,
+            new HashSet<Conversation>());
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
     
     conversationServlet.doGet(mockRequest, mockResponse);
@@ -128,7 +132,9 @@ public class ConversationServletTest {
             UUID.randomUUID(),
             "test_username",
             "$2a$10$eDhncK/4cNH2KE.Y51AWpeL8/5znNBQLuAFlyJpSYNODR/SJQ/Fg6",
-            Instant.now());
+            Instant.now(),
+            new LinkedHashSet<Conversation>(),
+            new HashSet<Conversation>());
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
 
     conversationServlet.doPost(mockRequest, mockResponse);
@@ -139,7 +145,7 @@ public class ConversationServletTest {
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
   }
 
-  /*@Test
+  @Test
   public void testDoPost_ConversationNameTaken() throws IOException, ServletException {
     Mockito.when(mockRequest.getParameter("conversationTitle")).thenReturn("test_conversation");
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
@@ -149,7 +155,9 @@ public class ConversationServletTest {
             UUID.randomUUID(),
             "test_username",
             "$2a$10$eDhncK/4cNH2KE.Y51AWpeL8/5znNBQLuAFlyJpSYNODR/SJQ/Fg6",
-            Instant.now());
+            Instant.now(),
+            new LinkedHashSet<Conversation>(),
+            new HashSet<Conversation>());
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
 
     Mockito.when(mockConversationStore.isTitleTaken("test_conversation")).thenReturn(true);
@@ -158,31 +166,7 @@ public class ConversationServletTest {
 
     Mockito.verify(mockConversationStore, Mockito.never())
         .addConversation(Mockito.any(Conversation.class));
-    Mockito.verify(mockResponse).sendRedirect("/chat/test_conversation");
-  }*/
-
-  @Test
-  public void testDoPost_NewConversation() throws IOException, ServletException {
-    Mockito.when(mockRequest.getParameter("conversationTitle")).thenReturn("test_conversation");
-    Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
-
-    User fakeUser =
-        new User(
-            UUID.randomUUID(),
-            "test_username",
-            "$2a$10$eDhncK/4cNH2KE.Y51AWpeL8/5znNBQLuAFlyJpSYNODR/SJQ/Fg6",
-            Instant.now());
-    Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
-
-    Mockito.when(mockConversationStore.isTitleTaken("test_conversation")).thenReturn(false);
-
-    conversationServlet.doPost(mockRequest, mockResponse);
-
-    ArgumentCaptor<Conversation> conversationArgumentCaptor =
-        ArgumentCaptor.forClass(Conversation.class);
-    Mockito.verify(mockConversationStore).addConversation(conversationArgumentCaptor.capture());
-    Assert.assertEquals(conversationArgumentCaptor.getValue().getTitle(), "test_conversation");
-
-    Mockito.verify(mockResponse).sendRedirect("/chat/test_conversation");
+    Mockito.verify(mockRequest).setAttribute("error", 
+        "You are not authorized to view this conversation.");
   }
 }

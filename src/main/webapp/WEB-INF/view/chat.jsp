@@ -47,6 +47,11 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       width: 200px;
       overflow-y: scroll;
     }
+
+    #invite {
+      background-color: white;
+      float: bottom;
+    }
   </style>
 
   <script>
