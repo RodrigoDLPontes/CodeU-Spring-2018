@@ -15,12 +15,15 @@
 <% GeneralTimingFilter filter = new GeneralTimingFilter(Type.CHAT_JSP); %>
 
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.LinkedHashSet" %>
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
+<%@ page import="codeu.model.data.User" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
 <%
 Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
+LinkedHashSet<User> members = (LinkedHashSet<User>) request.getAttribute("members");
 		  /*** The unique Url that is generated for each Users about me page  */
 		
 %>
@@ -94,7 +97,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
         String author = UserStore.getInstance()
           .getUser(message.getAuthorId()).getName();
 
-        String url = "/userprofile/"+ author;
+        String url = "/userprofile/" + author;
     %>
 
       <li><strong> <a href= <%= url %>> <%= author %>:</strong> </a>  <%= message.getContent() %></li>
@@ -109,6 +112,17 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 
     <div id="members">
       <p style="text-align: center"><strong>Members</strong></p>
+      <ul>
+        <% for (User user : members) {
+            String username = user.getName();
+        %>
+
+        <li><%= username %></li>
+
+        <%
+          }
+        %>
+      </ul>
     </div>
 
     <hr/>
