@@ -35,6 +35,7 @@
     <% String username = (String) request.getSession().getAttribute("user"); %>
     <% if(username != null) { %>
       <a  href="/userprofile/<%= request.getSession().getAttribute("user")%>">Hello <%= username %></a>
+      <a href="/mentions">Mentions</a>
     <% } else { %>
       <a href="/login">Login</a>
     

@@ -100,6 +100,16 @@
     <servlet-name>RequestServlet</servlet-name>
     <url-pattern>/requests</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>MentionsServlet</servlet-name>
+    <servlet-class>codeu.controller.MentionsServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>MentionsServlet</servlet-name>
+    <url-pattern>/mentions</url-pattern>
+  </servlet-mapping>
 
   <servlet>
     <servlet-name>StatisticsServlet</servlet-name>
@@ -120,6 +130,8 @@
     <filter-name>ServletTimingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+  
+  
 
 </web-app>
 
