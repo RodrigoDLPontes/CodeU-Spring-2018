@@ -32,17 +32,18 @@
     google.charts.load('current', {'packages':['corechart']});
 
     // Set a callback to run when the Google Visualization API is loaded.
-    google.charts.setOnLoadCallback(drawGetChart);
+    google.charts.setOnLoadCallback(drawFirstChart);
 
-    google.charts.setOnLoadCallback(drawPostChart);
-
+    google.charts.setOnLoadCallback(drawSecondChart);
+    
     // Callback that creates and populates a data table,
     // instantiates the line chart, passes in the data and draws it
-    function drawGetChart() {
+    function drawFirstChart() {
 
       // Get statistics from Datastore with JSP Java and transform it to JavaScript array
       <% PersistentStorageAgent instance = PersistentStorageAgent.getInstance(); %>
-      <% List<Statistic> statistics = instance.loadStatistics(Type.CONVERSATION_SERVLET_GET_TIME); %>
+      <% List<Statistic> statistics = instance.loadStatistics(
+           Type.MESSAGE_STORE_ADD_MESSAGE_TIME); %>
       var table = new Array();
       <% for (int i = 0; i < statistics.size(); i++) {
            String date = statistics.get(i).getCreationTimeString();
@@ -58,7 +59,7 @@
       data.addRows(table);
 
       // Set chart options
-      var options = {'title':'Conversation Servlet GET Elapsed Time',
+      var options = {'title':'Message Store addMessage() Elapsed Time',
                      'width':800,
                      'height':600,
                      'backgroundColor':'#f6f6f6',
@@ -71,13 +72,15 @@
       };
 
       // Instantiate and draw our chart, passing in some options.
-      var chart = new google.visualization.LineChart(document.getElementById('get_chart_div'));
+      var chart = new google.visualization.LineChart(document.getElementById(
+    		  'add_message_chart_div'));
       chart.draw(data, options);
     }
 
-    function drawPostChart() {
+    function drawSecondChart() {
 
-        <% statistics = instance.loadStatistics(Type.CONVERSATION_SERVLET_POST_TIME); %>
+        <% statistics = instance.loadStatistics(
+             Type.MESSAGE_STORE_GET_MESSAGES_IN_CONVERSATION_COMPS); %>
         var table = new Array();
         <% for (int i = 0; i < statistics.size(); i++) {
              String date = statistics.get(i).getCreationTimeString();
@@ -91,7 +94,7 @@
         data.addColumn('number', 'Elapsed Time');
         data.addRows(table);
 
-        var options = {'title':'Conversation Servlet POST Elapsed Time',
+        var options = {'title':'Message Store getMessagesInConversation() Number of Comparisons',
                        'width':800,
                        'height':600,
                        'backgroundColor':'#f6f6f6',
@@ -103,7 +106,8 @@
                        'animation':{'startup':true, 'duration':500, 'easing':'in'}
         };
 
-        var chart = new google.visualization.LineChart(document.getElementById('post_chart_div'));
+        var chart = new google.visualization.LineChart(document.getElementById(
+        		'get_messages_chart_div'));
         chart.draw(data, options);
     }
 
@@ -122,14 +126,26 @@
     <% } %>
     <a href="/about.jsp">About</a>
   </nav>
+  
+  <div id="sidenav">
+  	<a href="/statistics/chat-servlet">Chat Servlet</a><br>
+  	<a href="/statistics/conversation-servlet">Conversation Servlet</a><br>
+  	<a href="/statistics/login-servlet">Login Servlet</a><br>
+  	<a href="/statistics/register-servlet">Register Servlet</a><br>
+  	<a href="/statistics/conversation-store">Conversation Store</a><br>
+  	<a style="color:#202020;" href="/statistics/message-store">Message Store</a><br>
+  	<a href="/statistics/user-store">User Store</a><br>
+  	<a href="/statistics/persistent-data-store">Persistant Data Store</a><br>
+  	<a href="/statistics/jsp-pages">JSP Pages</a><br>
+  </div>
 
   <div id="container">
     <h1>Statistics</h1>
-    <h2>Conversation Servlet</h2>
-    <!--Div that will hold the pie chart-->
-    <div id="get_chart_div"></div>
+    <h2>Message Store</h2>
+    <!--Div that will hold the line chart-->
+    <div id="add_message_chart_div"></div>
     <br>
-    <div id="post_chart_div"></div>
+    <div id="get_messages_chart_div"></div>
     <br>
   </div>
 
