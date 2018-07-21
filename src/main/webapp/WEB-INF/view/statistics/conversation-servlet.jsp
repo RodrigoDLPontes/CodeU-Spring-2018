@@ -122,17 +122,17 @@
     <% } %>
     <a href="/about.jsp">About</a>
   </nav>
-  
+
   <div id="sidenav">
-  	<a href="/statistics/chat-servlet">Chat Servlet</a><br>
-  	<a style="color:#202020;" href="/statistics/conversation-servlet">Conversation Servlet</a><br>
-  	<a href="/statistics/login-servlet">Login Servlet</a><br>
-  	<a href="/statistics/register-servlet">Register Servlet</a><br>
-  	<a href="/statistics/conversation-store">Conversation Store</a><br>
-  	<a href="/statistics/message-store">Message Store</a><br>
-  	<a href="/statistics/user-store">User Store</a><br>
-  	<a href="/statistics/persistent-data-store">Persistant Data Store</a><br>
-  	<a href="/statistics/jsp-pages">JSP Pages</a><br>
+      <a href="/statistics/chat-servlet">Chat Servlet</a><br>
+      <a style="color:#202020;" href="/statistics/conversation-servlet">Conversation Servlet</a><br>
+      <a href="/statistics/login-servlet">Login Servlet</a><br>
+      <a href="/statistics/register-servlet">Register Servlet</a><br>
+      <a href="/statistics/conversation-store">Conversation Store</a><br>
+      <a href="/statistics/message-store">Message Store</a><br>
+      <a href="/statistics/user-store">User Store</a><br>
+      <a href="/statistics/persistent-data-store">Persistant Data Store</a><br>
+      <a href="/statistics/jsp-pages">JSP Pages</a><br>
   </div>
 
   <div id="container">

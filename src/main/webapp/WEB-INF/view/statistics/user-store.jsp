@@ -35,11 +35,11 @@
     google.charts.setOnLoadCallback(drawFirstChart);
 
     google.charts.setOnLoadCallback(drawSecondChart);
-    
+
     google.charts.setOnLoadCallback(drawThirdChart);
-    
+
     google.charts.setOnLoadCallback(drawFourthChart);
-    
+
     google.charts.setOnLoadCallback(drawFifthChart);
 
     // Callback that creates and populates a data table,
@@ -110,10 +110,10 @@
         };
 
         var chart = new google.visualization.LineChart(document.getElementById(
-        		'get_user_id_chart_div'));
+                'get_user_id_chart_div'));
         chart.draw(data, options);
     }
-    
+
     function drawThirdChart() {
 
         <% statistics = instance.loadStatistics(Type.USER_STORE_GET_USER_USERNAME_COMPS); %>
@@ -143,10 +143,10 @@
         };
 
         var chart = new google.visualization.LineChart(document.getElementById(
-        		'get_user_username_chart_div'));
+                'get_user_username_chart_div'));
         chart.draw(data, options);
     }
-    
+
     function drawFourthChart() {
 
         <% statistics = instance.loadStatistics(Type.USER_STORE_IS_USER_REGISTERED_COMPS); %>
@@ -176,10 +176,10 @@
         };
 
         var chart = new google.visualization.LineChart(document.getElementById(
-        		'is_user_registered_chart_div'));
+                'is_user_registered_chart_div'));
         chart.draw(data, options);
     }
-    
+
     function drawFifthChart() {
 
         <% statistics = instance.loadStatistics(Type.USER_STORE_UPDATE_USER_TIME); %>
@@ -209,7 +209,7 @@
         };
 
         var chart = new google.visualization.LineChart(document.getElementById(
-        		'update_user_chart_div'));
+                'update_user_chart_div'));
         chart.draw(data, options);
     }
 
@@ -228,17 +228,17 @@
     <% } %>
     <a href="/about.jsp">About</a>
   </nav>
-  
+
   <div id="sidenav">
-  	<a href="/statistics/chat-servlet">Chat Servlet</a><br>
-  	<a href="/statistics/conversation-servlet">Conversation Servlet</a><br>
-  	<a href="/statistics/login-servlet">Login Servlet</a><br>
-  	<a href="/statistics/register-servlet">Register Servlet</a><br>
-  	<a href="/statistics/conversation-store">Conversation Store</a><br>
-  	<a href="/statistics/message-store">Message Store</a><br>
-  	<a style="color:#202020;" href="/statistics/user-store">User Store</a><br>
-  	<a href="/statistics/persistent-data-store">Persistant Data Store</a><br>
-  	<a href="/statistics/jsp-pages">JSP Pages</a><br>
+      <a href="/statistics/chat-servlet">Chat Servlet</a><br>
+      <a href="/statistics/conversation-servlet">Conversation Servlet</a><br>
+      <a href="/statistics/login-servlet">Login Servlet</a><br>
+      <a href="/statistics/register-servlet">Register Servlet</a><br>
+      <a href="/statistics/conversation-store">Conversation Store</a><br>
+      <a href="/statistics/message-store">Message Store</a><br>
+      <a style="color:#202020;" href="/statistics/user-store">User Store</a><br>
+      <a href="/statistics/persistent-data-store">Persistant Data Store</a><br>
+      <a href="/statistics/jsp-pages">JSP Pages</a><br>
   </div>
 
   <div id="container">

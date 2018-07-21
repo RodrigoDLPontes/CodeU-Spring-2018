@@ -35,13 +35,13 @@
     google.charts.setOnLoadCallback(drawFirstChart);
 
     google.charts.setOnLoadCallback(drawSecondChart);
-    
+
     google.charts.setOnLoadCallback(drawThirdChart);
-    
+
     google.charts.setOnLoadCallback(drawFourthChart);
-    
+
     google.charts.setOnLoadCallback(drawFifthChart);
-    
+
     google.charts.setOnLoadCallback(drawSixthChart);
 
     // Callback that creates and populates a data table,
@@ -80,7 +80,7 @@
 
       // Instantiate and draw our chart, passing in some options.
       var chart = new google.visualization.LineChart(document.getElementById(
-    		  'index_chart_div'));
+              'index_chart_div'));
       chart.draw(data, options);
     }
 
@@ -113,10 +113,10 @@
         };
 
         var chart = new google.visualization.LineChart(document.getElementById(
-        		'about_chart_div'));
+                'about_chart_div'));
         chart.draw(data, options);
     }
-    
+
     function drawThirdChart() {
 
         <% statistics = instance.loadStatistics(Type.CHAT_JSP); %>
@@ -146,10 +146,10 @@
         };
 
         var chart = new google.visualization.LineChart(document.getElementById(
-        		'chat_chart_div'));
+                'chat_chart_div'));
         chart.draw(data, options);
     }
-    
+
     function drawFourthChart() {
 
         <% statistics = instance.loadStatistics(Type.CONVERSATIONS_JSP); %>
@@ -179,10 +179,10 @@
         };
 
         var chart = new google.visualization.LineChart(document.getElementById(
-        		'conversations_chart_div'));
+                'conversations_chart_div'));
         chart.draw(data, options);
     }
-    
+
     function drawFifthChart() {
 
         <% statistics = instance.loadStatistics(Type.LOGIN_JSP); %>
@@ -212,10 +212,10 @@
         };
 
         var chart = new google.visualization.LineChart(document.getElementById(
-        		'login_chart_div'));
+                'login_chart_div'));
         chart.draw(data, options);
     }
-    
+
     function drawSixthChart() {
 
         <% statistics = instance.loadStatistics(Type.REGISTER_JSP); %>
@@ -245,7 +245,7 @@
         };
 
         var chart = new google.visualization.LineChart(document.getElementById(
-        		'register_chart_div'));
+                'register_chart_div'));
         chart.draw(data, options);
     }
 
@@ -264,17 +264,17 @@
     <% } %>
     <a href="/about.jsp">About</a>
   </nav>
-  
+
   <div id="sidenav">
-  	<a href="/statistics/chat-servlet">Chat Servlet</a><br>
-  	<a href="/statistics/conversation-servlet">Conversation Servlet</a><br>
-  	<a href="/statistics/login-servlet">Login Servlet</a><br>
-  	<a href="/statistics/register-servlet">Register Servlet</a><br>
-  	<a href="/statistics/conversation-store">Conversation Store</a><br>
-  	<a href="/statistics/message-store">Message Store</a><br>
-  	<a href="/statistics/user-store">User Store</a><br>
-  	<a href="/statistics/persistent-data-store">Persistant Data Store</a><br>
-  	<a style="color:#202020;" href="/statistics/jsp-pages">JSP Pages</a><br>
+      <a href="/statistics/chat-servlet">Chat Servlet</a><br>
+      <a href="/statistics/conversation-servlet">Conversation Servlet</a><br>
+      <a href="/statistics/login-servlet">Login Servlet</a><br>
+      <a href="/statistics/register-servlet">Register Servlet</a><br>
+      <a href="/statistics/conversation-store">Conversation Store</a><br>
+      <a href="/statistics/message-store">Message Store</a><br>
+      <a href="/statistics/user-store">User Store</a><br>
+      <a href="/statistics/persistent-data-store">Persistant Data Store</a><br>
+      <a style="color:#202020;" href="/statistics/jsp-pages">JSP Pages</a><br>
   </div>
 
   <div id="container">

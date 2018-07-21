@@ -35,7 +35,7 @@
     google.charts.setOnLoadCallback(drawFirstChart);
 
     google.charts.setOnLoadCallback(drawSecondChart);
-    
+
     google.charts.setOnLoadCallback(drawThirdChart);
 
     // Callback that creates and populates a data table,
@@ -75,7 +75,7 @@
 
       // Instantiate and draw our chart, passing in some options.
       var chart = new google.visualization.LineChart(document.getElementById(
-    		  'add_conversation_chart_div'));
+              'add_conversation_chart_div'));
       chart.draw(data, options);
     }
 
@@ -109,10 +109,10 @@
         };
 
         var chart = new google.visualization.LineChart(document.getElementById(
-        		'get_conversation_chart_div'));
+                'get_conversation_chart_div'));
         chart.draw(data, options);
     }
-    
+
     function drawThirdChart() {
 
         <% statistics = instance.loadStatistics(Type.CONVERSATION_STORE_IS_TITLE_TAKEN_COMPS); %>
@@ -142,7 +142,7 @@
         };
 
         var chart = new google.visualization.LineChart(document.getElementById(
-        		'is_title_taken_chart_div'));
+                'is_title_taken_chart_div'));
         chart.draw(data, options);
     }
 
@@ -161,17 +161,17 @@
     <% } %>
     <a href="/about.jsp">About</a>
   </nav>
-  
+
   <div id="sidenav">
-  	<a href="/statistics/chat-servlet">Chat Servlet</a><br>
-  	<a href="/statistics/conversation-servlet">Conversation Servlet</a><br>
-  	<a href="/statistics/login-servlet">Login Servlet</a><br>
-  	<a href="/statistics/register-servlet">Register Servlet</a><br>
-  	<a style="color:#202020;" href="/statistics/conversation-store">Conversation Store</a><br>
-  	<a href="/statistics/message-store">Message Store</a><br>
-  	<a href="/statistics/user-store">User Store</a><br>
-  	<a href="/statistics/persistent-data-store">Persistant Data Store</a><br>
-  	<a href="/statistics/jsp-pages">JSP Pages</a><br>
+      <a href="/statistics/chat-servlet">Chat Servlet</a><br>
+      <a href="/statistics/conversation-servlet">Conversation Servlet</a><br>
+      <a href="/statistics/login-servlet">Login Servlet</a><br>
+      <a href="/statistics/register-servlet">Register Servlet</a><br>
+      <a style="color:#202020;" href="/statistics/conversation-store">Conversation Store</a><br>
+      <a href="/statistics/message-store">Message Store</a><br>
+      <a href="/statistics/user-store">User Store</a><br>
+      <a href="/statistics/persistent-data-store">Persistant Data Store</a><br>
+      <a href="/statistics/jsp-pages">JSP Pages</a><br>
   </div>
 
   <div id="container">
