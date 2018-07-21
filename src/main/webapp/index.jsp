@@ -38,6 +38,7 @@
     <% if(request.getSession().getAttribute("user") != null){ %>
     	<a href="/logout">Logout</a>
     <% } %>
+    <a href="/statistics/">Statistics</a>
   </nav>
 
   <div id="container">
