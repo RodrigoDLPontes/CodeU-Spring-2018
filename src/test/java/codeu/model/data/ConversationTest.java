@@ -15,6 +15,7 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.util.LinkedHashSet;
 import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,12 +28,14 @@ public class ConversationTest {
     UUID owner = UUID.randomUUID();
     String title = "Test_Title";
     Instant creation = Instant.now();
+    LinkedHashSet<User> members = new LinkedHashSet<User>();
 
-    Conversation conversation = new Conversation(id, owner, title, creation);
+    Conversation conversation = new Conversation(id, owner, title, creation, members);
 
     Assert.assertEquals(id, conversation.getId());
     Assert.assertEquals(owner, conversation.getOwnerId());
     Assert.assertEquals(title, conversation.getTitle());
     Assert.assertEquals(creation, conversation.getCreationTime());
+    Assert.assertEquals(members, conversation.getMembers());
   }
 }

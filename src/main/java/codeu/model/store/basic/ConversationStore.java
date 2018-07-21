@@ -22,6 +22,7 @@ import codeu.service.GeneralTimingFilter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
@@ -81,6 +82,11 @@ public class ConversationStore {
     persistentStorageAgent.writeThrough(conversation);
     filter.finish();
   }
+  
+  /** Updates the conversation */
+  public void updateConversation(Conversation conversation) {
+    persistentStorageAgent.writeThrough(conversation);
+  }
 
   /** Check whether a Conversation title is already known to the application. */
   public boolean isTitleTaken(String title) {
@@ -110,6 +116,17 @@ public class ConversationStore {
       }
     }
     filter.finish();
+    return null;
+  }
+  
+  /** Find and return the Conversation with the given id. */
+  public Conversation getConversationWithId(String uuidString) {
+    for (Conversation conversation : conversations) {
+      if (conversation.getId().toString().equals(uuidString)) {
+        return conversation;
+      }
+    }
+
     return null;
   }
 
