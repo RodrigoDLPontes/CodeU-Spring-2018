@@ -64,8 +64,8 @@
                      'height':600,
                      'backgroundColor':'#f6f6f6',
                      'colors':['green'],
-                     'hAxis':{'title':'Creation time'},
-                     'vAxis':{'title':'Elapsed time'},
+                     'hAxis':{'title':'Creation time (date)'},
+                     'vAxis':{'title':'Elapsed time (ms)'},
                      'legend':{'position':'none'},
                      'chartArea':{'left':'15%','top':'15%','width':'70%','height':'60%'},
                      'animation':{'startup':true, 'duration':500, 'easing':'in'}
@@ -99,8 +99,8 @@
                        'height':600,
                        'backgroundColor':'#f6f6f6',
                        'colors':['green'],
-                       'hAxis':{'title':'Creation time'},
-                       'vAxis':{'title':'Elapsed time'},
+                       'hAxis':{'title':'Creation time (date)'},
+                       'vAxis':{'title':'Number of comparisons'},
                        'legend':{'position':'none'},
                        'chartArea':{'left':'15%','top':'15%','width':'70%','height':'60%'},
                        'animation':{'startup':true, 'duration':500, 'easing':'in'}
