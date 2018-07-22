@@ -46,32 +46,30 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 <body onload="scrollChat()">
 
 
-	<nav>
-		<a id="navTitle" href="/">CodeU Chat App</a> <a href="/conversations">Conversations</a>
-		<% if(request.getSession().getAttribute("user") != null){ %>
-		<a href="/userprofile/<%= request.getSession().getAttribute("user")%>">Hello
-			<%= request.getSession().getAttribute("user")%></a>
-		<% } else{ %>
-		<a href="/login">Login</a>
-		<% } %>
-		<a href="/about.jsp">About</a>
-		<% if(request.getSession().getAttribute("user") != null){ %>
-		<a href="/logout">Logout</a>
-		<% } %>
-	</nav>
+  <nav>
+    <a id="navTitle" href="/">CodeU Chat App</a>
+    <a href="/conversations">Conversations</a>
+      <% if (request.getSession().getAttribute("user") != null) { %>
+    <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
+    <% } else { %>
+      <a href="/login">Login</a>
+    <% } %>
+    <a href="/about.jsp">About</a>
+    <% if(request.getSession().getAttribute("user") != null){ %>
+      <a href="/logout">Logout</a>
+    <% } %>    
+  </nav>
+	
+  <div id="container">
 
+	<h1><%= conversation.getTitle() %>
+      <a href="" style="float: right">&#8635;</a></h1>
 
-	<div id="container">
+	<hr />
 
-		<h1><%= conversation.getTitle() %>
-			<a href="" style="float: right">&#8635;</a>
-		</h1>
-
-		<hr />
-
-		<div id="chat">
-			<ul>
-				<%
+    <div id="chat">
+      <ul>
+    <%
       for (Message message : messages) {
         String author = UserStore.getInstance()
           .getUser(message.getAuthorId()).getName();
@@ -79,36 +77,35 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
           String url = "/userprofile/"+ author;
     %>
 
-				<li><strong> <a href=<%= url %>> <%= author %>:</strong> </a> <%= message.getContent() %>
+		<li><strong> <a href=<%= url %>> <%= author %>:</strong> </a> <%= message.getContent() %>
 
-					<% if (UserStore.getInstance().getUser(author).getName().equals(request.getSession().getAttribute("user"))) { %> 
-						<form action="/chat/<%= conversation.getTitle() %>" method="POST">
-						<button   class="deleteButton" type="submit">Delete</button>
-						<input type="hidden" name="delete" value="true"> <input
-							type="hidden" name="messageId" value="<%= message.getId() %>">
-					</form> <% } %></li>
+		   <% if (UserStore.getInstance().getUser(author).getName().equals(request.getSession().getAttribute("user"))) { %>
+			 <form action="/chat/<%= conversation.getTitle() %>" method="POST">
+			 	<button class="deleteButton" type="submit">Delete</button>
+				<input type="hidden" name="delete" value="true"> 
+				<input type="hidden" name="messageId" value="<%= message.getId() %>">
+			</form> <% } %></li>
 				<%
       }
     %>
-			</ul>
-		</div>
+	  </ul>
+    </div>
 
-		<hr />
+    <hr/>>
 
-		<% if (request.getSession().getAttribute("user") != null) { %>
-		<form action="/chat/<%= conversation.getTitle() %>" method="POST">
-			<input type="text" name="message"> <br />
-			<button type="submit">Send</button>
-		</form>
-		<% } else { %>
-		<p>
-			<a href="/login">Login</a> to send a message.
-		</p>
-		<% } %>
+	    <% if (request.getSession().getAttribute("user") != null) { %>
+    <form action="/chat/<%= conversation.getTitle() %>" method="POST">
+        <input type="text" name="message">
+        <br/>
+        <button type="submit">Send</button>
+    </form>
+    <% } else { %>
+      <p><a href="/login">Login</a> to send a message.</p>
+    <% } %>
 
-		<hr />
+    <hr/>
 
-	</div>
+  </div>
 
 </body>
 </html>

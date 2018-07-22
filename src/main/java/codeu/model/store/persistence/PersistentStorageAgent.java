@@ -135,12 +135,13 @@ public class PersistentStorageAgent {
   public void deleteThroughConvo(Conversation conversation) {
     persistentDataStore.deleteThroughConvo(conversation);
   }
-
+  
+  /** Remove a Message object from the Datastore service. */
   public void deleteThrough(Message message) {
-    // TODO Auto-generated method stub
     persistentDataStore.deleteThrough(message);
   }
-
+  
+  /** Remove a AboutMeMessage object from the Datastore service. */
   public void deleteThroughAboutMe(AboutMeMessage aboutmemessage) {
     persistentDataStore.deleteThroughAboutMe(aboutmemessage);
   }

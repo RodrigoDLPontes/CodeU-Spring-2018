@@ -16,6 +16,7 @@ package codeu.model.store.basic;
 
 import codeu.model.data.Message;
 import codeu.model.store.persistence.PersistentStorageAgent;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -44,11 +45,9 @@ public class MessageStore {
   }
 
   /**
-   * Instance getter function used for testing. Supply a mock for
-   * PersistentStorageAgent.
+   * Instance getter function used for testing. Supply a mock for PersistentStorageAgent.
    *
-   * @param persistentStorageAgent
-   *          a mock used for testing
+   * @param persistentStorageAgent a mock used for testing
    */
   public static MessageStore getTestInstance(PersistentStorageAgent persistentStorageAgent) {
     return new MessageStore(persistentStorageAgent);

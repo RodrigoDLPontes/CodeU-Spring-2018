@@ -79,10 +79,10 @@ public class UserProfileServlet extends HttpServlet {
     }
 
     User user = userStore.getUser(username);
-    if (user == null) {
-      // user was not found, don't let them add a AboutMeMessage
-      response.sendRedirect("/login");
-      return;
+         if (user == null) {
+         // user was not found, don't let them add a AboutMeMessage
+         response.sendRedirect("/login");
+        return;
     }
 
     List<AboutMeMessage> aboutmemessages = aboutmemessageStore.getAllAboutMeMessages();
@@ -103,17 +103,17 @@ public class UserProfileServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
     String username = (String) request.getSession().getAttribute("user");
-    if (username == null) {
+       if (username == null) {
       // user is not logged in, don't let them add a message
-      response.sendRedirect("/login");
-      return;
+         response.sendRedirect("/login");
+         return;
     }
 
     User user = userStore.getUser(username);
-    if (user == null) {
+       if (user == null) {
       // user was not found, don't let them add a AboutMeMessage
-      response.sendRedirect("/login");
-      return;
+        response.sendRedirect("/login");
+        return;
     }
 
     String requestUrl = request.getRequestURI();
@@ -131,13 +131,15 @@ public class UserProfileServlet extends HttpServlet {
     String cleanedAboutMeContent = Jsoup.clean(aboutMeContent, Whitelist.none());
 
     // this parses BBCode tags to equivalent HTML tags
-    String cleaneAboutMedAndBBMessageContent = textProcessor.process(cleanedAboutMeContent);
+    String leanedAboutMeAndBBMessageContent = textProcessor.process(cleanedAboutMeContent);
 
-    AboutMeMessage aboutmemessage = new AboutMeMessage(UUID.randomUUID(), user.getId(),
-        cleaneAboutMedAndBBMessageContent, Instant.now());
+    AboutMeMessage aboutmemessage = new AboutMeMessage(
+        UUID.randomUUID(), 
+        user.getId(),
+        leanedAboutMeAndBBMessageContent, 
+        Instant.now());
 
     aboutmemessageStore.addAboutMeMessage(aboutmemessage);
-
     // redirect to a GET request
     response.sendRedirect("/userprofile/" + username);
 
