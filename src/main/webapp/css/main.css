@@ -74,6 +74,29 @@ button {
   width:100%;
 }
 
+
+
+
+.deleteButton{
+  margin: left auto;
+  position:relative;
+ width: auto;
+ color: #ecf0f1;
+ text-decoration:none;
+ border-radius:5px;
+ border: solid 1px;
+ background: #ff1a1a;
+text-align:center;
+ color:black;
+ font-size:16px;
+ 
+ /* padding:16px 18px 14px; */
+ 
+}
+.flexbox{
+  display: flex;
+  justify-content: justify-content;
+}
 .btn {
   background-color: DodgerBlue;
   border: none;
@@ -84,7 +107,3 @@ button {
   float: right;
 }
 
-/* Darker background on mouse-over */
-.btn:hover {
-  background-color: RoyalBlue;
-}

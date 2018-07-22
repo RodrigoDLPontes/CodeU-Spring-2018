@@ -15,6 +15,8 @@
 --%>
 <%@ page import="java.util.List" %>
 <%@ page import="codeu.model.data.Conversation" %>
+<%@ page import="codeu.model.store.basic.UserStore"%>
+<%@ page import="codeu.model.data.User"%>
 
 <!DOCTYPE html>
 <html>
@@ -75,11 +77,39 @@
       <ul class="mdl-list">
     <%
       for(Conversation conversation : conversations){
+      	
+        // The user that Created the Conversatio 
+        String  conversationCreater = UserStore.getInstance().getUser(conversation.getOwnerId()).getName();
     %>
 
-      <li><a href="/chat/<%= conversation.getTitle() %>">
-        <%= conversation.getTitle() %></a></li> 
-
+        <%
+        // Makes it so that only the user who created  the converation  deltete  said Conversation 
+        if ((request.getSession().getAttribute("user") == null)){ 
+        %>
+         <h3> You must <a href="/login">Login</a> to view conversations. </h3>
+     
+         	<!--  Checks if the user is logged  made the conversation   -->
+        <%
+     
+    } else if  (!conversationCreater.equals(request.getSession().getAttribute("user").toString())){
+    %> 
+  <li><a href="/chat/<%= conversation.getTitle() %>">
+        <%= conversation.getTitle() %></a>
+<%
+//  ReDirecet user to login so they can view Conversations  
+		}else if (conversationCreater.equals(request.getSession().getAttribute("user").toString())){
+	%>
+  <li><a href="/chat/<%= conversation.getTitle() %>">
+        <%= conversation.getTitle() %></a>
+         <form action="/conversations" method="POST">
+          <button   class="deleteButton" type="submit">Delete Convo</button>
+          <input type="hidden" name="deleteConvo" value="true">
+          <input type="hidden" name="conversationId" value="<%= conversation.getId() %>">
+        </form>
+    <%
+      }
+    %>
+    
     <%
       }
     %>

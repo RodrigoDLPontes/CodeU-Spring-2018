@@ -15,14 +15,16 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Conversation;
+
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
- * Store class that uses in-memory data structures to hold values and automatically loads from and
- * saves to PersistentStorageAgent. It's a singleton so all servlet classes can access the same
- * instance.
+ * Store class that uses in-memory data structures to hold values and
+ * automatically loads from and saves to PersistentStorageAgent. It's a
+ * singleton so all servlet classes can access the same instance.
  */
 public class ConversationStore {
 
@@ -30,8 +32,9 @@ public class ConversationStore {
   private static ConversationStore instance;
 
   /**
-   * Returns the singleton instance of ConversationStore that should be shared between all servlet
-   * classes. Do not call this function from a test; use getTestInstance() instead.
+   * Returns the singleton instance of ConversationStore that should be shared
+   * between all servlet classes. Do not call this function from a test; use
+   * getTestInstance() instead.
    */
   public static ConversationStore getInstance() {
     if (instance == null) {
@@ -41,38 +44,65 @@ public class ConversationStore {
   }
 
   /**
-   * Instance getter function used for testing. Supply a mock for PersistentStorageAgent.
+   * Instance getter function used for testing. Supply a mock for
+   * PersistentStorageAgent.
    *
-   * @param persistentStorageAgent a mock used for testing
+   * @param persistentStorageAgent
+   *          a mock used for testing
    */
   public static ConversationStore getTestInstance(PersistentStorageAgent persistentStorageAgent) {
     return new ConversationStore(persistentStorageAgent);
   }
 
   /**
-   * The PersistentStorageAgent responsible for loading Conversations from and saving Conversations
-   * to Datastore.
+   * The PersistentStorageAgent responsible for loading Conversations from and
+   * saving Conversations to Datastore.
    */
   private PersistentStorageAgent persistentStorageAgent;
 
   /** The in-memory list of Conversations. */
   private List<Conversation> conversations;
 
-  /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
+  /**
+   * This class is a singleton, so its constructor is private. Call getInstance()
+   * instead.
+   */
   private ConversationStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
     conversations = new ArrayList<>();
   }
 
-/** Access the current set of conversations known to the application. */
+  /** Access the current set of conversations known to the application. */
   public List<Conversation> getAllConversations() {
     return conversations;
   }
 
-  /** Add a new conversation to the current set of conversations known to the application. */
+  /**
+   * Add a new conversation to the current set of conversations known to the
+   * application.
+   */
   public void addConversation(Conversation conversation) {
     conversations.add(conversation);
     persistentStorageAgent.writeThrough(conversation);
+  }
+
+  /** Access Conversation by UUID. */
+  public Conversation getConversation(UUID conversationId) {
+    for (Conversation conversation : conversations) {
+      if (conversation.getId().equals(conversationId)) {
+        return conversation;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Deletes a conversation from the current set of conversations known to the
+   * application.
+   */
+  public void deleteConversation(Conversation conversation) {
+    conversations.remove(conversation);
+    persistentStorageAgent.deleteThroughConvo(conversation);
   }
 
   /** Check whether a Conversation title is already known to the application. */

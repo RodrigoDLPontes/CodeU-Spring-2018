@@ -19,16 +19,18 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentDataStore;
-import java.util.ArrayList;
+
 import java.util.List;
 
 /**
- * This class is the interface between the application and PersistentDataStore, which handles
- * interactions with Google App Engine's Datastore service. Currently this class simply passes
- * function calls through to PersistentDataStore, but this could be modified to make asynchronous
- * calls or to point to a different backend storage system.
+ * This class is the interface between the application and PersistentDataStore,
+ * which handles interactions with Google App Engine's Datastore service.
+ * Currently this class simply passes function calls through to
+ * PersistentDataStore, but this could be modified to make asynchronous calls or
+ * to point to a different backend storage system.
  *
- * <p>This is a singleton; the single instance is accessed through getInstance().
+ * <p>
+ * This is a singleton; the single instance is accessed through getInstance().
  */
 public class PersistentStorageAgent {
 
@@ -37,8 +39,9 @@ public class PersistentStorageAgent {
   private final PersistentDataStore persistentDataStore;
 
   /**
-   * Access the persistent storage agent, in order to perform object-level loads and/or stores. Do
-   * not call this function from a test; use getTestInstance() instead.
+   * Access the persistent storage agent, in order to perform object-level loads
+   * and/or stores. Do not call this function from a test; use getTestInstance()
+   * instead.
    */
   public static PersistentStorageAgent getInstance() {
     if (instance == null) {
@@ -48,9 +51,11 @@ public class PersistentStorageAgent {
   }
 
   /**
-   * Instance getter function used for testing. Supply a mock for PersistentDataStore.
+   * Instance getter function used for testing. Supply a mock for
+   * PersistentDataStore.
    *
-   * @param mockPersistentDataStore a mock used for testing
+   * @param mockPersistentDataStore
+   *          a mock used for testing
    */
   static PersistentStorageAgent getTestInstance(PersistentDataStore mockPersistentDataStore) {
     return new PersistentStorageAgent(mockPersistentDataStore);
@@ -62,44 +67,48 @@ public class PersistentStorageAgent {
   }
 
   /**
-   * Retrieve all User objects from the Datastore service. The returned list may be empty.
+   * Retrieve all User objects from the Datastore service. The returned list may
+   * be empty.
    *
-   * @throws PersistentDataStoreException if an error was detected during the load from the
-   *     Datastore service
+   * @throws PersistentDataStoreException
+   *           if an error was detected during the load from the Datastore service
    */
   public List<User> loadUsers() throws PersistentDataStoreException {
     return persistentDataStore.loadUsers();
   }
 
   /**
-   * Retrieve all Conversation objects from the Datastore service. The returned list may be empty.
+   * Retrieve all Conversation objects from the Datastore service. The returned
+   * list may be empty.
    *
-   * @throws PersistentDataStoreException if an error was detected during the load from the
-   *     Datastore service
+   * @throws PersistentDataStoreException
+   *           if an error was detected during the load from the Datastore service
    */
   public List<Conversation> loadConversations() throws PersistentDataStoreException {
     return persistentDataStore.loadConversations();
   }
 
   /**
-   * Retrieve all Message objects from the Datastore service. The returned list may be empty.
+   * Retrieve all Message objects from the Datastore service. The returned list
+   * may be empty.
    *
-   * @throws PersistentDataStoreException if an error was detected during the load from the
-   *     Datastore service
+   * @throws PersistentDataStoreException
+   *           if an error was detected during the load from the Datastore service
    */
   public List<Message> loadMessages() throws PersistentDataStoreException {
     return persistentDataStore.loadMessages();
   }
-  
+
   /**
-   * Retrieve all AboutMeMessage objects from the Datastore service. The returned list may be empty.
+   * Retrieve all AboutMeMessage objects from the Datastore service. The returned
+   * list may be empty.
    *
-   * @throws PersistentDataStoreException if an error was detected during the load from the
-   *     Datastore service
+   * @throws PersistentDataStoreException
+   *           if an error was detected during the load from the Datastore service
    */
-  
+
   public List<AboutMeMessage> loadAboutMeMessages() throws PersistentDataStoreException {
-	  return persistentDataStore.loadAboutMeMessages();
+    return persistentDataStore.loadAboutMeMessages();
   }
 
   /** Write a User object to the Datastore service. */
@@ -120,5 +129,19 @@ public class PersistentStorageAgent {
   /** Write a AboutMeMessagee object to the Datastore service. */
   public void writeThrough(AboutMeMessage aboutmemessage) {
     persistentDataStore.writeThrough(aboutmemessage);
+  }
+
+  /** Remove a Conversation object from the Datastore service. */
+  public void deleteThroughConvo(Conversation conversation) {
+    persistentDataStore.deleteThroughConvo(conversation);
+  }
+
+  public void deleteThrough(Message message) {
+    // TODO Auto-generated method stub
+    persistentDataStore.deleteThrough(message);
+  }
+
+  public void deleteThroughAboutMe(AboutMeMessage aboutmemessage) {
+    persistentDataStore.deleteThroughAboutMe(aboutmemessage);
   }
 }
