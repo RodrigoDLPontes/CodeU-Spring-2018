@@ -19,6 +19,7 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.Statistic;
 import codeu.model.data.User;
+import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.UserStore;
 
 import com.google.appengine.api.datastore.DatastoreService;
@@ -110,7 +111,7 @@ public class PersistentDataStore {
         String title = (String) entity.getProperty("title");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         
-        String[] memberList = ((String) entity.getProperty("member_names")).split(", ");
+        String[] memberList = ((String) entity.getProperty("member_names")).split(", ");      
         LinkedHashSet<User> memberSet = new LinkedHashSet<User>();
         
         if (!memberList[0].equals("[]")) {
@@ -124,6 +125,7 @@ public class PersistentDataStore {
           }
         }
         
+        memberSet.remove(null);
         Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime, memberSet);
         
         for (User user : memberSet) {
@@ -141,7 +143,7 @@ public class PersistentDataStore {
         // occur include network errors, Datastore service errors, authorization errors,
         // database entity definition mismatches, or service mismatches.
         throw new PersistentDataStoreException(e);
-      }
+      } 
     }
 
     return conversations;
