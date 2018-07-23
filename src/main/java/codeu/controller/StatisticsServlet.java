@@ -34,18 +34,51 @@ public class StatisticsServlet extends HttpServlet {
 
   /**
    * This function fires when a user requests the /statistics URL. It simply forwards the request to
-   * statistics.jsp.
+   * the appropriate statistics page.
    */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    request.getRequestDispatcher("/WEB-INF/view/statistics.jsp").forward(request, response);
+    String requestUri = request.getRequestURI();
+    String statisticsTitle = requestUri.substring("/statistics/".length());
+    switch(statisticsTitle) {
+      default:
+      case "chat-servlet":
+        request.getRequestDispatcher("/WEB-INF/view/statistics/chat-servlet.jsp")
+            .forward(request, response);
+        break;
+      case "conversation-servlet":
+        request.getRequestDispatcher("/WEB-INF/view/statistics/conversation-servlet.jsp")
+            .forward(request, response);
+        break;
+      case "login-servlet":
+        request.getRequestDispatcher("/WEB-INF/view/statistics/login-servlet.jsp")
+            .forward(request, response);
+        break;
+      case "register-servlet":
+        request.getRequestDispatcher("/WEB-INF/view/statistics/register-servlet.jsp")
+            .forward(request, response);
+        break;
+      case "conversation-store":
+        request.getRequestDispatcher("/WEB-INF/view/statistics/conversation-store.jsp")
+            .forward(request, response);
+        break;
+      case "message-store":
+        request.getRequestDispatcher("/WEB-INF/view/statistics/message-store.jsp")
+            .forward(request, response);
+        break;
+      case "user-store":
+        request.getRequestDispatcher("/WEB-INF/view/statistics/user-store.jsp")
+            .forward(request, response);
+        break;
+      case "persistent-data-store":
+        request.getRequestDispatcher("/WEB-INF/view/statistics/persistent-data-store.jsp")
+            .forward(request, response);
+        break;
+      case "jsp-pages":
+        request.getRequestDispatcher("/WEB-INF/view/statistics/jsp-pages.jsp")
+            .forward(request, response);
+        break;
+    }
   }
-
-  /**
-   * Stub for doPost
-   */
-  @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws IOException, ServletException {}
 }
