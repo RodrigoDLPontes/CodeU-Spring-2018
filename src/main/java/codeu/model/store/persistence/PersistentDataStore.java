@@ -19,6 +19,7 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.Statistic;
 import codeu.model.data.User;
+import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.UserStore;
 
 import com.google.appengine.api.datastore.DatastoreService;
@@ -110,21 +111,29 @@ public class PersistentDataStore {
         String title = (String) entity.getProperty("title");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         
-        String[] memberList = ((String) entity.getProperty("member_names")).split(", ");
+        String[] memberList;
         LinkedHashSet<User> memberSet = new LinkedHashSet<User>();
-        
-        if (!memberList[0].equals("[]")) {
-          for (int i = 0; i < memberList.length; i++) {
-            String username = memberList[i];
-            
-            username = username.replace("[", "");
-            username = username.replace("]", "");
-            
-            memberSet.add(userStore.getUser(username));
+        try {
+          memberList = ((String) entity.getProperty("member_names")).split(", ");
+          
+          if (!memberList[0].equals("[]")) {
+            for (int i = 0; i < memberList.length; i++) {
+              String username = memberList[i];
+              
+              username = username.replace("[", "");
+              username = username.replace("]", "");
+              
+              memberSet.add(userStore.getUser(username));
+            }
           }
+          
+          memberSet.remove(null);
+        } catch (NullPointerException e) {
+          // do nothing and continue
         }
         
         Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime, memberSet);
+        ConversationStore.getInstance().updateConversation(conversation);
         
         for (User user : memberSet) {
           user.addConversation(conversation);
@@ -141,7 +150,7 @@ public class PersistentDataStore {
         // occur include network errors, Datastore service errors, authorization errors,
         // database entity definition mismatches, or service mismatches.
         throw new PersistentDataStoreException(e);
-      }
+      } 
     }
 
     return conversations;
