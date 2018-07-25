@@ -15,16 +15,19 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Conversation;
-
+import codeu.model.data.Statistic.Type;
 import codeu.model.store.persistence.PersistentStorageAgent;
+import codeu.service.GeneralComparisonsFilter;
+import codeu.service.GeneralTimingFilter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * Store class that uses in-memory data structures to hold values and
- * automatically loads from and saves to PersistentStorageAgent. It's a
- * singleton so all servlet classes can access the same instance.
+ * Store class that uses in-memory data structures to hold values and automatically loads from and
+ * saves to PersistentStorageAgent. It's a singleton so all servlet classes can access the same
+ * instance.
  */
 public class ConversationStore {
 
@@ -32,9 +35,8 @@ public class ConversationStore {
   private static ConversationStore instance;
 
   /**
-   * Returns the singleton instance of ConversationStore that should be shared
-   * between all servlet classes. Do not call this function from a test; use
-   * getTestInstance() instead.
+   * Returns the singleton instance of ConversationStore that should be shared between all servlet
+   * classes. Do not call this function from a test; use getTestInstance() instead.
    */
   public static ConversationStore getInstance() {
     if (instance == null) {
@@ -44,11 +46,9 @@ public class ConversationStore {
   }
 
   /**
-   * Instance getter function used for testing. Supply a mock for
-   * PersistentStorageAgent.
+   * Instance getter function used for testing. Supply a mock for PersistentStorageAgent.
    *
-   * @param persistentStorageAgent
-   *          a mock used for testing
+   * @param persistentStorageAgent a mock used for testing
    */
   public static ConversationStore getTestInstance(PersistentStorageAgent persistentStorageAgent) {
     return new ConversationStore(persistentStorageAgent);
@@ -63,10 +63,7 @@ public class ConversationStore {
   /** The in-memory list of Conversations. */
   private List<Conversation> conversations;
 
-  /**
-   * This class is a singleton, so its constructor is private. Call getInstance()
-   * instead.
-   */
+  /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private ConversationStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
     conversations = new ArrayList<>();
@@ -76,13 +73,18 @@ public class ConversationStore {
   public List<Conversation> getAllConversations() {
     return conversations;
   }
-
-  /**
-   * Add a new conversation to the current set of conversations known to the
-   * application.
-   */
+  
+  /** Add a new conversation to the current set of conversations known to the application. */
   public void addConversation(Conversation conversation) {
+    GeneralTimingFilter filter = new GeneralTimingFilter(
+        Type.CONVERSATION_STORE_ADD_CONVERSATION_TIME, persistentStorageAgent);
     conversations.add(conversation);
+    persistentStorageAgent.writeThrough(conversation);
+    filter.finish();
+  }
+  
+  /** Updates the conversation */
+  public void updateConversation(Conversation conversation) {
     persistentStorageAgent.writeThrough(conversation);
   }
 
@@ -107,22 +109,43 @@ public class ConversationStore {
 
   /** Check whether a Conversation title is already known to the application. */
   public boolean isTitleTaken(String title) {
+    GeneralComparisonsFilter filter = new GeneralComparisonsFilter(
+        Type.CONVERSATION_STORE_IS_TITLE_TAKEN_COMPS, persistentStorageAgent);
     // This approach will be pretty slow if we have many Conversations.
     for (Conversation conversation : conversations) {
+      filter.increment();
       if (conversation.getTitle().equals(title)) {
+        filter.finish();
         return true;
       }
     }
+    filter.finish();
     return false;
   }
 
   /** Find and return the Conversation with the given title. */
   public Conversation getConversationWithTitle(String title) {
+    GeneralComparisonsFilter filter = new GeneralComparisonsFilter(
+        Type.CONVERSATION_STORE_GET_CONVERSATION_WITH_TITLE_COMPS, persistentStorageAgent);
     for (Conversation conversation : conversations) {
+      filter.increment();
       if (conversation.getTitle().equals(title)) {
+        filter.finish();
         return conversation;
       }
     }
+    filter.finish();
+    return null;
+  }
+  
+  /** Find and return the Conversation with the given id. */
+  public Conversation getConversationWithId(String uuidString) {
+    for (Conversation conversation : conversations) {
+      if (conversation.getId().toString().equals(uuidString)) {
+        return conversation;
+      }
+    }
+
     return null;
   }
 

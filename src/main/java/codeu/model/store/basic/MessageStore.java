@@ -15,12 +15,14 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Message;
+import codeu.model.data.Statistic.Type;
 import codeu.model.store.persistence.PersistentStorageAgent;
+import codeu.service.GeneralComparisonsFilter;
+import codeu.service.GeneralTimingFilter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 
 /**
  * Store class that uses in-memory data structures to hold values and
@@ -33,9 +35,8 @@ public class MessageStore {
   private static MessageStore instance;
 
   /**
-   * Returns the singleton instance of MessageStore that should be shared between
-   * all servlet classes. Do not call this function from a test; use
-   * getTestInstance() instead.
+   * Returns the singleton instance of MessageStore that should be shared between all servlet
+   * classes. Do not call this function from a test; use getTestInstance() instead.
    */
   public static MessageStore getInstance() {
     if (instance == null) {
@@ -54,29 +55,27 @@ public class MessageStore {
   }
 
   /**
-   * The PersistentStorageAgent responsible for loading Messages from and saving
-   * Messages to Datastore.
+   * The PersistentStorageAgent responsible for loading Messages from and saving Messages to
+   * Datastore.
    */
   private PersistentStorageAgent persistentStorageAgent;
 
   /** The in-memory list of Messages. */
   private List<Message> messages;
 
-  /**
-   * This class is a singleton, so its constructor is private. Call getInstance()
-   * instead.
-   */
+  /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private MessageStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
     messages = new ArrayList<>();
   }
 
-  /**
-   * Add a new message to the current set of messages known to the application.
-   */
+  /** Add a new message to the current set of messages known to the application. */
   public void addMessage(Message message) {
+    GeneralTimingFilter filter = new GeneralTimingFilter(
+        Type.MESSAGE_STORE_ADD_MESSAGE_TIME, persistentStorageAgent);
     messages.add(message);
     persistentStorageAgent.writeThrough(message);
+    filter.finish();
   }
 
   /** Access Message by UUID. */
@@ -99,14 +98,19 @@ public class MessageStore {
 
   /** Access the current set of Messages within the given Conversation. */
   public List<Message> getMessagesInConversation(UUID conversationId) {
+    GeneralComparisonsFilter filter = new GeneralComparisonsFilter(
+        Type.MESSAGE_STORE_GET_MESSAGES_IN_CONVERSATION_COMPS, persistentStorageAgent);
 
     List<Message> messagesInConversation = new ArrayList<>();
 
     for (Message message : messages) {
+      filter.increment();
       if (message.getConversationId().equals(conversationId)) {
         messagesInConversation.add(message);
       }
     }
+
+    filter.finish();
 
     return messagesInConversation;
   }

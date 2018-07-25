@@ -14,8 +14,12 @@
 
 package codeu.model.store.basic;
 
+import codeu.model.data.Statistic.Type;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
+import codeu.service.GeneralComparisonsFilter;
+import codeu.service.GeneralTimingFilter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -58,6 +62,11 @@ public class UserStore {
   /** The in-memory list of Users. */
   private List<User> users;
 
+  /** Return full list of users */
+  public List<User> getUsers() {
+	  return this.users;
+  }
+  
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private UserStore(PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
@@ -70,12 +79,17 @@ public class UserStore {
    * @return null if username does not match any existing User.
    */
   public User getUser(String username) {
+    GeneralComparisonsFilter filter = new GeneralComparisonsFilter(
+        Type.USER_STORE_GET_USER_USERNAME_COMPS, persistentStorageAgent);
     // This approach will be pretty slow if we have many users.
     for (User user : users) {
+      filter.increment();
       if (user.getName().equals(username)) {
+        filter.finish();
         return user;
       }
     }
+    filter.finish();
     return null;
   }
 
@@ -85,11 +99,16 @@ public class UserStore {
    * @return null if the UUID does not match any existing User.
    */
   public User getUser(UUID id) {
+    GeneralComparisonsFilter filter = new GeneralComparisonsFilter(
+        Type.USER_STORE_GET_USER_ID_COMPS, persistentStorageAgent);
     for (User user : users) {
+      filter.increment();
       if (user.getId().equals(id)) {
+        filter.finish();
         return user;
       }
     }
+    filter.finish();
     return null;
   }
 
@@ -98,24 +117,35 @@ public class UserStore {
    * to add a new user, not to update an existing user.
    */
   public void addUser(User user) {
+    GeneralTimingFilter filter = new GeneralTimingFilter(
+        Type.USER_STORE_ADD_USER_TIME, persistentStorageAgent);
     users.add(user);
     persistentStorageAgent.writeThrough(user);
+    filter.finish();
   }
 
   /**
    * Update an existing User.
    */
   public void updateUser(User user) {
+    GeneralTimingFilter filter = new GeneralTimingFilter(
+        Type.USER_STORE_UPDATE_USER_TIME, persistentStorageAgent);
     persistentStorageAgent.writeThrough(user);
+    filter.finish();
   }
 
   /** Return true if the given username is known to the application. */
   public boolean isUserRegistered(String username) {
+    GeneralComparisonsFilter filter = new GeneralComparisonsFilter(
+        Type.USER_STORE_IS_USER_REGISTERED_COMPS, persistentStorageAgent);
     for (User user : users) {
+      filter.increment();
       if (user.getName().equals(username)) {
+        filter.finish();
         return true;
       }
     }
+    filter.finish();
     return false;
   }
 

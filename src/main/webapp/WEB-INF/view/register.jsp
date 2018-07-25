@@ -13,6 +13,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
+<%@ page import="codeu.model.data.Statistic.Type" %>
+<%@ page import="codeu.service.GeneralTimingFilter" %>
+<% GeneralTimingFilter filter = new GeneralTimingFilter(Type.REGISTER_JSP); %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,6 +36,7 @@
     <% } %>
     <a href="/about.jsp">About</a>
     <% if(request.getSession().getAttribute("user") != null){ %>
+      <a href="/requests">Requests</a>
       <a href="/logout">Logout</a>
     <% } %>    
   </nav>
@@ -58,3 +63,5 @@
   </div>
 </body>
 </html>
+
+<% filter.finish(); %>

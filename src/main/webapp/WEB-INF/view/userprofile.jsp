@@ -41,21 +41,25 @@ limitations under the License.
 		// This is the  user  who's profile is getting looked at by another user
 		String viewAnotherUserProfile = request.getAttribute("user").toString();
 	%>
-	<nav>
-		<a id="navTitle" href="/">CodeU Chat App</a> <a href="/conversations">Conversations</a>
-		<% if(request.getSession().getAttribute("user") != null){ %>
-		<a href="/userprofile/<%= request.getSession().getAttribute("user")%>">Hello
-			<%= request.getSession().getAttribute("user")%></a>
-		<% } else{ %>
-		<a href="/login">Login</a> <a href="/userprofile/">AboutMe</a>
-		<% } %>
-		<a href="/about.jsp">About</a>
-		<% if(request.getSession().getAttribute("user") != null){ %>
-		<a href="/logout">Logout</a>
-		<% } %>
-	</nav>
+	<!--  Checks if the user is not logged in tells them to log in    -->
 
+	  <nav>
+    <a id="navTitle" href="/">CodeU Chat App</a>
+    <a href="/conversations">Conversations</a>
+    <% if(request.getSession().getAttribute("user") != null){ %>
+      <a  href="/userprofile/<%= request.getSession().getAttribute("user")%>">Hello <%= request.getSession().getAttribute("user")%></a>
+    <% } else{ %>
+      <a href="/login">Login</a>
+      <a href="/userprofile/">AboutMe</a>
+    <% } %>
+    <a href="/about.jsp">About</a>
+    <% if(request.getSession().getAttribute("user") != null){ %>
+      <a href="/requests">Requests</a>
+      <a href="/logout">Logout</a>
+    <% } %>    
+  </nav>
 
+	
 	<!--  Checks if the user is not logged in tells them to log in    -->
 	<%
     if ((request.getSession().getAttribute("user") == null)){ 
@@ -104,7 +108,7 @@ limitations under the License.
 					String author = UserStore.getInstance().getUser(aboutmemessage.getAuthorId()).getName();
 					if (author.equals(currenLoginedInUser)) {
 		%>
-<div class="flexbox">
+
 		<li><strong> <%=author%>:
 		</strong> <%=aboutmemessage.getContent()%>	<form action="<%=userUrl%>" method="POST">
 				<button   class="deleteButton" type="submit">Delete</button>
@@ -116,7 +120,7 @@ limitations under the License.
 		}
 		%>
 	</ul>
-</div>
+
 	<form action=" <%=userUrl%>" method="POST">
 		<input type="text" name="aboutme"> <br /> <br /> <br />
 		<button type="submit">Submit</button>
@@ -132,3 +136,4 @@ limitations under the License.
 
 </body>
 </html>
+

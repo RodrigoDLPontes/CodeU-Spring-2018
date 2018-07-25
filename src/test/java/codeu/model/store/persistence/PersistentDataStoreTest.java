@@ -3,10 +3,14 @@ package codeu.model.store.persistence;
 import codeu.model.data.AboutMeMessage;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
+import codeu.model.data.Statistic;
+import codeu.model.data.Statistic.Type;
 import codeu.model.data.User;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
 import org.junit.After;
@@ -43,13 +47,15 @@ public class PersistentDataStoreTest {
     String nameOne = "test_username_one";
     String passwordHashOne = "$2a$10$BNte6sC.qoL4AVjO3Rk8ouY6uFaMnsW8B9NjtHWaDNe8GlQRPRT1S";
     Instant creationOne = Instant.ofEpochMilli(1000);
-    User inputUserOne = new User(idOne, nameOne, passwordHashOne, creationOne);
+    User inputUserOne = new User(idOne, nameOne, passwordHashOne, creationOne, 
+        new LinkedHashSet<Conversation>(), new HashSet<Conversation>());
 
     UUID idTwo = UUID.fromString("10000001-2222-3333-4444-555555555555");
     String nameTwo = "test_username_two";
     String passwordHashTwo = "$2a$10$ttaMOMMGLKxBBuTN06VPvu.jVKif.IczxZcXfLcqEcFi1lq.sLb6i";
     Instant creationTwo = Instant.ofEpochMilli(2000);
-    User inputUserTwo = new User(idTwo, nameTwo, passwordHashTwo, creationTwo);
+    User inputUserTwo = new User(idTwo, nameTwo, passwordHashTwo, creationTwo,
+        new LinkedHashSet<Conversation>(), new HashSet<Conversation>());
 
     // save
     persistentDataStore.writeThrough(inputUserOne);
@@ -78,13 +84,15 @@ public class PersistentDataStoreTest {
     UUID ownerOne = UUID.fromString("10000001-2222-3333-4444-555555555555");
     String titleOne = "Test_Title";
     Instant creationOne = Instant.ofEpochMilli(1000);
-    Conversation inputConversationOne = new Conversation(idOne, ownerOne, titleOne, creationOne);
+    Conversation inputConversationOne = new Conversation(idOne, ownerOne, titleOne, creationOne,
+        new LinkedHashSet<User>());
 
     UUID idTwo = UUID.fromString("10000002-2222-3333-4444-555555555555");
     UUID ownerTwo = UUID.fromString("10000003-2222-3333-4444-555555555555");
     String titleTwo = "Test_Title_Two";
     Instant creationTwo = Instant.ofEpochMilli(2000);
-    Conversation inputConversationTwo = new Conversation(idTwo, ownerTwo, titleTwo, creationTwo);
+    Conversation inputConversationTwo = new Conversation(idTwo, ownerTwo, titleTwo, creationTwo,
+        new LinkedHashSet<User>());
 
     // save
     persistentDataStore.writeThrough(inputConversationOne);
@@ -172,7 +180,7 @@ public class PersistentDataStoreTest {
     // load
     List<AboutMeMessage> resultAboutMeMessages = persistentDataStore.loadAboutMeMessages();
 
- // confirm that what we saved matches what we loaded
+    // confirm that what we saved matches what we loaded
     AboutMeMessage resultsAboutMeMessageOne = resultAboutMeMessages.get(0);
     Assert.assertEquals(idOne, resultsAboutMeMessageOne.getId());
     Assert.assertEquals(authorOne, resultsAboutMeMessageOne.getAuthorId());
@@ -184,6 +192,38 @@ public class PersistentDataStoreTest {
     Assert.assertEquals(authorTwo, resultsAboutMeMessageTwo.getAuthorId());
     Assert.assertEquals(contentTwo, resultsAboutMeMessageTwo.getContent());
     Assert.assertEquals(creationTwo, resultsAboutMeMessageTwo.getCreationTime());
-    
+  }
+
+  @Test
+  public void testSaveAndLoadStatistics() throws PersistentDataStoreException {
+    UUID idOne = UUID.fromString("10000000-2222-3333-4444-555555555555");
+    Instant creationOne = Instant.ofEpochMilli(1000);
+    long valueOne = 1248;
+    Statistic inputStatisticOne = new Statistic(idOne, creationOne, Type.TEST, valueOne);
+
+    UUID idTwo = UUID.fromString("10000001-2222-3333-4444-555555555555");
+    Instant creationTwo = Instant.ofEpochMilli(2000);
+    long valueTwo = 1235;
+    Statistic inputStatisticTwo = new Statistic(idTwo, creationTwo, Type.TEST, valueTwo);
+
+    // save
+    persistentDataStore.writeThrough(inputStatisticOne);
+    persistentDataStore.writeThrough(inputStatisticTwo);
+
+    // load
+    List<Statistic> resultStatistics = persistentDataStore.loadStatistics(Type.TEST);
+
+    // confirm that what we saved matches what we loaded
+    Statistic resultStatisticOne = resultStatistics.get(0);
+    Assert.assertEquals(idOne, resultStatisticOne.getId());
+    Assert.assertEquals(creationOne, resultStatisticOne.getCreationTime());
+    Assert.assertEquals(Type.TEST, resultStatisticOne.getType());
+    Assert.assertEquals(valueOne, resultStatisticOne.getValue());
+
+    Statistic resultStatisticTwo = resultStatistics.get(1);
+    Assert.assertEquals(idTwo, resultStatisticTwo.getId());
+    Assert.assertEquals(creationTwo, resultStatisticTwo.getCreationTime());
+    Assert.assertEquals(Type.TEST, resultStatisticTwo.getType());
+    Assert.assertEquals(valueTwo, resultStatisticTwo.getValue());
   }
 }

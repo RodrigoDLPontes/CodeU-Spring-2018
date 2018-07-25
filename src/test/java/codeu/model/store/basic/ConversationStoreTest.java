@@ -1,15 +1,21 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Conversation;
+import codeu.model.data.Statistic;
+import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 
 public class ConversationStoreTest {
 
@@ -18,7 +24,8 @@ public class ConversationStoreTest {
 
   private final Conversation CONVERSATION_ONE =
       new Conversation(
-          UUID.randomUUID(), UUID.randomUUID(), "conversation_one", Instant.ofEpochMilli(1000));
+          UUID.randomUUID(), UUID.randomUUID(), "conversation_one", Instant.ofEpochMilli(1000),
+          new LinkedHashSet<User>());
 
   @Before
   public void setup() {
@@ -36,6 +43,7 @@ public class ConversationStoreTest {
         conversationStore.getConversationWithTitle(CONVERSATION_ONE.getTitle());
 
     assertEquals(CONVERSATION_ONE, resultConversation);
+    Mockito.verify(mockPersistentStorageAgent).writeThrough(any(Statistic.class));
   }
 
   @Test
@@ -43,6 +51,7 @@ public class ConversationStoreTest {
     Conversation resultConversation = conversationStore.getConversationWithTitle("unfound_title");
 
     Assert.assertNull(resultConversation);
+    Mockito.verify(mockPersistentStorageAgent).writeThrough(any(Statistic.class));
   }
 
   @Test
@@ -50,6 +59,7 @@ public class ConversationStoreTest {
     boolean isTitleTaken = conversationStore.isTitleTaken(CONVERSATION_ONE.getTitle());
 
     Assert.assertTrue(isTitleTaken);
+    Mockito.verify(mockPersistentStorageAgent).writeThrough(any(Statistic.class));
   }
 
   @Test
@@ -57,12 +67,14 @@ public class ConversationStoreTest {
     boolean isTitleTaken = conversationStore.isTitleTaken("unfound_title");
 
     Assert.assertFalse(isTitleTaken);
+    Mockito.verify(mockPersistentStorageAgent).writeThrough(any(Statistic.class));
   }
 
   @Test
   public void testAddConversation() {
     Conversation inputConversation =
-        new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now());
+        new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now(),
+            new LinkedHashSet<User>());
 
     conversationStore.addConversation(inputConversation);
     Conversation resultConversation =
@@ -70,6 +82,8 @@ public class ConversationStoreTest {
 
     assertEquals(inputConversation, resultConversation);
     Mockito.verify(mockPersistentStorageAgent).writeThrough(inputConversation);
+    // check if statistic was written twice (in addConversation() and getConversationWithTitle())
+    Mockito.verify(mockPersistentStorageAgent, times(2)).writeThrough(any(Statistic.class));
   }
 
   private void assertEquals(Conversation expectedConversation, Conversation actualConversation) {
@@ -78,5 +92,6 @@ public class ConversationStoreTest {
     Assert.assertEquals(expectedConversation.getTitle(), actualConversation.getTitle());
     Assert.assertEquals(
         expectedConversation.getCreationTime(), actualConversation.getCreationTime());
+    Assert.assertEquals(expectedConversation.getMembers(), actualConversation.getMembers());
   }
 }

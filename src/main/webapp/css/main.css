@@ -60,7 +60,6 @@ button {
   font-size: 18px;
 }
 
-
 #profileName{
    margin: 0 auto;
    font-size: 36px;
@@ -72,6 +71,26 @@ button {
   margin: 0 auto;
   text-align: center;
   width:100%;
+}
+
+#sidenav {
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    margin-top: 200px;
+    margin-left: 200px;
+}
+
+#sidenav a {
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+}
+
+#sidenav a:hover {
+    color: #404040;
 }
 
 .deleteButton{
@@ -92,5 +111,7 @@ text-align:center;
   display: flex;
   justify-content: justify-content;
 }
+
+
 
 

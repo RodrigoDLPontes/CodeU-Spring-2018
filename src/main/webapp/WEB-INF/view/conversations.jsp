@@ -13,10 +13,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
+<%@ page import="codeu.model.data.Statistic.Type" %>
+<%@ page import="codeu.service.GeneralTimingFilter" %>
+<% GeneralTimingFilter filter = new GeneralTimingFilter(Type.CONVERSATIONS_JSP); %>
+
 <%@ page import="java.util.List" %>
 <%@ page import="codeu.model.data.Conversation" %>
-<%@ page import="codeu.model.store.basic.UserStore"%>
-<%@ page import="codeu.model.data.User"%>
+<%@ page import="java.util.LinkedHashSet" %>
 
 <!DOCTYPE html>
 <html>
@@ -29,14 +32,16 @@
   <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
-    <% if(request.getSession().getAttribute("user") != null){ %>
-      <a  href="/userprofile/<%= request.getSession().getAttribute("user")%>">Hello <%= request.getSession().getAttribute("user")%></a>
-    <% } else{ %>
+    <% String username = (String) request.getSession().getAttribute("user"); %>
+    <% if(username != null) { %>
+      <a  href="/userprofile/<%= request.getSession().getAttribute("user")%>">Hello <%= username %></a>
+    <% } else { %>
       <a href="/login">Login</a>
     
     <% } %>
     <a href="/about.jsp">About</a>
-    <% if(request.getSession().getAttribute("user") != null){ %>
+    <% if(username != null) { %>
+      <a href="/requests">Requests</a>
       <a href="/logout">Logout</a>
     <% } %>    
   </nav>
@@ -48,7 +53,7 @@
         <h2 style="color:red"><%= request.getAttribute("error") %></h2>
     <% } %>
 
-    <% if(request.getSession().getAttribute("user") != null){ %>
+    <% if(username != null) { %>
       <h1>New Conversation</h1>
       <form action="/conversations" method="POST">
           <div class="form-group">
@@ -60,64 +65,39 @@
       </form>
 
       <hr/>
-    <% } %>
+      <h1>Conversations</h1>
 
-    <h1>Conversations</h1>
-
-    <%
-    List<Conversation> conversations =
-      (List<Conversation>) request.getAttribute("conversations");
-    if(conversations == null || conversations.isEmpty()){
-    %>
-      <p>Create a conversation to get started.</p>
-    <%
-    }
-    else{
-    %>
-      <ul class="mdl-list">
-    <%
-      for(Conversation conversation : conversations){
-      	
-        // The user that Created the Conversatio 
-        String  conversationCreater = UserStore.getInstance().getUser(conversation.getOwnerId()).getName();
-    %>
-
-        <%
-        // Makes it so that only the user who created  the converation  deltete  said Conversation 
-        if ((request.getSession().getAttribute("user") == null)){ 
-        %>
-         <h3> You must <a href="/login">Login</a> to view conversations. </h3>
-     
-         	<!--  Checks if the user is logged  made the conversation   -->
-        <%
-     
-    } else if  (!conversationCreater.equals(request.getSession().getAttribute("user").toString())){
-    %> 
-  <li><a href="/chat/<%= conversation.getTitle() %>">
-        <%= conversation.getTitle() %></a>
-<%
-//  ReDirecet user to login so they can view Conversations  
-		}else if (conversationCreater.equals(request.getSession().getAttribute("user").toString())){
-	%>
-  <li><a href="/chat/<%= conversation.getTitle() %>">
-        <%= conversation.getTitle() %></a>
-         <form action="/conversations" method="POST">
-          <button   class="deleteButton" type="submit">Delete Convo</button>
-          <input type="hidden" name="deleteConvo" value="true">
-          <input type="hidden" name="conversationId" value="<%= conversation.getId() %>">
-        </form>
-    <%
+      <%
+      LinkedHashSet<Conversation> conversations =
+        (LinkedHashSet<Conversation>) request.getAttribute("conversations");
+      if(conversations == null || conversations.isEmpty()){
+      %>
+        <p>You have no conversations to view.</p>
+      <%
+      } else {
+      %>
+        <ul class="mdl-list">
+      <%
+        for(Conversation conversation : conversations){
+      %>
+        <li><a href="/chat/<%= conversation.getTitle() %>">
+          <%= conversation.getTitle() %></a></li>
+      <%
+        }
+      %>
+        </ul>
+      <%
       }
-    %>
-    
-    <%
-      }
-    %>
-      </ul>
+    } else { 
+      %>
+      <p>You must <a href="/login">login</a> to view conversations.</p>
     <%
     }
     %>
+
     <hr/>
   </div>
 </body>
 </html>
+
+<% filter.finish(); %>

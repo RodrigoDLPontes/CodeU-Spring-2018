@@ -1,7 +1,7 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Message;
-
+import codeu.model.data.Statistic;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -11,6 +11,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 
 
 public class MessageStoreTest {
@@ -60,6 +63,9 @@ public class MessageStoreTest {
     Assert.assertEquals(2, resultMessages.size());
     assertEquals(MESSAGE_ONE, resultMessages.get(0));
     assertEquals(MESSAGE_TWO, resultMessages.get(1));
+    // check if we write the statistic without checking a specific statistic object by using any()
+    // (thank you google and stackoverflow)
+    Mockito.verify(mockPersistentStorageAgent).writeThrough(any(Statistic.class));
   }
 
   @Test
@@ -78,6 +84,8 @@ public class MessageStoreTest {
 
     assertEquals(inputMessage, resultMessage);
     Mockito.verify(mockPersistentStorageAgent).writeThrough(inputMessage);
+    // check if statistic was written twice (in addMessage() and getMessagesInConversation())
+    Mockito.verify(mockPersistentStorageAgent, times(2)).writeThrough(any(Statistic.class));
   }
 
   private void assertEquals(Message expectedMessage, Message actualMessage) {

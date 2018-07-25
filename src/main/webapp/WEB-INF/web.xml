@@ -50,7 +50,16 @@
     <servlet-name>RegisterServlet</servlet-name>
     <url-pattern>/register</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>ActivityFeedServlet</servlet-name>
+    <servlet-class>codeu.controller.ActivityFeedServlet</servlet-class>
+  </servlet>
 
+  <servlet-mapping>
+    <servlet-name>ActivityFeedServlet</servlet-name>
+    <url-pattern>/activityfeed</url-pattern>
+  </servlet-mapping>
 
   <servlet>
     <servlet-name>AdminServlet</servlet-name>
@@ -72,14 +81,45 @@
     <url-pattern>/logout</url-pattern>
   </servlet-mapping>
 
-<servlet>
-		<servlet-name>UserProfileServlet</servlet-name>
-		<servlet-class>codeu.controller.UserProfileServlet</servlet-class>
-	</servlet>
+ <servlet>
+    <servlet-name>UserProfileServlet</servlet-name>
+    <servlet-class>codeu.controller.UserProfileServlet</servlet-class>
+  </servlet>
 
-	<servlet-mapping>
-		<servlet-name>UserProfileServlet</servlet-name>
-		<url-pattern>/userprofile/*</url-pattern>
-	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UserProfileServlet</servlet-name>
+    <url-pattern>/userprofile/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>RequestServlet</servlet-name>
+    <servlet-class>codeu.controller.RequestServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>RequestServlet</servlet-name>
+    <url-pattern>/requests</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>StatisticsServlet</servlet-name>
+    <servlet-class>codeu.controller.StatisticsServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>StatisticsServlet</servlet-name>
+    <url-pattern>/statistics/*</url-pattern>
+  </servlet-mapping>
+
+  <filter>
+    <filter-name>ServletTimingFilter</filter-name>
+    <filter-class>codeu.controller.ServletTimingFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>ServletTimingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
 </web-app>
 

@@ -15,7 +15,11 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.UUID;
+
+import codeu.model.store.basic.UserStore;
 
 /** Class representing a registered user. */
 public class User {
@@ -23,6 +27,9 @@ public class User {
   private final String name;
   private final String passwordHash;
   private final Instant creation;
+  private LinkedHashSet<Conversation> conversations;
+  private HashSet<Conversation> adminConvos;
+  private UserStore userStore;
 
   /**
    * Constructs a new User.
@@ -32,11 +39,15 @@ public class User {
    * @param passwordHash the password hash of this User
    * @param creation the creation time of this User
    */
-  public User(UUID id, String name, String passwordHash, Instant creation) {
+  public User(UUID id, String name, String passwordHash, Instant creation, 
+      LinkedHashSet<Conversation> conversations, HashSet<Conversation> adminConvos) {
     this.id = id;
     this.name = name;
     this.passwordHash = passwordHash;
     this.creation = creation;
+    this.conversations = conversations;
+    this.adminConvos = adminConvos;
+    userStore = UserStore.getInstance();
   }
 
   /** Returns the ID of this User. */
@@ -58,4 +69,65 @@ public class User {
   public Instant getCreationTime() {
     return creation;
   }
+  
+  /** Returns a set of the conversations this User belongs to */
+  public LinkedHashSet<Conversation> getConversations() {
+    return conversations;
+  }
+  
+  /** Sets the conversations this User belongs to */
+  public void setConversations(LinkedHashSet<Conversation> conversations) {
+    this.conversations = conversations;
+    userStore.updateUser(this);
+  }
+  
+  /** Returns a set of the conversations this User is an admin for */
+  public HashSet<Conversation> getAdminConvos() {
+    return adminConvos;
+  }
+  
+  /** Sets the conversations this User is an admin of */
+  public void setAdminConvos(HashSet<Conversation> adminConvos) {
+    this.adminConvos = adminConvos;
+    userStore.updateUser(this);
+  }
+  
+  /** Adds a conversation that this User is a member of to the Conversations set */
+  public void addConversation(Conversation convo) {
+    conversations.add(convo);
+    userStore.updateUser(this);
+  }
+  
+  /** Adds a conversation that this User is an admin for to the adminConvos set */
+  public void addAdminConvo(Conversation adminConvo) {
+    adminConvos.add(adminConvo);
+    userStore.updateUser(this);
+  }
+  
+  @Override
+  public boolean equals(Object o) {
+    // null check
+    if (o == null) {
+      return false;
+    }
+    
+    // self check
+    if (this == o) {
+      return true;
+    }
+    
+    // class check
+    if (!(o instanceof User)) {
+      return false;
+    }
+    
+    User user = (User) o;
+    return id.equals(user.getId());
+  }
+  
+  @Override
+  public int hashCode() {
+    return id.hashCode();
+  }
+ 
 }

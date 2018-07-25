@@ -17,11 +17,15 @@ package codeu.model.store.persistence;
 import codeu.model.data.AboutMeMessage;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
+import codeu.model.data.Statistic;
 import codeu.model.data.User;
-import codeu.model.store.persistence.PersistentDataStoreException;
+import codeu.model.store.basic.ConversationStore;
+import codeu.model.store.basic.UserStore;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -29,15 +33,17 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
 
 
 /**
- * This class handles all interactions with Google App Engine's Datastore
- * service. On startup it sets the state of the applications's data objects from
- * the current contents of its Datastore. It also performs writes of new of
- * modified objects back to the Datastore.
+ * This class handles all interactions with Google App Engine's Datastore service. On startup it
+ * sets the state of the applications's data objects from the current contents of its Datastore. It
+ * also performs writes of new of modified objects back to the Datastore.
  */
 public class PersistentDataStore {
 
@@ -59,7 +65,6 @@ public class PersistentDataStore {
    *           if an error was detected during the load from the Datastore service
    */
   public List<User> loadUsers() throws PersistentDataStoreException {
-
     List<User> users = new ArrayList<>();
 
     // Retrieve all users from the datastore.
@@ -72,7 +77,9 @@ public class PersistentDataStore {
         String userName = (String) entity.getProperty("username");
         String passwordHash = (String) entity.getProperty("password_hash");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
-        User user = new User(uuid, userName, passwordHash, creationTime);
+        
+        User user = new User(uuid, userName, passwordHash, creationTime, 
+            new LinkedHashSet<Conversation>(), new HashSet<Conversation>());
         users.add(user);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -93,8 +100,8 @@ public class PersistentDataStore {
    *           if an error was detected during the load from the Datastore service
    */
   public List<Conversation> loadConversations() throws PersistentDataStoreException {
-
     List<Conversation> conversations = new ArrayList<>();
+    UserStore userStore = UserStore.getInstance();
 
     // Retrieve all conversations from the datastore.
     Query query = new Query("chat-conversations").addSort("creation_time", SortDirection.ASCENDING);
@@ -106,14 +113,47 @@ public class PersistentDataStore {
         UUID ownerUuid = UUID.fromString((String) entity.getProperty("owner_uuid"));
         String title = (String) entity.getProperty("title");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
-        Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime);
+        
+        String[] memberList;
+        LinkedHashSet<User> memberSet = new LinkedHashSet<User>();
+        try {
+          memberList = ((String) entity.getProperty("member_names")).split(", ");
+          
+          if (!memberList[0].equals("[]")) {
+            for (int i = 0; i < memberList.length; i++) {
+              String username = memberList[i];
+              
+              username = username.replace("[", "");
+              username = username.replace("]", "");
+              
+              memberSet.add(userStore.getUser(username));
+            }
+          }
+          
+          memberSet.remove(null);
+        } catch (NullPointerException e) {
+          // do nothing and continue
+        }
+        
+        Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime, memberSet);
+        ConversationStore.getInstance().updateConversation(conversation);
+        
+        for (User user : memberSet) {
+          user.addConversation(conversation);
+          
+          if (user.getId().equals(ownerUuid)) {
+            user.addAdminConvo(conversation);
+          }
+          
+          userStore.updateUser(user);
+        }
         conversations.add(conversation);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
         // occur include network errors, Datastore service errors, authorization errors,
         // database entity definition mismatches, or service mismatches.
         throw new PersistentDataStoreException(e);
-      }
+      } 
     }
 
     return conversations;
@@ -127,7 +167,6 @@ public class PersistentDataStore {
    *           if an error was detected during the load from the Datastore service
    */
   public List<Message> loadMessages() throws PersistentDataStoreException {
-
     List<Message> messages = new ArrayList<>();
 
     // Retrieve all messages from the datastore.
@@ -187,6 +226,27 @@ public class PersistentDataStore {
     return aboutmemessages;
   }
 
+  public List<Statistic> loadStatistics(Statistic.Type type) throws PersistentDataStoreException {
+    List<Statistic> statistics = new ArrayList<>();
+
+    // Retrieve all statistics of that type from the datastore.
+    Query query = new Query(type.getName()).addSort("creation_time", SortDirection.ASCENDING);
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        UUID id = UUID.fromString((String) entity.getProperty("uuid"));
+        long value = (long) entity.getProperty("value");
+        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
+        Statistic statistic = new Statistic(id, creationTime, type, value);
+        statistics.add(statistic);
+      } catch (Exception e) {
+        throw new PersistentDataStoreException(e);
+      }
+    }
+
+    return statistics;
+  }
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
     Entity userEntity = new Entity("chat-users", user.getId().toString());
@@ -194,6 +254,23 @@ public class PersistentDataStore {
     userEntity.setProperty("username", user.getName());
     userEntity.setProperty("password_hash", user.getPasswordHash());
     userEntity.setProperty("creation_time", user.getCreationTime().toString());
+    
+    String[] convoIds = new String[user.getConversations().size()];
+    int count = 0;
+    for (Conversation conversation : user.getConversations()) {
+      convoIds[count] = conversation.getId().toString();
+      count++;
+    }
+    userEntity.setProperty("convo_ids", Arrays.toString(convoIds));
+    
+    String[] adminConvoIds = new String[user.getAdminConvos().size()];
+    count = 0;
+    for (Conversation adminConvo : user.getAdminConvos()) {
+      adminConvoIds[count] = adminConvo.getId().toString();
+      count++;
+    }
+    userEntity.setProperty("admin_convo_ids", Arrays.toString(adminConvoIds));
+    
     datastore.put(userEntity);
   }
 
@@ -215,7 +292,25 @@ public class PersistentDataStore {
     conversationEntity.setProperty("owner_uuid", conversation.getOwnerId().toString());
     conversationEntity.setProperty("title", conversation.getTitle());
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
+    
+    String[] memberNames = new String[conversation.getNumMembers()];
+    int count = 0;
+    for (User member : conversation.getMembers()) {
+      memberNames[count] = member.getName();
+      count++;
+    }
+    conversationEntity.setProperty("member_names", Arrays.toString(memberNames));
+    
     datastore.put(conversationEntity);
+  }
+
+  /** Write a long value (e.g. elapsed time or number of comparisons) to the Datastore service */
+  public void writeThrough(Statistic statistic) {
+    Entity valueEntity = new Entity(statistic.getType().getName(), statistic.getId().toString());
+    valueEntity.setProperty("uuid", statistic.getId().toString());
+    valueEntity.setProperty("value", statistic.getValue());
+    valueEntity.setProperty("creation_time", statistic.getCreationTime().toString());
+    datastore.put(valueEntity);
   }
 
   /** Write a AboutMeMessage object to the Datastore service. */
@@ -236,14 +331,20 @@ public class PersistentDataStore {
 
   /** Remove a Conversation object from the Datastore service. */
   public void deleteThroughConvo(Conversation conversation) {
+ 
     Key conversationKey = KeyFactory.createKey("chat-conversations", conversation.getId().toString());
     datastore.delete(conversationKey);
+    
+    
+    
   }
 
   /** Remove a Message object from the Datastore service. */
   public void deleteThroughAboutMe(AboutMeMessage aboutmemessage) {
+    
     Key messageKey = KeyFactory.createKey("chat-aboutme", aboutmemessage.getId().toString());
     datastore.delete(messageKey);
+    
   }
 
 }

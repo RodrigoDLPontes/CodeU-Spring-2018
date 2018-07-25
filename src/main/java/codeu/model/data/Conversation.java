@@ -15,7 +15,10 @@
 package codeu.model.data;
 
 import java.time.Instant;
+import java.util.LinkedHashSet;
 import java.util.UUID;
+
+import codeu.model.store.basic.ConversationStore;
 
 /**
  * Class representing a conversation, which can be thought of as a chat room. Conversations are
@@ -26,6 +29,8 @@ public class Conversation {
   public final UUID owner;
   public final Instant creation;
   public final String title;
+  private LinkedHashSet<User> members;
+  private ConversationStore conversationStore;
 
   /**
    * Constructs a new Conversation.
@@ -35,11 +40,13 @@ public class Conversation {
    * @param title the title of this Conversation
    * @param creation the creation time of this Conversation
    */
-  public Conversation(UUID id, UUID owner, String title, Instant creation) {
+  public Conversation(UUID id, UUID owner, String title, Instant creation, LinkedHashSet<User> members) {
     this.id = id;
     this.owner = owner;
     this.creation = creation;
     this.title = title;
+    this.members = members;
+    conversationStore = ConversationStore.getInstance();
   }
 
   /** Returns the ID of this Conversation. */
@@ -60,5 +67,46 @@ public class Conversation {
   /** Returns the creation time of this Conversation. */
   public Instant getCreationTime() {
     return creation;
+  }
+  
+  /** Returns a set of the members of this Conversation */
+  public LinkedHashSet<User> getMembers() {
+    return members;
+  }
+  
+  public int getNumMembers() {
+    return members.size();
+  }
+  
+  /** Adds given user as a member to this Conversation */
+  public void addMember(User user) {
+    members.add(user);
+    conversationStore.updateConversation(this);
+  }
+  
+  @Override
+  public boolean equals(Object o) {
+    // null check
+    if (o == null) {
+      return false;
+    }
+    
+    // self check
+    if (this == o) {
+      return true;
+    }
+    
+    // class check
+    if (!(o instanceof Conversation)) {
+      return false;
+    }
+    
+    Conversation conversation = (Conversation) o;
+    return id.equals(conversation.getId());
+  }
+  
+  @Override
+  public int hashCode() {
+    return id.hashCode();
   }
 }

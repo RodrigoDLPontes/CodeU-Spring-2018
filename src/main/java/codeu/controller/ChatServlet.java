@@ -60,8 +60,7 @@ public class ChatServlet extends HttpServlet {
 
   /**
    * Sets the ConversationStore used by this servlet. This function provides a
-   * common setup method for use by the test framework or the servlet's init()
-   * function.
+   * common setup method for use by the test framework or the servlet's init() function.
    */
   void setConversationStore(ConversationStore conversationStore) {
     this.conversationStore = conversationStore;
@@ -92,13 +91,13 @@ public class ChatServlet extends HttpServlet {
   }
 
   /**
-   * This function fires when a user navigates to the chat page. It gets the
-   * conversation title from the URL, finds the corresponding Conversation, and
-   * fetches the messages in that Conversation. It then forwards to chat.jsp for
-   * rendering.
+   * This function fires when a user navigates to the chat page. It gets the conversation title from
+   * the URL, finds the corresponding Conversation, and fetches the messages in that Conversation.
+   * It then forwards to chat.jsp for rendering.
    */
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+  public void doGet(HttpServletRequest request, HttpServletResponse response) 
+      throws IOException, ServletException {
     String requestUrl = request.getRequestURI();
     String conversationTitle = requestUrl.substring("/chat/".length());
 
@@ -116,19 +115,19 @@ public class ChatServlet extends HttpServlet {
 
     request.setAttribute("conversation", conversation);
     request.setAttribute("messages", messages);
+    request.setAttribute("members", conversation.getMembers());
     request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response);
   }
 
   /**
-   * This function fires when a user submits the form on the chat page. It gets
-   * the logged-in username from the session, the conversation title from the URL,
-   * and the chat message from the submitted form data. It creates a new Message
-   * from that data, adds it to the model, and then redirects back to the chat
-   * page.
+   * This function fires when a user submits the form on the chat page. It gets the logged-in
+   * username from the session, the conversation title from the URL, and the chat message from the
+   * submitted form data. It creates a new Message from that data, adds it to the model, and then
+   * redirects back to the chat page.
    */
   @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException {
     String username = (String) request.getSession().getAttribute("user");
     if (username == null) {
       // user is not logged in, don't let them add a message
@@ -167,8 +166,13 @@ public class ChatServlet extends HttpServlet {
     // this parses BBCode tags to equivalent HTML tags
     String cleanedAndBBMessageContent = textProcessor.process(cleanedMessageContent);
 
-    Message message = new Message(UUID.randomUUID(), conversation.getId(), user.getId(), cleanedAndBBMessageContent,
-        Instant.now());
+    Message message =
+        new Message(
+            UUID.randomUUID(),
+            conversation.getId(),
+            user.getId(),
+            cleanedAndBBMessageContent,
+            Instant.now());
 
     messageStore.addMessage(message);
 

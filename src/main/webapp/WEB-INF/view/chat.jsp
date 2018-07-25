@@ -10,13 +10,21 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
-<%@ page import="java.util.List"%>
-<%@ page import="codeu.model.data.Conversation"%>
-<%@ page import="codeu.model.data.Message"%>
-<%@ page import="codeu.model.store.basic.UserStore"%>
+<%@ page import="codeu.model.data.Statistic.Type" %>
+<%@ page import="codeu.service.GeneralTimingFilter" %>
+<% GeneralTimingFilter filter = new GeneralTimingFilter(Type.CHAT_JSP); %>
+
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.LinkedHashSet" %>
+<%@ page import="codeu.model.data.Conversation" %>
+<%@ page import="codeu.model.data.Message" %>
+<%@ page import="codeu.model.data.User" %>
+<%@ page import="codeu.model.store.basic.UserStore" %>
+
 <%
 Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
+LinkedHashSet<User> members = (LinkedHashSet<User>) request.getAttribute("members");
 		  /*** The unique Url that is generated for each Users about me page  */
 		
 %>
@@ -24,18 +32,33 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 <!DOCTYPE html>
 <html>
 <head>
-<title><%= conversation.getTitle() %></title>
-<link rel="stylesheet" href="/css/main.css" type="text/css">
+  <title><%= conversation.getTitle() %></title>
+  <link rel="stylesheet" href="/css/main.css" type="text/css">
 
-<style>
-#chat {
-	background-color: white;
-	height: 500px;
-	overflow-y: scroll
-}
-</style>
+  <style>
+    #chat {
+      background-color: white;
+      height: 500px;
+      overflow-y: scroll;
+      float: left;
+      width: 580px;
+    }
 
-<script>
+    #members {
+      background-color: white;
+      height: 500px;
+      margin-left: 600px;
+      width: 200px;
+      overflow-y: scroll;
+    }
+
+    #invite {
+      background-color: white;
+      float: bottom;
+    }
+  </style>
+
+  <script>
     // scroll the chat div to the bottom
     function scrollChat() {
       var chatDiv = document.getElementById('chat');
@@ -56,9 +79,11 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     <% } %>
     <a href="/about.jsp">About</a>
     <% if(request.getSession().getAttribute("user") != null){ %>
+      <a href="/requests">Requests</a>
       <a href="/logout">Logout</a>
     <% } %>    
   </nav>
+
 	
   <div id="container">
 
@@ -73,8 +98,8 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       for (Message message : messages) {
         String author = UserStore.getInstance()
           .getUser(message.getAuthorId()).getName();
-
-          String url = "/userprofile/"+ author;
+          
+        String url = "/userprofile/" + author;
     %>
 
 		<li><strong> <a href=<%= url %>> <%= author %>:</strong> </a> <%= message.getContent() %>
@@ -91,7 +116,22 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 	  </ul>
     </div>
 
-    <hr/>>
+  <div id="members">
+      <p style="text-align: center"><strong>Members</strong></p>
+      <ul>
+        <% for (User user : members) {
+            String username = user.getName();
+        %>
+
+        <li><%= username %></li>
+
+        <%
+          }
+        %>
+      </ul>
+    </div>
+
+    <hr/>
 
 	    <% if (request.getSession().getAttribute("user") != null) { %>
     <form action="/chat/<%= conversation.getTitle() %>" method="POST">
@@ -109,3 +149,5 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 
 </body>
 </html>
+
+<% filter.finish(); %>

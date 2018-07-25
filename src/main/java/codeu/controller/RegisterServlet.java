@@ -2,6 +2,8 @@ package codeu.controller;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.UUID;
 
 import javax.servlet.ServletException;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+import codeu.model.data.Conversation;
 import codeu.model.data.User;
 import codeu.model.store.basic.UserStore;
 
@@ -46,7 +49,6 @@ public class RegisterServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-
     String username = request.getParameter("username");
 
     if (!username.matches("[\\w*\\s*]*")) {
@@ -64,7 +66,8 @@ public class RegisterServlet extends HttpServlet {
     String password = request.getParameter("password");
     String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
-    User user = new User(UUID.randomUUID(), username, hashedPassword, Instant.now());
+    User user = new User(UUID.randomUUID(), username, hashedPassword, Instant.now(),
+        new LinkedHashSet<Conversation>(), new HashSet<Conversation>());
     userStore.addUser(user);
 
     response.sendRedirect("/login");
