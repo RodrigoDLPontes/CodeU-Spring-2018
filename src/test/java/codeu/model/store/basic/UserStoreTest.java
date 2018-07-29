@@ -2,9 +2,12 @@ package codeu.model.store.basic;
 
 import codeu.model.data.Statistic;
 import codeu.model.data.User;
+import codeu.model.data.Conversation;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
 import org.junit.Assert;
@@ -25,19 +28,25 @@ public class UserStoreTest {
           UUID.randomUUID(),
           "test_username_one",
           "$2a$10$/zf4WlT2Z6tB5sULB9Wec.QQdawmF0f1SbqBw5EeJg5uoVpKFFXAa",
-          Instant.ofEpochMilli(1000));
+          Instant.ofEpochMilli(1000),
+          new LinkedHashSet<Conversation>(),
+          new HashSet<Conversation>());
   private final User USER_TWO =
       new User(
           UUID.randomUUID(),
           "test_username_two",
           "$2a$10$lgZSbmcYyyC7bETcMo/O1uUltWYDK3DW1lrEjCumOE1u8QPMlzNVy",
-          Instant.ofEpochMilli(2000));
+          Instant.ofEpochMilli(2000),
+          new LinkedHashSet<Conversation>(),
+          new HashSet<Conversation>());
   private final User USER_THREE =
       new User(
           UUID.randomUUID(),
           "test_username_three",
           "$2a$10$htXz4E48iPprTexGsEeBFurXyCwW6F6aoiSBqotL4m0NBg/VSkB9.",
-          Instant.ofEpochMilli(3000));
+          Instant.ofEpochMilli(3000),
+          new LinkedHashSet<Conversation>(),
+          new HashSet<Conversation>());
 
   @Before
   public void setup() {
@@ -90,7 +99,9 @@ public class UserStoreTest {
             UUID.randomUUID(),
             "test_username",
             "$2a$10$eDhncK/4cNH2KE.Y51AWpeL8/5znNBQLuAFlyJpSYNODR/SJQ/Fg6",
-            Instant.now());
+            Instant.now(),
+            new LinkedHashSet<Conversation>(),
+            new HashSet<Conversation>());
 
     userStore.addUser(inputUser);
     User resultUser = userStore.getUser("test_username");

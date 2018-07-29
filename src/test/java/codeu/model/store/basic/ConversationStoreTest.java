@@ -2,9 +2,11 @@ package codeu.model.store.basic;
 
 import codeu.model.data.Conversation;
 import codeu.model.data.Statistic;
+import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
 import org.junit.Assert;
@@ -22,7 +24,8 @@ public class ConversationStoreTest {
 
   private final Conversation CONVERSATION_ONE =
       new Conversation(
-          UUID.randomUUID(), UUID.randomUUID(), "conversation_one", Instant.ofEpochMilli(1000));
+          UUID.randomUUID(), UUID.randomUUID(), "conversation_one", Instant.ofEpochMilli(1000),
+          new LinkedHashSet<User>());
 
   @Before
   public void setup() {
@@ -70,7 +73,8 @@ public class ConversationStoreTest {
   @Test
   public void testAddConversation() {
     Conversation inputConversation =
-        new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now());
+        new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now(),
+            new LinkedHashSet<User>());
 
     conversationStore.addConversation(inputConversation);
     Conversation resultConversation =
@@ -88,5 +92,6 @@ public class ConversationStoreTest {
     Assert.assertEquals(expectedConversation.getTitle(), actualConversation.getTitle());
     Assert.assertEquals(
         expectedConversation.getCreationTime(), actualConversation.getCreationTime());
+    Assert.assertEquals(expectedConversation.getMembers(), actualConversation.getMembers());
   }
 }

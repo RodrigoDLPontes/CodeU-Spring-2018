@@ -15,8 +15,10 @@
 package codeu.model.data;
 
 import java.time.Instant;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.UUID;
+
+import codeu.model.store.basic.ConversationStore;
 
 /**
  * Class representing a conversation, which can be thought of as a chat room. Conversations are
@@ -27,7 +29,8 @@ public class Conversation {
   public final UUID owner;
   public final Instant creation;
   public final String title;
-  private HashSet<User> members;
+  private LinkedHashSet<User> members;
+  private ConversationStore conversationStore;
 
   /**
    * Constructs a new Conversation.
@@ -37,12 +40,13 @@ public class Conversation {
    * @param title the title of this Conversation
    * @param creation the creation time of this Conversation
    */
-  public Conversation(UUID id, UUID owner, String title, Instant creation) {
+  public Conversation(UUID id, UUID owner, String title, Instant creation, LinkedHashSet<User> members) {
     this.id = id;
     this.owner = owner;
     this.creation = creation;
     this.title = title;
-    members = new HashSet<User>();
+    this.members = members;
+    conversationStore = ConversationStore.getInstance();
   }
 
   /** Returns the ID of this Conversation. */
@@ -66,13 +70,18 @@ public class Conversation {
   }
   
   /** Returns a set of the members of this Conversation */
-  public HashSet<User> getMembers() {
+  public LinkedHashSet<User> getMembers() {
     return members;
+  }
+  
+  public int getNumMembers() {
+    return members.size();
   }
   
   /** Adds given user as a member to this Conversation */
   public void addMember(User user) {
     members.add(user);
+    conversationStore.updateConversation(this);
   }
   
   @Override

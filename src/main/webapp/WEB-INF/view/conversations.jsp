@@ -42,6 +42,7 @@
     <% } %>
     <a href="/about.jsp">About</a>
     <% if(username != null) { %>
+      <a href="/requests">Requests</a>
       <a href="/logout">Logout</a>
     <% } %>    
   </nav>

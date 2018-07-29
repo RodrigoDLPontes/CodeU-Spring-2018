@@ -118,7 +118,7 @@
 
   <servlet-mapping>
     <servlet-name>StatisticsServlet</servlet-name>
-    <url-pattern>/statistics</url-pattern>
+    <url-pattern>/statistics/*</url-pattern>
   </servlet-mapping>
 
   <filter>

@@ -126,9 +126,11 @@ public class ConversationServlet extends HttpServlet {
       return;
     }
 
+    LinkedHashSet<User> memberSet = new LinkedHashSet<User>();
+    memberSet.add(user);
     Conversation conversation =
-        new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
-    conversation.addMember(user);
+        new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now(),
+            memberSet);
     user.addConversation(conversation);
 
     conversationStore.addConversation(conversation);

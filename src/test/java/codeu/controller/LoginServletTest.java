@@ -14,10 +14,13 @@
 
 package codeu.controller;
 
+import codeu.model.data.Conversation;
 import codeu.model.data.User;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.UUID;
 
 import javax.servlet.RequestDispatcher;
@@ -76,7 +79,9 @@ public class LoginServletTest {
             UUID.randomUUID(),
             "test username",
             "$2a$10$.e.4EEfngEXmxAO085XnYOmDntkqod0C384jOR9oagwxMnPNHaGLa",
-            Instant.now());
+            Instant.now(),
+            new LinkedHashSet<Conversation>(),
+            new HashSet<Conversation>());
 
     Mockito.when(mockRequest.getParameter("username")).thenReturn("test username");
     Mockito.when(mockRequest.getParameter("password")).thenReturn("test password");

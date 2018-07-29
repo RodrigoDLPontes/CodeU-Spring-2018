@@ -19,14 +19,21 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.Statistic;
 import codeu.model.data.User;
+import codeu.model.store.basic.ConversationStore;
+import codeu.model.store.basic.UserStore;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -67,7 +74,9 @@ public class PersistentDataStore {
         String userName = (String) entity.getProperty("username");
         String passwordHash = (String) entity.getProperty("password_hash");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
-        User user = new User(uuid, userName, passwordHash, creationTime);
+        
+        User user = new User(uuid, userName, passwordHash, creationTime, 
+            new LinkedHashSet<Conversation>(), new HashSet<Conversation>());
         users.add(user);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -89,6 +98,7 @@ public class PersistentDataStore {
    */
   public List<Conversation> loadConversations() throws PersistentDataStoreException {
     List<Conversation> conversations = new ArrayList<>();
+    UserStore userStore = UserStore.getInstance();
 
     // Retrieve all conversations from the datastore.
     Query query = new Query("chat-conversations").addSort("creation_time", SortDirection.ASCENDING);
@@ -100,14 +110,47 @@ public class PersistentDataStore {
         UUID ownerUuid = UUID.fromString((String) entity.getProperty("owner_uuid"));
         String title = (String) entity.getProperty("title");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
-        Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime);
+        
+        String[] memberList;
+        LinkedHashSet<User> memberSet = new LinkedHashSet<User>();
+        try {
+          memberList = ((String) entity.getProperty("member_names")).split(", ");
+          
+          if (!memberList[0].equals("[]")) {
+            for (int i = 0; i < memberList.length; i++) {
+              String username = memberList[i];
+              
+              username = username.replace("[", "");
+              username = username.replace("]", "");
+              
+              memberSet.add(userStore.getUser(username));
+            }
+          }
+          
+          memberSet.remove(null);
+        } catch (NullPointerException e) {
+          // do nothing and continue
+        }
+        
+        Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime, memberSet);
+        ConversationStore.getInstance().updateConversation(conversation);
+        
+        for (User user : memberSet) {
+          user.addConversation(conversation);
+          
+          if (user.getId().equals(ownerUuid)) {
+            user.addAdminConvo(conversation);
+          }
+          
+          userStore.updateUser(user);
+        }
         conversations.add(conversation);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
         // occur include network errors, Datastore service errors, authorization errors,
         // database entity definition mismatches, or service mismatches.
         throw new PersistentDataStoreException(e);
-      }
+      } 
     }
 
     return conversations;
@@ -209,6 +252,23 @@ public class PersistentDataStore {
     userEntity.setProperty("username", user.getName());
     userEntity.setProperty("password_hash", user.getPasswordHash());
     userEntity.setProperty("creation_time", user.getCreationTime().toString());
+    
+    String[] convoIds = new String[user.getConversations().size()];
+    int count = 0;
+    for (Conversation conversation : user.getConversations()) {
+      convoIds[count] = conversation.getId().toString();
+      count++;
+    }
+    userEntity.setProperty("convo_ids", Arrays.toString(convoIds));
+    
+    String[] adminConvoIds = new String[user.getAdminConvos().size()];
+    count = 0;
+    for (Conversation adminConvo : user.getAdminConvos()) {
+      adminConvoIds[count] = adminConvo.getId().toString();
+      count++;
+    }
+    userEntity.setProperty("admin_convo_ids", Arrays.toString(adminConvoIds));
+    
     datastore.put(userEntity);
   }
 
@@ -230,6 +290,15 @@ public class PersistentDataStore {
     conversationEntity.setProperty("owner_uuid", conversation.getOwnerId().toString());
     conversationEntity.setProperty("title", conversation.getTitle());
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
+    
+    String[] memberNames = new String[conversation.getNumMembers()];
+    int count = 0;
+    for (User member : conversation.getMembers()) {
+      memberNames[count] = member.getName();
+      count++;
+    }
+    conversationEntity.setProperty("member_names", Arrays.toString(memberNames));
+    
     datastore.put(conversationEntity);
   }
 
