@@ -14,6 +14,7 @@
 
 package codeu.controller;
 
+import codeu.model.data.Activity;
 import codeu.model.data.Conversation;
 import codeu.model.data.ConversationActivity;
 import codeu.model.data.Mention;
@@ -25,6 +26,7 @@ import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.UUID;
@@ -112,8 +114,9 @@ public class MentionsServlet extends HttpServlet {
       }
     }
     
-    
-    request.setAttribute("mentions", mentions);
+    Mention[] mentionsRA = mentions.toArray(new Mention[0]); 
+    Arrays.sort(mentionsRA);
+    request.setAttribute("mentions", Arrays.asList(mentionsRA));
     request.getRequestDispatcher("/WEB-INF/view/mentions.jsp").forward(request, response);
     
   }
