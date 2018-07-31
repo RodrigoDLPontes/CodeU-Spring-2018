@@ -1,11 +1,7 @@
 package codeu.controller;
 
 import codeu.model.data.AboutMeMessage;
-import codeu.model.data.Conversation;
-import codeu.model.data.Message;
-import codeu.model.data.User;
 import codeu.model.store.basic.AboutMeMessageStore;
-import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
@@ -25,7 +21,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 public class UserProfileServletTest {
-  private AboutMeMessageStore aboutmemessageStore;
+
   private UserProfileServlet userprofileServlet;
   private HttpServletRequest mockRequest;
   private HttpSession mockSession;

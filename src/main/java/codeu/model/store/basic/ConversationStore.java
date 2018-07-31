@@ -55,8 +55,8 @@ public class ConversationStore {
   }
 
   /**
-   * The PersistentStorageAgent responsible for loading Conversations from and saving Conversations
-   * to Datastore.
+   * The PersistentStorageAgent responsible for loading Conversations from and
+   * saving Conversations to Datastore.
    */
   private PersistentStorageAgent persistentStorageAgent;
 
@@ -73,7 +73,7 @@ public class ConversationStore {
   public List<Conversation> getAllConversations() {
     return conversations;
   }
-
+  
   /** Add a new conversation to the current set of conversations known to the application. */
   public void addConversation(Conversation conversation) {
     GeneralTimingFilter filter = new GeneralTimingFilter(
@@ -86,6 +86,25 @@ public class ConversationStore {
   /** Updates the conversation */
   public void updateConversation(Conversation conversation) {
     persistentStorageAgent.writeThrough(conversation);
+  }
+
+  /** Access Conversation by UUID. */
+  public Conversation getConversation(UUID conversationId) {
+    for (Conversation conversation : conversations) {
+      if (conversation.getId().equals(conversationId)) {
+        return conversation;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Deletes a conversation from the current set of conversations known to the
+   * application.
+   */
+  public void deleteConversation(Conversation conversation) {
+    conversations.remove(conversation);
+    persistentStorageAgent.deleteThroughConvo(conversation);
   }
 
   /** Check whether a Conversation title is already known to the application. */

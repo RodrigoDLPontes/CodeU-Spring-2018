@@ -1,7 +1,6 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.AboutMeMessage;
-import codeu.model.data.Message;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import static org.junit.Assert.assertEquals;
 import java.time.Instant;

@@ -51,9 +51,11 @@ public class PersistentStorageAgent {
   }
 
   /**
-   * Instance getter function used for testing. Supply a mock for PersistentDataStore.
+   * Instance getter function used for testing. Supply a mock for
+   * PersistentDataStore.
    *
-   * @param mockPersistentDataStore a mock used for testing
+   * @param mockPersistentDataStore
+   *          a mock used for testing
    */
   static PersistentStorageAgent getTestInstance(PersistentDataStore mockPersistentDataStore) {
     return new PersistentStorageAgent(mockPersistentDataStore);
@@ -65,10 +67,11 @@ public class PersistentStorageAgent {
   }
 
   /**
-   * Retrieve all User objects from the Datastore service. The returned list may be empty.
+   * Retrieve all User objects from the Datastore service. The returned list may
+   * be empty.
    *
-   * @throws PersistentDataStoreException if an error was detected during the load from the
-   *     Datastore service
+   * @throws PersistentDataStoreException
+   *           if an error was detected during the load from the Datastore service
    */
   public List<User> loadUsers() throws PersistentDataStoreException {
     GeneralTimingFilter filter = new GeneralTimingFilter(
@@ -79,10 +82,11 @@ public class PersistentStorageAgent {
   }
 
   /**
-   * Retrieve all Conversation objects from the Datastore service. The returned list may be empty.
+   * Retrieve all Conversation objects from the Datastore service. The returned
+   * list may be empty.
    *
-   * @throws PersistentDataStoreException if an error was detected during the load from the
-   *     Datastore service
+   * @throws PersistentDataStoreException
+   *           if an error was detected during the load from the Datastore service
    */
   public List<Conversation> loadConversations() throws PersistentDataStoreException {
     GeneralTimingFilter filter = new GeneralTimingFilter(
@@ -93,10 +97,11 @@ public class PersistentStorageAgent {
   }
 
   /**
-   * Retrieve all Message objects from the Datastore service. The returned list may be empty.
+   * Retrieve all Message objects from the Datastore service. The returned list
+   * may be empty.
    *
-   * @throws PersistentDataStoreException if an error was detected during the load from the
-   *     Datastore service
+   * @throws PersistentDataStoreException
+   *           if an error was detected during the load from the Datastore service
    */
   public List<Message> loadMessages() throws PersistentDataStoreException {
     GeneralTimingFilter filter = new GeneralTimingFilter(
@@ -105,16 +110,16 @@ public class PersistentStorageAgent {
     filter.finish();
     return messages;
   }
-  
+
   /**
    * Retrieve all AboutMeMessage objects from the Datastore service. The returned list may be empty.
    *
    * @throws PersistentDataStoreException if an error was detected during the load from the
    *     Datastore service
    */
-  
+
   public List<AboutMeMessage> loadAboutMeMessages() throws PersistentDataStoreException {
-	  return persistentDataStore.loadAboutMeMessages();
+    return persistentDataStore.loadAboutMeMessages();
   }
 
   /**
@@ -160,5 +165,20 @@ public class PersistentStorageAgent {
   /** Write a AboutMeMessagee object to the Datastore service. */
   public void writeThrough(AboutMeMessage aboutmemessage) {
     persistentDataStore.writeThrough(aboutmemessage);
+  }
+
+  /** Remove a Conversation object from the Datastore service. */
+  public void deleteThroughConvo(Conversation conversation) {
+    persistentDataStore.deleteThroughConvo(conversation);
+  }
+  
+  /** Remove a Message object from the Datastore service. */
+  public void deleteThrough(Message message) {
+    persistentDataStore.deleteThrough(message);
+  }
+  
+  /** Remove a AboutMeMessage object from the Datastore service. */
+  public void deleteThroughAboutMe(AboutMeMessage aboutmemessage) {
+    persistentDataStore.deleteThroughAboutMe(aboutmemessage);
   }
 }

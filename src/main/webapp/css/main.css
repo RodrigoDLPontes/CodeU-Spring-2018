@@ -92,3 +92,26 @@ button {
 #sidenav a:hover {
     color: #404040;
 }
+
+.deleteButton{
+  margin: left auto;
+  position:relative;
+ width: auto;
+ color: #ecf0f1;
+ text-decoration:none;
+ border-radius:5px;
+ border: solid 1px;
+ background: #ff1a1a;
+text-align:center;
+ color:black;
+ font-size:16px;
+}
+
+.flexbox{
+  display: flex;
+  justify-content: justify-content;
+}
+
+
+
+
