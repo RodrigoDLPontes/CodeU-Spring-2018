@@ -29,8 +29,6 @@ import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,7 +36,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
-
 
 /**
  * This class handles all interactions with Google App Engine's Datastore service. On startup it
@@ -51,8 +48,8 @@ public class PersistentDataStore {
   private DatastoreService datastore;
 
   /**
-   * Constructs a new PersistentDataStore and sets up its state to begin loading
-   * objects from the Datastore service.
+   * Constructs a new PersistentDataStore and sets up its state to begin loading objects from the
+   * Datastore service.
    */
   public PersistentDataStore() {
     datastore = DatastoreServiceFactory.getDatastoreService();
@@ -61,8 +58,8 @@ public class PersistentDataStore {
   /**
    * Loads all User objects from the Datastore service and returns them in a List.
    *
-   * @throws PersistentDataStoreException
-   *           if an error was detected during the load from the Datastore service
+   * @throws PersistentDataStoreException if an error was detected during the load from the
+   *     Datastore service
    */
   public List<User> loadUsers() throws PersistentDataStoreException {
     List<User> users = new ArrayList<>();
@@ -93,11 +90,11 @@ public class PersistentDataStore {
   }
 
   /**
-   * Loads all Conversation objects from the Datastore service and returns them in
-   * a List, sorted in ascending order by creation time.
+   * Loads all Conversation objects from the Datastore service and returns them in a List, sorted in
+   * ascending order by creation time.
    *
-   * @throws PersistentDataStoreException
-   *           if an error was detected during the load from the Datastore service
+   * @throws PersistentDataStoreException if an error was detected during the load from the
+   *     Datastore service
    */
   public List<Conversation> loadConversations() throws PersistentDataStoreException {
     List<Conversation> conversations = new ArrayList<>();
@@ -160,11 +157,11 @@ public class PersistentDataStore {
   }
 
   /**
-   * Loads all Message objects from the Datastore service and returns them in a
-   * List, sorted in ascending order by creation time.
+   * Loads all Message objects from the Datastore service and returns them in a List, sorted in
+   * ascending order by creation time.
    *
-   * @throws PersistentDataStoreException
-   *           if an error was detected during the load from the Datastore service
+   * @throws PersistentDataStoreException if an error was detected during the load from the
+   *     Datastore service
    */
   public List<Message> loadMessages() throws PersistentDataStoreException {
     List<Message> messages = new ArrayList<>();
@@ -192,13 +189,13 @@ public class PersistentDataStore {
 
     return messages;
   }
-
+  
   /**
-   * Loads all AboutMeMessage objects from the Datastore service and returns them
-   * in a List, sorted in ascending order by creation time.
+   * Loads all AboutMeMessage objects from the Datastore service and returns them in a List, sorted in
+   * ascending order by creation time.
    *
-   * @throws PersistentDataStoreException
-   *           if an error was detected during the load from the Datastore service
+   * @throws PersistentDataStoreException if an error was detected during the load from the
+   *     Datastore service
    */
   public List<AboutMeMessage> loadAboutMeMessages() throws PersistentDataStoreException {
 
@@ -213,7 +210,7 @@ public class PersistentDataStore {
         UUID authorUuid = UUID.fromString((String) entity.getProperty("author_uuid"));
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         String content = (String) entity.getProperty("content");
-        AboutMeMessage aboutmemessage = new AboutMeMessage(uuid, authorUuid, content, creationTime);
+        AboutMeMessage aboutmemessage = new  AboutMeMessage(uuid, authorUuid, content, creationTime);
         aboutmemessages.add(aboutmemessage);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -223,7 +220,7 @@ public class PersistentDataStore {
       }
     }
 
-    return aboutmemessages;
+    return  aboutmemessages;
   }
 
   public List<Statistic> loadStatistics(Statistic.Type type) throws PersistentDataStoreException {
@@ -247,6 +244,7 @@ public class PersistentDataStore {
 
     return statistics;
   }
+  
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
     Entity userEntity = new Entity("chat-users", user.getId().toString());
@@ -316,35 +314,11 @@ public class PersistentDataStore {
   /** Write a AboutMeMessage object to the Datastore service. */
   public void writeThrough(AboutMeMessage aboutmemessage) {
     Entity aboutmemessageEntity = new Entity("chat-aboutme", aboutmemessage.getId().toString());
-    aboutmemessageEntity.setProperty("uuid", aboutmemessage.getId().toString());
+    aboutmemessageEntity.setProperty("uuid",aboutmemessage.getId().toString());
     aboutmemessageEntity.setProperty("author_uuid", aboutmemessage.getAuthorId().toString());
     aboutmemessageEntity.setProperty("content", aboutmemessage.getContent());
     aboutmemessageEntity.setProperty("creation_time", aboutmemessage.getCreationTime().toString());
     datastore.put(aboutmemessageEntity);
   }
-
-  /** Remove a Message object from the Datastore service. */
-  public void deleteThrough(Message message) {
-    Key messageKey = KeyFactory.createKey("chat-messages", message.getId().toString());
-    datastore.delete(messageKey);
-  }
-
-  /** Remove a Conversation object from the Datastore service. */
-  public void deleteThroughConvo(Conversation conversation) {
- 
-    Key conversationKey = KeyFactory.createKey("chat-conversations", conversation.getId().toString());
-    datastore.delete(conversationKey);
-    
-    
-    
-  }
-
-  /** Remove a Message object from the Datastore service. */
-  public void deleteThroughAboutMe(AboutMeMessage aboutmemessage) {
-    
-    Key messageKey = KeyFactory.createKey("chat-aboutme", aboutmemessage.getId().toString());
-    datastore.delete(messageKey);
-    
-  }
-
 }
+

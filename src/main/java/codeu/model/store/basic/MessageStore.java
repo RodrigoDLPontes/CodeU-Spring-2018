@@ -25,9 +25,9 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Store class that uses in-memory data structures to hold values and
- * automatically loads from and saves to PersistentStorageAgent. It's a
- * singleton so all servlet classes can access the same instance.
+ * Store class that uses in-memory data structures to hold values and automatically loads from and
+ * saves to PersistentStorageAgent. It's a singleton so all servlet classes can access the same
+ * instance.
  */
 public class MessageStore {
 
@@ -76,24 +76,6 @@ public class MessageStore {
     messages.add(message);
     persistentStorageAgent.writeThrough(message);
     filter.finish();
-  }
-
-  /** Access Message by UUID. */
-  public Message getMessage(UUID messageId) {
-    for (Message message : messages) {
-      if (message.getId().equals(messageId)) {
-        return message;
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Deletes a message from the current set of messages known to the application.
-   */
-  public void deleteMessage(Message message) {
-    messages.remove(message);
-    persistentStorageAgent.deleteThrough(message);
   }
 
   /** Access the current set of Messages within the given Conversation. */
