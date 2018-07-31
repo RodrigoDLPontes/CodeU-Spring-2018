@@ -59,32 +59,32 @@ public class ChatServlet extends HttpServlet {
   }
 
   /**
-   * Sets the ConversationStore used by this servlet. This function provides a
-   * common setup method for use by the test framework or the servlet's init() function.
+   * Sets the ConversationStore used by this servlet. This function provides a common setup method
+   * for use by the test framework or the servlet's init() function.
    */
   void setConversationStore(ConversationStore conversationStore) {
     this.conversationStore = conversationStore;
   }
 
   /**
-   * Sets the MessageStore used by this servlet. This function provides a common
-   * setup method for use by the test framework or the servlet's init() function.
+   * Sets the MessageStore used by this servlet. This function provides a common setup method for
+   * use by the test framework or the servlet's init() function.
    */
   void setMessageStore(MessageStore messageStore) {
     this.messageStore = messageStore;
   }
 
   /**
-   * Sets the UserStore used by this servlet. This function provides a common
-   * setup method for use by the test framework or the servlet's init() function.
+   * Sets the UserStore used by this servlet. This function provides a common setup method for use
+   * by the test framework or the servlet's init() function.
    */
   void setUserStore(UserStore userStore) {
     this.userStore = userStore;
   }
 
   /**
-   * Sets the TextProcessor used by this servlet. This function provides a common
-   * setup method for use by the test framework or the servlet's init() function.
+   * Sets the TextProcessor used by this servlet. This function provides a common setup method for
+   * use by the test framework or the servlet's init() function.
    */
   void setTextProcessor(TextProcessor textProcessor) {
     this.textProcessor = textProcessor;
@@ -96,7 +96,7 @@ public class ChatServlet extends HttpServlet {
    * It then forwards to chat.jsp for rendering.
    */
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) 
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
     String requestUrl = request.getRequestURI();
     String conversationTitle = requestUrl.substring("/chat/".length());
@@ -152,26 +152,20 @@ public class ChatServlet extends HttpServlet {
       return;
     }
 
-    boolean shouldDelete = Boolean.valueOf(request.getParameter("delete"));
-    if (shouldDelete) {
-      messageStore.deleteMessage(messageStore.getMessage(UUID.fromString(request.getParameter("messageId"))));
-      response.sendRedirect("/chat/" + conversationTitle);
-      return;
-    }
     String messageContent = request.getParameter("message");
 
     // this removes any HTML from the message content
-    String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.none());
+    messageContent = Jsoup.clean(messageContent, Whitelist.none());
 
     // this parses BBCode tags to equivalent HTML tags
-    String cleanedAndBBMessageContent = textProcessor.process(cleanedMessageContent);
+    messageContent = textProcessor.process(messageContent);
 
     Message message =
         new Message(
             UUID.randomUUID(),
             conversation.getId(),
             user.getId(),
-            cleanedAndBBMessageContent,
+            messageContent,
             Instant.now());
 
     messageStore.addMessage(message);

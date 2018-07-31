@@ -17,8 +17,6 @@ limitations under the License.
 <%@ page import="codeu.model.data.AboutMeMessage"%>
 <%@ page import="codeu.model.data.User"%>
 <%@ page import="codeu.model.store.basic.UserStore"%>
-<%@ page import="codeu.model.store.basic.AboutMeMessageStore"%>
-
 <%
 	// Creats a list of all   to all aboutmemessages
 	List<AboutMeMessage> aboutmemessages = (List<AboutMeMessage>) request.getAttribute("aboutmemessage");
@@ -29,8 +27,6 @@ limitations under the License.
 <head>
 <title>Profile</title>
 <link rel="stylesheet" href="/css/main.css">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 	<%
@@ -41,8 +37,6 @@ limitations under the License.
 		// This is the  user  who's profile is getting looked at by another user
 		String viewAnotherUserProfile = request.getAttribute("user").toString();
 	%>
-	<!--  Checks if the user is not logged in tells them to log in    -->
-
 	  <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
@@ -60,18 +54,40 @@ limitations under the License.
   </nav>
 
 	
-	<!--  Checks if the user is not logged in tells them to log in    -->
+	<!--  Checks if the user is logged  in but Viewing thier own page and alllows them to edit it   -->
 	<%
-    if ((request.getSession().getAttribute("user") == null)){ 
-        %>
-	<h3>
-		You must <a href="/login">Login</a> to view User Profiles .
-	</h3>
+		if ((request.getSession().getAttribute("user") != null)
+				&& (request.getSession().getAttribute("user").equals(request.getAttribute("user")))) {
+	%>
+	<h1 id="profileNameCenter">
+		<%=request.getAttribute("user")%>
+		tell us all about yourself
+	</h1>
 
-	<!--  Checks if the user is logged  and Views someone's else page   -->
+	<ul class="mdl-list">
+		<%
+			for (AboutMeMessage aboutmemessage : aboutmemessages) {
+					String author = UserStore.getInstance().getUser(aboutmemessage.getAuthorId()).getName();
+					if (author.equals(currenLoginedInUser)) {
+		%>
+		<li><strong> <%=author%>:
+		</strong> </a> <%=aboutmemessage.getContent()%></li>
+		<%
+			}
+		%>
+		<%
+			}
+		%>
+	</ul>
+	<form action="" <%=userUrl%>" method="POST">
+		<input type="text" name="aboutme"> <br /> <br /> <br /> <input
+			type="submit" value="Submit">
+	</form>
+
+
+	<!--  Checks if the user is logged  and View come else page   -->
 	<%
-		} else if (request.getSession().getAttribute("user") != null
-		  && (!request.getSession().getAttribute("user").equals(request.getAttribute("user")))) {
+		} else if (request.getSession().getAttribute("user") != null) {
 	%>
 	<h1 id="profileNameCenter">
 		<%=request.getAttribute("user")%>'s profile Read all about them
@@ -84,56 +100,21 @@ limitations under the License.
 					if (author.equals(viewAnotherUserProfile)) {
 		%>
 		<li><strong> <%=author%>:
-		</strong>  <%=aboutmemessage.getContent()%></li>
+		</strong> </a> <%=aboutmemessage.getContent()%></li>
 		<%
-			} %>
+			}
+		%>
 		<%
-			} 
+			}
 		%>
 	</ul>
-	<!--  If the user is on their page they can add and delete information about themselves   -->
-
-
+	<!--  Direcet user to login so they can view profiles   -->
 	<%
-		}else if ((request.getSession().getAttribute("user") != null)
-				&& (request.getSession().getAttribute("user").equals(request.getAttribute("user")))) {
+		} else {
 	%>
-	<h1 id="profileNameCenter">
-		<%=request.getAttribute("user")%>
-		tell us all about yourself
-	</h1>
-	<ul class="mdl-list">
-		<%
-			for (AboutMeMessage aboutmemessage : aboutmemessages) {
-					String author = UserStore.getInstance().getUser(aboutmemessage.getAuthorId()).getName();
-					if (author.equals(currenLoginedInUser)) {
-		%>
-
-		<li><strong> <%=author%>:
-		</strong> <%=aboutmemessage.getContent()%>	<form action="<%=userUrl%>" method="POST">
-				<button   class="deleteButton" type="submit">Delete</button>
-				<input type="hidden" name="deleteAboutme" value="true"> <input
-					type="hidden" name="aboutmemessageId"
-					value="<%= aboutmemessage.getId() %>">
-			</form> <% 
-		} %> <% 
-		}
-		%>
-	</ul>
-
-	<form action=" <%=userUrl%>" method="POST">
-		<input type="text" name="aboutme"> <br /> <br /> <br />
-		<button type="submit">Submit</button>
-	</form>
-
-
-
+	<a href="/login">Login to view your profile</a>
 	<%
-			} 
-		%>
-
-
-
+		}
+	%>
 </body>
 </html>
-
