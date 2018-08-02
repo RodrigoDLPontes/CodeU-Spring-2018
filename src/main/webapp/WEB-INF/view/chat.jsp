@@ -78,13 +78,14 @@ LinkedHashSet<User> members = (LinkedHashSet<User>) request.getAttribute("member
     <% } %>
     <a href="/about.jsp">About</a>
     <% if(request.getSession().getAttribute("user") != null){ %>
-      <a href="/requests">Requests</a>
       <a href="/logout">Logout</a>
     <% } %>    
   </nav>
 
-
   <div id="container">
+    <% if(request.getAttribute("error") != null){ %>
+        <h2 style="color:red"><%= request.getAttribute("error") %></h2>
+    <% } %>
 
     <h1><%= conversation.getTitle() %>
       <a href="" style="float: right">&#8635;</a></h1>
@@ -133,6 +134,11 @@ LinkedHashSet<User> members = (LinkedHashSet<User>) request.getAttribute("member
         <input type="text" name="message">
         <br/>
         <button type="submit">Send</button>
+    </form>
+    <form action="/chat/<%= conversation.getTitle() %>" method="POST">
+      <input type="text" name="member_name">
+      <br/>
+      <button type="submit">Invite member</button>
     </form>
     <% } else { %>
       <p><a href="/login">Login</a> to send a message.</p>
