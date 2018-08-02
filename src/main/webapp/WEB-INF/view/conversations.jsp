@@ -33,8 +33,8 @@
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
     <% String username = (String) request.getSession().getAttribute("user"); %>
-    <% if(username != null) { %>
-      <a  href="/userprofile/<%= request.getSession().getAttribute("user")%>">Hello <%= username %></a>
+  <% if(request.getSession().getAttribute("user") != null){ %>
+      <a  href="/userprofile/<%= request.getSession().getAttribute("user")%>">Hello <%= request.getSession().getAttribute("user")%></a>
     <% } else { %>
       <a href="/login">Login</a>
     
