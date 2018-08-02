@@ -151,26 +151,53 @@ public class ChatServlet extends HttpServlet {
       response.sendRedirect("/conversations");
       return;
     }
+    
+    if (request.getParameter("message") != null) {
 
-    String messageContent = request.getParameter("message");
+      String messageContent = request.getParameter("message");
 
-    // this removes any HTML from the message content
-    messageContent = Jsoup.clean(messageContent, Whitelist.none());
+      // this removes any HTML from the message content
+      messageContent = Jsoup.clean(messageContent, Whitelist.none());
 
-    // this parses BBCode tags to equivalent HTML tags
-    messageContent = textProcessor.process(messageContent);
+      // this parses BBCode tags to equivalent HTML tags
+      messageContent = textProcessor.process(messageContent);
 
-    Message message =
-        new Message(
-            UUID.randomUUID(),
-            conversation.getId(),
-            user.getId(),
-            messageContent,
-            Instant.now());
+      Message message =
+          new Message(
+              UUID.randomUUID(),
+              conversation.getId(),
+              user.getId(),
+              messageContent,
+              Instant.now());
 
-    messageStore.addMessage(message);
-
-    // redirect to a GET request
-    response.sendRedirect("/chat/" + conversationTitle);
+      messageStore.addMessage(message);
+      // redirect to a GET request
+      response.sendRedirect("/chat/" + conversationTitle);
+      return;
+    } else if (request.getParameter("member_name") != null) {
+      User userToInvite = userStore.getUser(request.getParameter("member_name"));
+      
+      if (userToInvite == null) {
+        request.setAttribute("error", "User not found.");
+        request.setAttribute("conversation", conversation);
+        
+        List<Message> messages = messageStore.getMessagesInConversation(
+            conversation.getId());
+        request.setAttribute("messages", messages);
+        
+        request.setAttribute("members", conversation.getMembers());
+        request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response);
+        return;
+      } else {
+        conversation.addMember(userToInvite);
+        userToInvite.addConversation(conversation);
+        conversationStore.updateConversation(conversation);
+        userStore.updateUser(userToInvite);
+        
+        // redirect to a GET request
+        response.sendRedirect("/chat/" + conversationTitle);
+        return;
+      }
+    }
   }
 }
