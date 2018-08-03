@@ -38,8 +38,8 @@ public class ConversationServlet extends HttpServlet {
   private ConversationStore conversationStore;
 
   /**
-   * Set up state for handling conversation-related requests. This method is only called when
-   * running in a server, not when running in a test.
+   * Set up state for handling conversation-related requests. This method is only
+   * called when running in a server, not when running in a test.
    */
   @Override
   public void init() throws ServletException {
@@ -49,8 +49,8 @@ public class ConversationServlet extends HttpServlet {
   }
 
   /**
-   * Sets the UserStore used by this servlet. This function provides a common setup method for use
-   * by the test framework or the servlet's init() function.
+   * Sets the UserStore used by this servlet. This function provides a common
+   * setup method for use by the test framework or the servlet's init() function.
    */
   void setUserStore(UserStore userStore) {
     this.userStore = userStore;
@@ -104,6 +104,8 @@ public class ConversationServlet extends HttpServlet {
       response.sendRedirect("/conversations");
       return;
     }
+
+  
 
     String conversationTitle = request.getParameter("conversationTitle");
     if (!conversationTitle.matches("[\\w*]*")) {

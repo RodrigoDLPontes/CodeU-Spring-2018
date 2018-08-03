@@ -71,7 +71,7 @@ public class MentionsServlet extends HttpServlet {
 }
 
   /**
-   * Sets the ConversationStore used by this servlet. This function provides a common setup method
+   * Sets the ConversationStore used by this servlet. Th0is function provides a common setup method
    * for use by the test framework or the servlet's init() function.
    */
   void setConversationStore(ConversationStore conversationStore) {
@@ -100,7 +100,6 @@ public class MentionsServlet extends HttpServlet {
       List<Message> messages = this.messageStore.getMessagesInConversation(conversation.getId());
       
       for (Message message : messages){
-        
         if (message.getContent().contains("@" + username)){
           // get conversation owner's UUID from conversation
           UUID id = message.getAuthorId();
@@ -117,9 +116,6 @@ public class MentionsServlet extends HttpServlet {
     Mention[] mentionsRA = mentions.toArray(new Mention[0]); 
     Arrays.sort(mentionsRA);
     request.setAttribute("mentions", Arrays.asList(mentionsRA));
-    request.getRequestDispatcher("/WEB-INF/view/mentions.jsp").forward(request, response);
-    
+    request.getRequestDispatcher("/WEB-INF/view/mentions.jsp").forward(request, response);  
   }
-
-
 }
