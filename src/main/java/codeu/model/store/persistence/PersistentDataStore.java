@@ -29,6 +29,8 @@ import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -319,6 +321,29 @@ public class PersistentDataStore {
     aboutmemessageEntity.setProperty("content", aboutmemessage.getContent());
     aboutmemessageEntity.setProperty("creation_time", aboutmemessage.getCreationTime().toString());
     datastore.put(aboutmemessageEntity);
+  }
+  /** Remove a Message object from the Datastore service. */
+  public void deleteThrough(Message message) {
+    Key messageKey = KeyFactory.createKey("chat-messages", message.getId().toString());
+    datastore.delete(messageKey);
+  }
+
+  /** Remove a Conversation object from the Datastore service. */
+  public void deleteThroughConvo(Conversation conversation) {
+ 
+    Key conversationKey = KeyFactory.createKey("chat-conversations", conversation.getId().toString());
+    datastore.delete(conversationKey);
+    
+    
+    
+  }
+
+  /** Remove a Message object from the Datastore service. */
+  public void deleteThroughAboutMe(AboutMeMessage aboutmemessage) {
+    
+    Key messageKey = KeyFactory.createKey("chat-aboutme", aboutmemessage.getId().toString());
+    datastore.delete(messageKey);
+    
   }
 }
 

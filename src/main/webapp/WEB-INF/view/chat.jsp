@@ -94,19 +94,23 @@ LinkedHashSet<User> members = (LinkedHashSet<User>) request.getAttribute("member
 
     <div id="chat">
       <ul>
-    <%
+     <%
       for (Message message : messages) {
         String author = UserStore.getInstance()
           .getUser(message.getAuthorId()).getName();
-
+          
         String url = "/userprofile/" + author;
     %>
 
-      <li><strong> <a href= <%= url %>> <%= author %>:</strong> </a>  <%= message.getContent() %></li>
-  
-   
-    
-    <%
+		<li><strong> <a href=<%= url %>> <%= author %>:</strong> </a> <%= message.getContent() %>
+
+		   <% if (UserStore.getInstance().getUser(author).getName().equals(request.getSession().getAttribute("user"))) { %>
+			 <form action="/chat/<%= conversation.getTitle() %>" method="POST">
+			 	<button class="deleteButton" type="submit">Delete</button>
+				<input type="hidden" name="delete" value="true"> 
+				<input type="hidden" name="messageId" value="<%= message.getId() %>">
+			</form> <% } %></li>
+				<%
       }
     %>
       </ul>
