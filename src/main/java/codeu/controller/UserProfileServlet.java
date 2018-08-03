@@ -69,7 +69,7 @@ public class UserProfileServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     String requestUrl = request.getRequestURI();
-     String currentProfile = requestUrl.substring("/userprofile/".length());
+    String currentProfile = requestUrl.substring("/userprofile/".length());
     String username = (String) request.getSession().getAttribute("user");
     if (username == null) {
       // user is not logged in, don't let them add a message
@@ -78,10 +78,10 @@ public class UserProfileServlet extends HttpServlet {
     }
 
     User user = userStore.getUser(username);
-    if (user == null) {
-      // user was not found, don't let them add a AboutMeMessage
-      response.sendRedirect("/login");
-      return;
+         if (user == null) {
+         // user was not found, don't let them add a AboutMeMessage
+         response.sendRedirect("/login");
+        return;
     }
 
     List<AboutMeMessage> aboutmemessages = aboutmemessageStore.getAllAboutMeMessages();
@@ -100,41 +100,48 @@ public class UserProfileServlet extends HttpServlet {
    */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
     String username = (String) request.getSession().getAttribute("user");
-    if (username == null) {
+       if (username == null) {
       // user is not logged in, don't let them add a message
-      response.sendRedirect("/login");
-      return;
+         response.sendRedirect("/login");
+         return;
     }
 
     User user = userStore.getUser(username);
-    if (user == null) {
+       if (user == null) {
       // user was not found, don't let them add a AboutMeMessage
-      response.sendRedirect("/login");
-      return;
+        response.sendRedirect("/login");
+        return;
     }
 
     String requestUrl = request.getRequestURI();
-    String Profile = requestUrl.substring("/userprofile/".length());
-    request.setAttribute("user", Profile);
-    String User = (String) request.getSession().getAttribute("user");
 
-    /** When the user is logged in they can add to their own about me page */
-    if (User != null) {
-      String aboutMeContent = request.getParameter("aboutme");
-
-      // this removes any HTML from the message content
-      aboutMeContent = Jsoup.clean(aboutMeContent, Whitelist.none());
-
-      // this parses BBCode tags to equivalent HTML tags
-      aboutMeContent = textProcessor.process(aboutMeContent);
-      AboutMeMessage aboutmemessage = new AboutMeMessage(UUID.randomUUID(), user.getId(), aboutMeContent,
-          Instant.now());
-
-      aboutmemessageStore.addAboutMeMessage(aboutmemessage);
-      // redirect to a GET request
+    boolean shouldDelete = Boolean.valueOf(request.getParameter("deleteAboutme"));
+    if (shouldDelete) {
+      aboutmemessageStore.deleteAboutMeMessage(
+          aboutmemessageStore.getAboutMeMessage(UUID.fromString(request.getParameter("aboutmemessageId"))));
       response.sendRedirect("/userprofile/" + username);
+      return;
     }
+    String aboutMeContent = request.getParameter("aboutme");
+
+    // this removes any HTML from the message content
+    String cleanedAboutMeContent = Jsoup.clean(aboutMeContent, Whitelist.none());
+
+    // this parses BBCode tags to equivalent HTML tags
+    String leanedAboutMeAndBBMessageContent = textProcessor.process(cleanedAboutMeContent);
+
+    AboutMeMessage aboutmemessage = new AboutMeMessage(
+        UUID.randomUUID(), 
+        user.getId(),
+        leanedAboutMeAndBBMessageContent, 
+        Instant.now());
+
+    aboutmemessageStore.addAboutMeMessage(aboutmemessage);
+    // redirect to a GET request
+    response.sendRedirect("/userprofile/" + username);
+
   }
 
 }
