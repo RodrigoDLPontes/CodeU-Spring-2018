@@ -1,6 +1,7 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.AboutMeMessage;
+import codeu.model.data.Message;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +84,24 @@ public class AboutMeMessageStore {
 
         return aboutMeMessagesByUser;
         
+    }
+    
+    /** Access Message by UUID. */
+    public AboutMeMessage getAboutMeMessage(UUID aboutmemessageId) {
+      for (AboutMeMessage aboutmemessage : aboutmemessages) {
+        if ( aboutmemessage.getId().equals(aboutmemessageId)) {
+          return  aboutmemessage;
+        }
+      }
+      return null;
+    }
+
+    /**
+     * Deletes a message from the current set of messages known to the application.
+     */
+    public void deleteAboutMeMessage(AboutMeMessage aboutmemessage) {
+      aboutmemessages.remove(aboutmemessage);
+      persistentStorageAgent.deleteThroughAboutMe(aboutmemessage);
     }
     
 

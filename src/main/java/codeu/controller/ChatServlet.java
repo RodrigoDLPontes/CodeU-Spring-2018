@@ -152,22 +152,30 @@ public class ChatServlet extends HttpServlet {
       return;
     }
     
+    boolean shouldDelete = Boolean.valueOf(request.getParameter("delete"));
+    if (shouldDelete) {
+      messageStore.deleteMessage(messageStore.getMessage(UUID.fromString(request.getParameter("messageId"))));
+      response.sendRedirect("/chat/" + conversationTitle);
+      return;
+    }
+    
     if (request.getParameter("message") != null) {
 
+    
       String messageContent = request.getParameter("message");
 
       // this removes any HTML from the message content
-      messageContent = Jsoup.clean(messageContent, Whitelist.none());
+      String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.none());
 
       // this parses BBCode tags to equivalent HTML tags
-      messageContent = textProcessor.process(messageContent);
+      String cleanedAndBBMessageContent = textProcessor.process(cleanedMessageContent);
 
       Message message =
           new Message(
               UUID.randomUUID(),
               conversation.getId(),
               user.getId(),
-              messageContent,
+              cleanedAndBBMessageContent,
               Instant.now());
 
       messageStore.addMessage(message);

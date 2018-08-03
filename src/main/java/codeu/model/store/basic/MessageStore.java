@@ -97,6 +97,24 @@ public class MessageStore {
     return messagesInConversation;
   }
 
+  /** Access Message by UUID. */
+  public Message getMessage(UUID messageId) {
+    for (Message message : messages) {
+      if (message.getId().equals(messageId)) {
+        return message;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Deletes a message from the current set of messages known to the application.
+   */
+  public void deleteMessage(Message message) {
+    messages.remove(message);
+    persistentStorageAgent.deleteThrough(message);
+  }
+  
   /** Sets the List of Messages stored by this MessageStore. */
   public void setMessages(List<Message> messages) {
     this.messages = messages;
